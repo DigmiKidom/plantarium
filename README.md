@@ -43,6 +43,7 @@ Later, with the Supabase CLI (`supabase link`, `supabase db push`) new migration
 | `admin` | + approve/reject articles, give roles, ban/unban, delete accounts, handle reports at `/admin` |
 
 - Articles are never published by their author: *draft → pending → published* (or *rejected* with a note). Editing a published article sends it back to review.
+- Signed-in users can like and comment on published articles (max 5 comments a minute / 100 a day). Comments can't be edited; the writer or an admin can delete them (admin deletions go to the log).
 - The first admin is set once in the SQL editor: `supabase/snippets/make-admin.sql`. After that, roles are given from `/admin/users`.
 - Admins can't change their own role or another admin from the site – only from Supabase.
 - Ban = the profile is marked `banned_until` **and** sign-in is blocked in Supabase Auth. Delete removes the login; the database cascades remove profile, plants, articles and reports. Every admin action is written to `admin_actions` (`/admin/log`).

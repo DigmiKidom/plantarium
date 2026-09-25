@@ -240,6 +240,73 @@ console.log("\nPersonal data");
 await as(alice, () => q(`insert into public.gardens (name) values ('בית')`));
 await expectCount("users can't see each other's gardens", 0, () => as(mallory, () => q(`select id from public.gardens`)));
 
+// ---------- likes & comments ----------
+console.log("\nLikes & comments");
+const { rows: pub } = await q(
+  `insert into public.magazine_articles (author_id, title, status) values ($1, 'פורסם', 'published') returning id`,
+  [carol],
+);
+const liveId = pub[0].id;
+const { rows: drf } = await q(`insert into public.magazine_articles (author_id, title) values ($1, 'טיוטה') returning id`, [carol]);
+const draftId = drf[0].id;
+
+await allowed("user likes a published article", () =>
+  as(alice, () => q(`insert into public.magazine_likes (article_id) values ($1)`, [liveId])));
+await denied("user can't like twice", () =>
+  as(alice, () => q(`insert into public.magazine_likes (article_id) values ($1)`, [liveId])));
+await denied("user can't like in someone else's name", () =>
+  as(alice, () => q(`insert into public.magazine_likes (article_id, user_id) values ($1, $2)`, [liveId, mallory])));
+await denied("user can't like an unpublished article", () =>
+  as(alice, () => q(`insert into public.magazine_likes (article_id) values ($1)`, [draftId])));
+await denied("visitors can't like", () =>
+  as(null, () => q(`insert into public.magazine_likes (article_id) values ($1)`, [liveId])));
+await expectCount("visitors see the like count", 1, () =>
+  as(null, () => q(`select 1 from public.magazine_likes where article_id = $1`, [liveId])));
+await denied("user can't remove someone else's like", () =>
+  as(mallory, () => q(`delete from public.magazine_likes where article_id = $1`, [liveId])));
+await allowed("user removes own like", () =>
+  as(alice, () => q(`delete from public.magazine_likes where article_id = $1 and user_id = $2`, [liveId, alice])));
+
+let commentId;
+await allowed("user comments on a published article", () =>
+  as(alice, async () => {
+    const { rows } = await q(`insert into public.magazine_comments (article_id, body) values ($1, '  כתבה מעולה  ') returning id, body`, [liveId]);
+    commentId = rows[0].id;
+    if (rows[0].body !== "כתבה מעולה") throw new Error("body not trimmed");
+  }));
+await denied("empty comment is rejected", () =>
+  as(alice, () => q(`insert into public.magazine_comments (article_id, body) values ($1, '   ')`, [liveId])));
+await denied("user can't comment on an unpublished article", () =>
+  as(alice, () => q(`insert into public.magazine_comments (article_id, body) values ($1, 'x')`, [draftId])));
+await denied("visitors can't comment", () =>
+  as(null, () => q(`insert into public.magazine_comments (article_id, body) values ($1, 'x')`, [liveId])));
+await expectCount("visitors read comments", 1, () =>
+  as(null, () => q(`select id from public.magazine_comments where article_id = $1`, [liveId])));
+await denied("user can't edit a comment", () =>
+  as(alice, () => q(`update public.magazine_comments set body = 'changed' where id = $1`, [commentId])));
+await denied("user can't delete someone else's comment", () =>
+  as(mallory, () => q(`delete from public.magazine_comments where id = $1`, [commentId])));
+await q(`update public.profiles set banned_until = 'infinity' where id = $1`, [mallory]);
+await denied("banned user can't comment", () =>
+  as(mallory, () => q(`insert into public.magazine_comments (article_id, body) values ($1, 'x')`, [liveId])));
+await denied("banned user can't like", () =>
+  as(mallory, () => q(`insert into public.magazine_likes (article_id) values ($1)`, [liveId])));
+await q(`update public.profiles set banned_until = null where id = $1`, [mallory]);
+await denied("more than 5 comments a minute is blocked", () =>
+  as(mallory, async () => {
+    for (let i = 0; i < 6; i++) await q(`insert into public.magazine_comments (article_id, body) values ($1, $2)`, [liveId, `c${i}`]);
+  }));
+await expectCount("…after the first 5 went through", 5, () =>
+  q(`select count(*)::int as n from public.magazine_comments where user_id = $1`, [mallory]));
+await allowed("admin deletes someone else's comment", () =>
+  as(carol, async () => {
+    const r = await q(`delete from public.magazine_comments where id = $1`, [commentId]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await q(`update public.magazine_articles set status = 'rejected', review_note = 'x' where id = $1`, [liveId]);
+await expectCount("comments hide when the article is unpublished", 0, () =>
+  as(null, () => q(`select id from public.magazine_comments where article_id = $1`, [liveId])));
+
 // ---------- cascade ----------
 console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);

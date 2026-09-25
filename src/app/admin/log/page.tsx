@@ -15,6 +15,7 @@ const ACTION_HE: Record<string, string> = {
   reject_article: "החזרת מאמר לתיקון",
   unpublish_article: "הורדת מאמר",
   dismiss_reports: "סגירת דיווחים",
+  delete_comment: "מחיקת תגובה",
 };
 
 function detail(action: string, meta: Record<string, unknown>) {

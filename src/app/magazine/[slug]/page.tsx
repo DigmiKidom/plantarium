@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Clock } from "lucide-react";
 import { getPublishedBySlug } from "@/lib/magazine/queries";
 import { ArticleBody } from "@/components/magazine/article-body";
+import { ArticleEngagement } from "@/components/magazine/article-engagement";
 import { formatDate } from "@/lib/dates";
 
 export const revalidate = 300;
@@ -61,6 +62,7 @@ export default async function MagazineArticlePage({ params }: PageProps<"/magazi
         <img src={article.cover_url} alt="" className="aspect-[16/9] w-full rounded-3xl object-cover" />
       )}
       <ArticleBody content={article.content} />
+      <ArticleEngagement articleId={article.id} slug={article.slug} />
     </article>
   );
 }
