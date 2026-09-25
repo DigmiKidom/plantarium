@@ -4,6 +4,7 @@ import { listSpecies } from "@/lib/species/repo";
 import { SpeciesCard } from "@/components/species/species-card";
 import { listPublished } from "@/lib/magazine/queries";
 import { ArticleCard } from "@/components/magazine/article-card";
+import { TodayBar } from "@/components/home/today-bar";
 
 export const revalidate = 300;
 
@@ -20,6 +21,9 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-14">
+      <div className="-mb-8">
+        <TodayBar />
+      </div>
       <section className="relative overflow-hidden rounded-3xl bg-leaf-soft px-6 py-12 md:px-12 md:py-16">
         <div className="relative z-10 flex max-w-2xl flex-col gap-5">
           <p className="text-sm font-semibold text-primary">ללמוד · לגדל · לעקוב · להשתפר</p>
