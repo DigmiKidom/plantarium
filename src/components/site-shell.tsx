@@ -2,21 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, NotebookPen, Newspaper, Plus, Settings, ShieldCheck, Sprout, Trees, User, type LucideIcon } from "lucide-react";
+import { BookOpen, Home, Newspaper, NotebookPen, Plus, Sprout, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { AuthStatusCompact, AuthStatusSidebar, useMe } from "@/components/auth/auth-status";
+import { MeProvider } from "@/components/auth/me";
+import { CompactUserMenu, SidebarUserMenu } from "@/components/nav/user-menu";
 
 type NavItem = { href: string; label: string; icon: LucideIcon };
 
+/**
+ * Main nav = the places everyone goes. Personal pages (profile, garden, my articles, admin,
+ * settings) are in the account menu under the user's name, on both desktop and mobile.
+ */
 const DESKTOP_NAV: NavItem[] = [
   { href: "/", label: "בית", icon: Home },
   { href: "/plants", label: "הצמחים שלי", icon: Sprout },
-  { href: "/garden", label: "גינה", icon: Trees },
   { href: "/knowledge", label: "ידע", icon: BookOpen },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },
   { href: "/blog", label: "בלוג", icon: Newspaper },
-  { href: "/profile", label: "פרופיל", icon: User },
-  { href: "/settings", label: "הגדרות", icon: Settings },
 ];
 
 const MOBILE_NAV: NavItem[] = [
@@ -24,12 +26,14 @@ const MOBILE_NAV: NavItem[] = [
   { href: "/plants", label: "צמחים", icon: Sprout },
   { href: "/plants/new", label: "הוספה", icon: Plus },
   { href: "/knowledge", label: "ידע", icon: BookOpen },
-  { href: "/profile", label: "פרופיל", icon: User },
+  { href: "/magazine", label: "מגזין", icon: NotebookPen },
 ];
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   if (href === "/plants") return pathname === "/plants" || (pathname.startsWith("/plants/") && pathname !== "/plants/new");
+  // The writer area belongs to the account menu, not to "Magazine"
+  if (href === "/magazine") return pathname.startsWith("/magazine") && !pathname.startsWith("/magazine/write");
   return pathname === href || pathname.startsWith(href + "/");
 }
 
@@ -51,101 +55,82 @@ export function Logo({ className }: { className?: string }) {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const me = useMe();
-  const nav: NavItem[] =
-    me?.role === "admin" ? [...DESKTOP_NAV, { href: "/admin", label: "ניהול", icon: ShieldCheck }] : DESKTOP_NAV;
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-7xl">
-      {/* Desktop sidebar – first in DOM, so it sits on the right in RTL */}
-      <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
-        <Logo />
-        <nav aria-label="ניווט ראשי" className="flex flex-col gap-1">
-          {nav.map(({ href, label, icon: Icon }) => {
+    <MeProvider>
+      <div className="mx-auto flex min-h-dvh max-w-7xl">
+        {/* Desktop sidebar – first in DOM, so it sits on the right in RTL */}
+        <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
+          <Logo />
+          <nav aria-label="ניווט ראשי" className="flex flex-col gap-1">
+            {DESKTOP_NAV.map(({ href, label, icon: Icon }) => {
+              const active = isActive(pathname, href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] transition-colors",
+                    active ? "bg-leaf-soft font-semibold text-primary-strong" : "text-text hover:bg-surface-2",
+                  )}
+                >
+                  <Icon className="size-5" aria-hidden />
+                  {label}
+                </Link>
+              );
+            })}
+          </nav>
+          <Link
+            href="/plants/new"
+            className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 font-semibold text-on-primary hover:bg-primary-strong"
+          >
+            <Plus className="size-5" aria-hidden />
+            הוספת צמח
+          </Link>
+          <div className="mt-auto">
+            <SidebarUserMenu />
+          </div>
+        </aside>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* Mobile top bar */}
+          <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-bg/90 px-4 backdrop-blur md:hidden">
+            <Logo />
+            <CompactUserMenu />
+          </header>
+
+          <main className="flex-1 px-4 pb-28 pt-6 md:px-8 md:pb-12">{children}</main>
+        </div>
+
+        {/* Mobile bottom bar */}
+        <nav
+          aria-label="ניווט ראשי"
+          className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+        >
+          {MOBILE_NAV.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
+            const isAdd = href === "/plants/new";
             return (
               <Link
                 key={href}
                 href={href}
                 aria-current={active ? "page" : undefined}
-                className={cn(
-                  "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] transition-colors",
-                  active
-                    ? "bg-leaf-soft font-semibold text-primary-strong"
-                    : "text-text hover:bg-surface-2",
-                )}
+                className={cn("flex flex-col items-center gap-1 py-2 text-[11px]", active ? "font-semibold text-primary" : "text-muted")}
               >
-                <Icon className="size-5" aria-hidden />
+                {isAdd ? (
+                  <span className="-mt-5 grid size-12 place-items-center rounded-full bg-primary text-on-primary shadow-lg">
+                    <Icon className="size-6" aria-hidden />
+                  </span>
+                ) : (
+                  <Icon className="size-5" aria-hidden />
+                )}
                 {label}
               </Link>
             );
           })}
         </nav>
-        <Link
-          href="/plants/new"
-          className="mt-2 flex items-center justify-center gap-2 rounded-full bg-primary px-4 py-3 font-semibold text-on-primary hover:bg-primary-strong"
-        >
-          <Plus className="size-5" aria-hidden />
-          הוספת צמח
-        </Link>
-        <div className="mt-auto">
-          <AuthStatusSidebar />
-        </div>
-      </aside>
-
-      <div className="flex min-w-0 flex-1 flex-col">
-        {/* Mobile top bar */}
-        <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-bg/90 px-4 py-3 backdrop-blur md:hidden">
-          <Logo />
-          <div className="flex items-center gap-2">
-            <Link
-              href="/settings"
-              aria-label="הגדרות"
-              aria-current={isActive(pathname, "/settings") ? "page" : undefined}
-              className={cn(
-                "grid size-9 place-items-center rounded-full hover:bg-surface-2",
-                isActive(pathname, "/settings") ? "text-primary" : "text-muted",
-              )}
-            >
-              <Settings className="size-5" aria-hidden />
-            </Link>
-            <AuthStatusCompact />
-          </div>
-        </header>
-
-        <main className="flex-1 px-4 pb-28 pt-6 md:px-8 md:pb-12">{children}</main>
       </div>
-
-      {/* Mobile bottom bar */}
-      <nav
-        aria-label="ניווט ראשי"
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
-      >
-        {MOBILE_NAV.map(({ href, label, icon: Icon }) => {
-          const active = isActive(pathname, href);
-          const isAdd = href === "/plants/new";
-          return (
-            <Link
-              key={href}
-              href={href}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "flex flex-col items-center gap-1 py-2 text-[11px]",
-                active ? "font-semibold text-primary" : "text-muted",
-              )}
-            >
-              {isAdd ? (
-                <span className="-mt-5 grid size-12 place-items-center rounded-full bg-primary text-on-primary shadow-lg">
-                  <Icon className="size-6" aria-hidden />
-                </span>
-              ) : (
-                <Icon className="size-5" aria-hidden />
-              )}
-              {label}
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
+    </MeProvider>
   );
 }
