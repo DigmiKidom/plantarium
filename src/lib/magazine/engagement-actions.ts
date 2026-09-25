@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { isBannedNow, type Role } from "@/lib/auth/roles";
@@ -20,6 +21,12 @@ async function signedIn() {
   return { supabase, userId: data.user.id, role: me.role };
 }
 
+/** Counts on the magazine cards (home + /magazine) are cached pages – refresh them. */
+function refreshCounts() {
+  revalidatePath("/magazine");
+  revalidatePath("/");
+}
+
 const SIGN_IN = { ok: false as const, error: "צריך להתחבר כדי לעשות את זה" };
 const uuid = z.uuid();
 
@@ -35,6 +42,7 @@ export async function setLike(articleId: string, like: boolean): Promise<Result>
     console.error(JSON.stringify({ at: "magazine.like", error: error.message }));
     return { ok: false, error: "הלייק לא נשמר. נסו שוב" };
   }
+  refreshCounts();
   return { ok: true };
 }
 
@@ -57,6 +65,7 @@ export async function addComment(raw: z.input<typeof commentInput>): Promise<Res
     console.error(JSON.stringify({ at: "magazine.comment", code: error.code, error: error.message }));
     return { ok: false, error: "התגובה לא נשלחה. נסו שוב" };
   }
+  refreshCounts();
   return { ok: true };
 }
 
@@ -83,5 +92,6 @@ export async function deleteComment(commentId: string): Promise<Result> {
       reason: data.body.slice(0, 300),
     });
   }
+  refreshCounts();
   return { ok: true };
 }

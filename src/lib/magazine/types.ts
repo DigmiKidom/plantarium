@@ -25,6 +25,9 @@ export type ArticleSummary = {
   updated_at: string;
   review_note: string | null;
   author: AuthorRef | null;
+  /** Only filled on public lists (listPublished). */
+  like_count?: number;
+  comment_count?: number;
 };
 
 export type Article = ArticleSummary & { content: JSONContent };

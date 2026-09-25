@@ -2,19 +2,34 @@ import "server-only";
 import { createPublicClient, createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { SUMMARY_COLUMNS, type Article, type ArticleStatus, type ArticleSummary } from "./types";
 
-/** Published articles, newest first. Public data, no session needed. */
+type WithCounts = ArticleSummary & { likes?: { count: number }[]; comments?: { count: number }[] };
+const COUNT_COLUMNS = "likes:magazine_likes(count), comments:magazine_comments(count)";
+
+/** Published articles, newest first, with like and comment counts. Public data, no session needed. */
 export async function listPublished({ limit = 24, authorId }: { limit?: number; authorId?: string } = {}) {
   if (!hasSupabase()) return [] as ArticleSummary[];
-  let query = createPublicClient()
-    .from("magazine_articles")
-    .select(SUMMARY_COLUMNS)
-    .eq("status", "published")
-    .order("published_at", { ascending: false })
-    .limit(limit);
-  if (authorId) query = query.eq("author_id", authorId);
-  const { data, error } = await query.returns<ArticleSummary[]>();
-  if (error) console.error(JSON.stringify({ at: "magazine.listPublished", error: error.message }));
-  return data ?? [];
+  const run = (columns: string) => {
+    let query = createPublicClient()
+      .from("magazine_articles")
+      .select(columns)
+      .eq("status", "published")
+      .order("published_at", { ascending: false })
+      .limit(limit);
+    if (authorId) query = query.eq("author_id", authorId);
+    return query.returns<WithCounts[]>();
+  };
+
+  let { data, error } = await run(`${SUMMARY_COLUMNS}, ${COUNT_COLUMNS}`);
+  if (error) {
+    // Likes/comments tables missing (migration 0008 not applied yet): still show the articles
+    console.error(JSON.stringify({ at: "magazine.listPublished", error: error.message }));
+    ({ data, error } = await run(SUMMARY_COLUMNS));
+  }
+  return (data ?? []).map(({ likes, comments, ...a }) => ({
+    ...a,
+    like_count: likes?.[0]?.count ?? 0,
+    comment_count: comments?.[0]?.count ?? 0,
+  }));
 }
 
 export async function getPublishedBySlug(slug: string) {

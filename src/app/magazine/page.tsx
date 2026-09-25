@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PenLine } from "lucide-react";
 import { listPublished } from "@/lib/magazine/queries";
-import { ArticleCard } from "@/components/magazine/article-card";
+import { ArticleCard, ArticleStats } from "@/components/magazine/article-card";
 
 export const metadata: Metadata = {
   title: "מגזין",
@@ -48,6 +48,7 @@ export default async function MagazinePage() {
               <p className="text-sm text-muted">
                 {lead.author?.display_name} · {lead.reading_minutes} דק׳ קריאה
               </p>
+              <ArticleStats article={lead} />
             </div>
           </Link>
           {rest.length > 0 && (

@@ -1,7 +1,26 @@
 import Link from "next/link";
-import { Clock, Newspaper } from "lucide-react";
+import { Clock, Heart, MessageCircle, Newspaper } from "lucide-react";
 import type { ArticleSummary } from "@/lib/magazine/types";
 import { formatDate } from "@/lib/dates";
+
+/** Likes and comments counts, e.g. under a magazine card. */
+export function ArticleStats({ article, className }: { article: ArticleSummary; className?: string }) {
+  if (article.like_count === undefined) return null;
+  const likes = article.like_count;
+  const comments = article.comment_count ?? 0;
+  return (
+    <p className={`flex items-center gap-4 text-sm text-muted ${className ?? ""}`}>
+      <span className="flex items-center gap-1.5" aria-label={`${likes} לייקים`}>
+        <Heart className="size-4" aria-hidden />
+        <span className="tabular-nums">{likes}</span>
+      </span>
+      <span className="flex items-center gap-1.5" aria-label={`${comments} תגובות`}>
+        <MessageCircle className="size-4" aria-hidden />
+        <span className="tabular-nums">{comments}</span>
+      </span>
+    </p>
+  );
+}
 
 export function ArticleCard({ article, href }: { article: ArticleSummary; href?: string }) {
   return (
@@ -28,6 +47,7 @@ export function ArticleCard({ article, href }: { article: ArticleSummary; href?:
             {article.reading_minutes} דק׳ קריאה
           </span>
         </p>
+        <ArticleStats article={article} className="border-t border-border pt-3" />
       </div>
     </Link>
   );
