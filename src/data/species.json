@@ -1,0 +1,5888 @@
+{
+  "meta": {
+    "name": "Plantarium species seed",
+    "version": "0.1.0",
+    "generated": "2026-09-24",
+    "language": "he",
+    "count": 103,
+    "status": "draft – care values are typical ranges for Israeli conditions; review each species before publishing",
+    "notes": {
+      "water_interval": "Days between waterings in spring. Multiply by care.seasonal[season].water_factor for other seasons (northern hemisphere: winter = Dec–Feb).",
+      "is_toxic_pets": "Based on common references such as the ASPCA list; null = not verified.",
+      "humidity": "Percent relative humidity.",
+      "medium": "Values map to the medium_type enum; 'orchid_bark' and 'none' must be added to that enum.",
+      "published": "false until an editor reviews the entry and adds images."
+    },
+    "enums": {
+      "category": [
+        "houseplant",
+        "succulent",
+        "herb",
+        "vegetable",
+        "fruit_tree",
+        "garden"
+      ],
+      "difficulty": [
+        "easy",
+        "moderate",
+        "hard"
+      ],
+      "light": [
+        "low",
+        "medium",
+        "bright_indirect",
+        "direct"
+      ],
+      "growth_rate": [
+        "slow",
+        "moderate",
+        "fast"
+      ],
+      "medium": [
+        "soil",
+        "aroid_mix",
+        "cactus_mix",
+        "sphagnum",
+        "orchid_bark",
+        "water",
+        "none"
+      ]
+    }
+  },
+  "species": [
+    {
+      "slug": "monstera-deliciosa",
+      "scientific_name": "Monstera deliciosa",
+      "common_name_he": "מונסטרה",
+      "other_names_he": [
+        "מונסטרה דליציוזה"
+      ],
+      "common_name_en": "Swiss cheese plant",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "צמח מטפס עם עלים גדולים ומחוררים, חזק ומתאים למתחילים.",
+      "native_region_he": "מרכז אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "climber",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "monstera-adansonii",
+      "scientific_name": "Monstera adansonii",
+      "common_name_he": "מונסטרה אדנסוני",
+      "other_names_he": [
+        "מונסטרת קופים"
+      ],
+      "common_name_en": "Monkey mask monstera",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מטפס או משתלשל עם עלים מלאי חורים, אוהב לחות גבוהה.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 200,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "climber",
+        "hanging"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 6,
+        "water_interval_max_days": 9,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 55,
+        "humidity_max": 75,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "epipremnum-aureum",
+      "scientific_name": "Epipremnum aureum",
+      "common_name_he": "פוטוס",
+      "other_names_he": [
+        "אפיפרמנום",
+        "פוטוס זהוב"
+      ],
+      "common_name_en": "Golden pothos",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מהצמחים הסלחניים ביותר, משתלשל או מטפס וסובל תאורה חלשה.",
+      "native_region_he": "איי שלמה",
+      "growth_rate": "fast",
+      "max_height_cm": 1000,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "hanging",
+        "low-light",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "scindapsus-pictus",
+      "scientific_name": "Scindapsus pictus",
+      "common_name_he": "סקינדפסוס",
+      "other_names_he": [
+        "פוטוס כסוף"
+      ],
+      "common_name_en": "Satin pothos",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים ירוקים כהים עם כתמים כסופים, משתלשל ואיטי מעט מהפוטוס.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "hanging"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 12,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "philodendron-hederaceum",
+      "scientific_name": "Philodendron hederaceum",
+      "common_name_he": "פילודנדרון לב",
+      "other_names_he": [
+        "פילודנדרון מטפס"
+      ],
+      "common_name_en": "Heartleaf philodendron",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים בצורת לב על ענפים ארוכים, קל מאוד לגידול ולריבוי.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 400,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "hanging",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "thaumatophyllum-bipinnatifidum",
+      "scientific_name": "Thaumatophyllum bipinnatifidum",
+      "common_name_he": "פילודנדרון סלואום",
+      "other_names_he": [
+        "פילודנדרון מפוצל",
+        "סלואום"
+      ],
+      "common_name_en": "Tree philodendron",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים גדולים ומפוצלים, גדל גם בחוץ בצל חלקי באקלים ישראלי.",
+      "native_region_he": "דרום אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "statement",
+        "outdoor-shade"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 13,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "syngonium-podophyllum",
+      "scientific_name": "Syngonium podophyllum",
+      "common_name_he": "סינגוניום",
+      "other_names_he": [
+        "ראש חץ"
+      ],
+      "common_name_en": "Arrowhead plant",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים בצורת חץ שמשנים צורה עם הגיל, מגוון צבעים רחב.",
+      "native_region_he": "מרכז אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "climber",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "aglaonema-commutatum",
+      "scientific_name": "Aglaonema commutatum",
+      "common_name_he": "אגלאונמה",
+      "other_names_he": [
+        "ירוק-עד סיני"
+      ],
+      "common_name_en": "Chinese evergreen",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים מנוקדים ועמידים, מתאים לפינות עם אור חלש.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "slow",
+      "max_height_cm": 90,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "low-light",
+        "beginner"
+      ],
+      "care": {
+        "light": "low",
+        "light_notes_he": "מסתדר עם אור חלש עד בינוני, גם רחוק מחלון.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dieffenbachia-seguine",
+      "scientific_name": "Dieffenbachia seguine",
+      "common_name_he": "דיפנבכיה",
+      "other_names_he": [],
+      "common_name_en": "Dumb cane",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים גדולים ומנומרים; המוהל רעיל ומגרה – להרחיק מילדים וחיות.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "toxic-sap"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "zamioculcas-zamiifolia",
+      "scientific_name": "Zamioculcas zamiifolia",
+      "common_name_he": "זמיוקולקס",
+      "other_names_he": [
+        "ZZ"
+      ],
+      "common_name_en": "ZZ plant",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "אוגר מים בפקעות וסובל הזנחה, תאורה נמוכה ואוויר יבש.",
+      "native_region_he": "מזרח אפריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 90,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "low-light",
+        "drought-tolerant",
+        "beginner"
+      ],
+      "care": {
+        "light": "low",
+        "light_notes_he": "מסתדר עם אור חלש עד בינוני, גם רחוק מחלון.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "spathiphyllum-wallisii",
+      "scientific_name": "Spathiphyllum wallisii",
+      "common_name_he": "ספטיפילום",
+      "other_names_he": [
+        "שושנת השלום"
+      ],
+      "common_name_en": "Peace lily",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "פורח בלבן ומודיע כשהוא צמא – העלים נובלים ומזדקפים אחרי השקיה.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 70,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "flowering",
+        "low-light",
+        "beginner"
+      ],
+      "care": {
+        "light": "low",
+        "light_notes_he": "מסתדר עם אור חלש עד בינוני, גם רחוק מחלון.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "alocasia-amazonica",
+      "scientific_name": "Alocasia × amazonica",
+      "common_name_he": "אלוקזיה אמזוניקה",
+      "other_names_he": [
+        "אוזן פיל"
+      ],
+      "common_name_en": "African mask plant",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "hard",
+      "difficulty_he": "מאתגר",
+      "summary_he": "עלים כהים עם עורקים לבנים, רגיש לקור ולהשקיית יתר ועלול לרדום בחורף.",
+      "native_region_he": "הכלאה (דרום-מזרח אסיה)",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "statement",
+        "humidity-lover"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 60,
+        "humidity_max": 80,
+        "temp_min_c": 18,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "anthurium-andraeanum",
+      "scientific_name": "Anthurium andraeanum",
+      "common_name_he": "אנתוריום",
+      "other_names_he": [],
+      "common_name_en": "Flamingo flower",
+      "family": "Araceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "פורח כמעט כל השנה בתפרחות מבריקות, אוהב לחות ואור בהיר.",
+      "native_region_he": "קולומביה ואקוודור",
+      "growth_rate": "slow",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "aroid",
+        "flowering",
+        "humidity-lover"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 60,
+        "humidity_max": 80,
+        "temp_min_c": 18,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ficus-lyrata",
+      "scientific_name": "Ficus lyrata",
+      "common_name_he": "פיקוס כינורי",
+      "other_names_he": [
+        "פיקוס ליראטה"
+      ],
+      "common_name_en": "Fiddle-leaf fig",
+      "family": "Moraceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים גדולים בצורת כינור; לא אוהב שינויי מיקום וטיוטות.",
+      "native_region_he": "מערב אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "statement",
+        "tree"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 12,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ficus-elastica",
+      "scientific_name": "Ficus elastica",
+      "common_name_he": "פיקוס גומי",
+      "other_names_he": [
+        "פיקוס אלסטיקה"
+      ],
+      "common_name_en": "Rubber plant",
+      "family": "Moraceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים עבים ומבריקים, חזק ומתאים לחדר מואר.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "tree",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ficus-benjamina",
+      "scientific_name": "Ficus benjamina",
+      "common_name_he": "פיקוס בנימינה",
+      "other_names_he": [],
+      "common_name_en": "Weeping fig",
+      "family": "Moraceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עץ עם עלים קטנים; משיר עלים כשמזיזים אותו או כשיש שינוי תאורה.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "tree"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 8,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "schefflera-arboricola",
+      "scientific_name": "Schefflera arboricola",
+      "common_name_he": "שפלרה",
+      "other_names_he": [
+        "שפלרה ננסית"
+      ],
+      "common_name_en": "Dwarf umbrella tree",
+      "family": "Araliaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים מסודרים כמו מטרייה, עמיד וגדל גם בחוץ בצל חלקי.",
+      "native_region_he": "טייוואן",
+      "growth_rate": "moderate",
+      "max_height_cm": 250,
+      "is_toxic_pets": true,
+      "tags": [
+        "tree",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 13,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "hedera-helix",
+      "scientific_name": "Hedera helix",
+      "common_name_he": "קיסוס החורש",
+      "other_names_he": [
+        "קיסוס"
+      ],
+      "common_name_en": "English ivy",
+      "family": "Araliaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מטפס קלאסי שאוהב טמפרטורות קרירות ורגיש לקרדית בחום יבש.",
+      "native_region_he": "אירופה ואסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 1000,
+      "is_toxic_pets": true,
+      "tags": [
+        "climber",
+        "hanging",
+        "cool-lover"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 10,
+        "temp_max_c": 25,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dracaena-trifasciata",
+      "scientific_name": "Dracaena trifasciata",
+      "common_name_he": "סנסווריה",
+      "other_names_he": [
+        "לשון חמות",
+        "סנסיווריה"
+      ],
+      "common_name_en": "Snake plant",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מהצמחים העמידים ביותר; העיקר לא להשקות יותר מדי.",
+      "native_region_he": "מערב אפריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 120,
+      "is_toxic_pets": true,
+      "tags": [
+        "low-light",
+        "drought-tolerant",
+        "beginner"
+      ],
+      "care": {
+        "light": "low",
+        "light_notes_he": "מסתדר עם אור חלש עד בינוני, גם רחוק מחלון.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 28,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 12,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dracaena-fragrans",
+      "scientific_name": "Dracaena fragrans",
+      "common_name_he": "דרצנה ריחנית",
+      "other_names_he": [
+        "עץ האושר",
+        "דרצנה מסנג'יאנה"
+      ],
+      "common_name_en": "Corn plant",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גזע עם ציצת עלים ארוכים, סובל תאורה בינונית ורגיש לכלור ופלואור.",
+      "native_region_he": "אפריקה הטרופית",
+      "growth_rate": "slow",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "tree",
+        "low-light",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dracaena-marginata",
+      "scientific_name": "Dracaena marginata",
+      "common_name_he": "דרצנה מרגינטה",
+      "other_names_he": [
+        "עץ הדרקון"
+      ],
+      "common_name_en": "Dragon tree",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גזעים דקים ועלים צרים עם שוליים אדומים, קל לגידול.",
+      "native_region_he": "מדגסקר",
+      "growth_rate": "slow",
+      "max_height_cm": 300,
+      "is_toxic_pets": true,
+      "tags": [
+        "tree",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dracaena-sanderiana",
+      "scientific_name": "Dracaena sanderiana",
+      "common_name_he": "במבוק המזל",
+      "other_names_he": [
+        "דרצנה סנדריאנה"
+      ],
+      "common_name_en": "Lucky bamboo",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גדל במים או באדמה; במים מחליפים כל שבוע-שבועיים.",
+      "native_region_he": "מרכז אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 100,
+      "is_toxic_pets": true,
+      "tags": [
+        "water-grown",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "water",
+          "soil"
+        ],
+        "medium_notes_he": "מים (או מצע רגיל); תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "chlorophytum-comosum",
+      "scientific_name": "Chlorophytum comosum",
+      "common_name_he": "זיפנוצה",
+      "other_names_he": [
+        "כלורופיטום",
+        "צמח העכביש"
+      ],
+      "common_name_en": "Spider plant",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מייצר צמחונים תלויים שקל להשריש, בטוח לחיות מחמד.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 40,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "hanging",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 10,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "aspidistra-elatior",
+      "scientific_name": "Aspidistra elatior",
+      "common_name_he": "אספידיסטרה",
+      "other_names_he": [
+        "צמח הברזל"
+      ],
+      "common_name_en": "Cast iron plant",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "כמעט בלתי ניתן להריגה, סובל חושך, קור והזנחה.",
+      "native_region_he": "יפן וטייוואן",
+      "growth_rate": "slow",
+      "max_height_cm": 70,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "low-light",
+        "beginner"
+      ],
+      "care": {
+        "light": "low",
+        "light_notes_he": "מסתדר עם אור חלש עד בינוני, גם רחוק מחלון.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 30,
+        "humidity_max": 60,
+        "temp_min_c": 7,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "beaucarnea-recurvata",
+      "scientific_name": "Beaucarnea recurvata",
+      "common_name_he": "רגל פיל",
+      "other_names_he": [
+        "בוקרניאה",
+        "עץ קוקו"
+      ],
+      "common_name_en": "Ponytail palm",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גזע מעובה שאוגר מים ועלים דקים ומשתלשלים.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "slow",
+      "max_height_cm": 300,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 28,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 10,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "yucca-gigantea",
+      "scientific_name": "Yucca gigantea",
+      "common_name_he": "יוקה",
+      "other_names_he": [
+        "יוקה פילית"
+      ],
+      "common_name_en": "Spineless yucca",
+      "family": "Asparagaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עמיד לשמש וליובש, גדל בבית ליד חלון שמשי או בחוץ.",
+      "native_region_he": "מרכז אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 400,
+      "is_toxic_pets": true,
+      "tags": [
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 7,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "goeppertia-orbifolia",
+      "scientific_name": "Goeppertia orbifolia",
+      "common_name_he": "קלתאה אורביפוליה",
+      "other_names_he": [
+        "קלתאה"
+      ],
+      "common_name_en": "Round-leaf calathea",
+      "family": "Marantaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "hard",
+      "difficulty_he": "מאתגר",
+      "summary_he": "עלים עגולים עם פסים כסופים, דורש לחות גבוהה ומים רכים.",
+      "native_region_he": "בוליביה",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "humidity-lover"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 4,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 60,
+        "humidity_max": 80,
+        "temp_min_c": 18,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "maranta-leuconeura",
+      "scientific_name": "Maranta leuconeura",
+      "common_name_he": "מרנטה",
+      "other_names_he": [
+        "צמח התפילה"
+      ],
+      "common_name_en": "Prayer plant",
+      "family": "Marantaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מקפל את עליו בלילה כמו ידיים בתפילה.",
+      "native_region_he": "ברזיל",
+      "growth_rate": "moderate",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "humidity-lover",
+        "hanging"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 4,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 18,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "peperomia-obtusifolia",
+      "scientific_name": "Peperomia obtusifolia",
+      "common_name_he": "פפרומיה",
+      "other_names_he": [],
+      "common_name_en": "Baby rubber plant",
+      "family": "Piperaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "צמח קומפקטי עם עלים בשרניים, מתאים לשולחן עבודה.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "compact",
+        "beginner"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "pilea-peperomioides",
+      "scientific_name": "Pilea peperomioides",
+      "common_name_he": "פיליאה",
+      "other_names_he": [
+        "צמח הכסף הסיני"
+      ],
+      "common_name_en": "Chinese money plant",
+      "family": "Urticaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים עגולים כמו מטבעות; לסובב את העציץ כדי שיגדל ישר.",
+      "native_region_he": "סין",
+      "growth_rate": "moderate",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "compact",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 13,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "tradescantia-zebrina",
+      "scientific_name": "Tradescantia zebrina",
+      "common_name_he": "טרדסקנטיה זברינה",
+      "other_names_he": [
+        "זברינה"
+      ],
+      "common_name_en": "Inch plant",
+      "family": "Commelinaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים סגולים-כסופים שצובעים יותר באור חזק, מתרבה בקלות ממים.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "fast",
+      "max_height_cm": 30,
+      "is_toxic_pets": true,
+      "tags": [
+        "hanging",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 13,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "fittonia-albivenis",
+      "scientific_name": "Fittonia albivenis",
+      "common_name_he": "פיטוניה",
+      "other_names_he": [
+        "צמח העורקים"
+      ],
+      "common_name_en": "Nerve plant",
+      "family": "Acanthaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים עם רשת עורקים צבעונית; מתעלף כשהוא צמא ומתאושש מהר.",
+      "native_region_he": "פרו",
+      "growth_rate": "moderate",
+      "max_height_cm": 15,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "compact",
+        "terrarium"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 60,
+        "humidity_max": 80,
+        "temp_min_c": 18,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "codiaeum-variegatum",
+      "scientific_name": "Codiaeum variegatum",
+      "common_name_he": "קרוטון",
+      "other_names_he": [],
+      "common_name_en": "Croton",
+      "family": "Euphorbiaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים צבעוניים בצהוב, כתום ואדום שמתחזקים באור בהיר.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 200,
+      "is_toxic_pets": true,
+      "tags": [
+        "colorful"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "begonia-maculata",
+      "scientific_name": "Begonia maculata",
+      "common_name_he": "בגוניה מנוקדת",
+      "other_names_he": [],
+      "common_name_en": "Polka dot begonia",
+      "family": "Begoniaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים ירוקים כהים עם נקודות כסופות וגב אדום.",
+      "native_region_he": "ברזיל",
+      "growth_rate": "fast",
+      "max_height_cm": 100,
+      "is_toxic_pets": true,
+      "tags": [
+        "colorful",
+        "flowering"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "hoya-carnosa",
+      "scientific_name": "Hoya carnosa",
+      "common_name_he": "הויה",
+      "other_names_he": [
+        "פרח שעווה"
+      ],
+      "common_name_en": "Wax plant",
+      "family": "Apocynaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מטפס עם עלים בשרניים ופרחים ריחניים דמויי שעווה.",
+      "native_region_he": "מזרח אסיה ואוסטרליה",
+      "growth_rate": "moderate",
+      "max_height_cm": 500,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "hanging",
+        "flowering"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ceropegia-woodii",
+      "scientific_name": "Ceropegia woodii",
+      "common_name_he": "שרשרת לבבות",
+      "other_names_he": [],
+      "common_name_en": "String of hearts",
+      "family": "Apocynaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "ענפים דקים משתלשלים עם עלים קטנים בצורת לב.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 300,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "hanging"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "curio-rowleyanus",
+      "scientific_name": "Curio rowleyanus",
+      "common_name_he": "שרשרת פנינים",
+      "other_names_he": [
+        "סנציו"
+      ],
+      "common_name_en": "String of pearls",
+      "family": "Asteraceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים כדוריים כמו פנינים; רגיש מאוד להשקיית יתר.",
+      "native_region_he": "דרום-מערב אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 90,
+      "is_toxic_pets": true,
+      "tags": [
+        "hanging",
+        "succulent"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 15,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "chamaedorea-elegans",
+      "scientific_name": "Chamaedorea elegans",
+      "common_name_he": "דקל שולחני",
+      "other_names_he": [
+        "כמדוריאה"
+      ],
+      "common_name_en": "Parlor palm",
+      "family": "Arecaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "דקל קטן ואלגנטי שמסתדר עם אור בינוני.",
+      "native_region_he": "מקסיקו וגואטמלה",
+      "growth_rate": "slow",
+      "max_height_cm": 180,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "palm",
+        "low-light"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "dypsis-lutescens",
+      "scientific_name": "Dypsis lutescens",
+      "common_name_he": "דקל אריקה",
+      "other_names_he": [
+        "דיפסיס"
+      ],
+      "common_name_en": "Areca palm",
+      "family": "Arecaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "דקל עם עלים מנוצים וגזעים מרובים, אוהב אור ולחות.",
+      "native_region_he": "מדגסקר",
+      "growth_rate": "moderate",
+      "max_height_cm": 300,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "palm"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "howea-forsteriana",
+      "scientific_name": "Howea forsteriana",
+      "common_name_he": "דקל קנטיה",
+      "other_names_he": [
+        "קנטיה"
+      ],
+      "common_name_en": "Kentia palm",
+      "family": "Arecaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "דקל עמיד ואיטי גדילה, סובל אור בינוני ואוויר יבש.",
+      "native_region_he": "אי לורד האו",
+      "growth_rate": "slow",
+      "max_height_cm": 300,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "palm",
+        "statement"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 12,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 12,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "rhapis-excelsa",
+      "scientific_name": "Rhapis excelsa",
+      "common_name_he": "רפיס",
+      "other_names_he": [
+        "דקל מניפה"
+      ],
+      "common_name_en": "Lady palm",
+      "family": "Arecaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "דקל עם עלים דמויי מניפה, עמיד ומתאים לבית.",
+      "native_region_he": "דרום סין",
+      "growth_rate": "slow",
+      "max_height_cm": 250,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "palm",
+        "low-light"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 10,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "strelitzia-nicolai",
+      "scientific_name": "Strelitzia nicolai",
+      "common_name_he": "סטרליציה ניקולאי",
+      "other_names_he": [
+        "ציפור גן עדן לבנה"
+      ],
+      "common_name_en": "Giant bird of paradise",
+      "family": "Strelitziaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים ענקיים דמויי בננה; גדל בבית מואר או בחוץ.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 400,
+      "is_toxic_pets": true,
+      "tags": [
+        "statement",
+        "outdoor"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 13,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "nephrolepis-exaltata",
+      "scientific_name": "Nephrolepis exaltata",
+      "common_name_he": "שרך בוסטון",
+      "other_names_he": [
+        "נפרולפיס"
+      ],
+      "common_name_en": "Boston fern",
+      "family": "Nephrolepidaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "שרך שופע שדורש מצע לח ולחות אוויר גבוהה.",
+      "native_region_he": "אזורים טרופיים",
+      "growth_rate": "fast",
+      "max_height_cm": 90,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "fern",
+        "hanging",
+        "humidity-lover"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 60,
+        "humidity_max": 80,
+        "temp_min_c": 16,
+        "temp_max_c": 26,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "asplenium-nidus",
+      "scientific_name": "Asplenium nidus",
+      "common_name_he": "שרך קן הציפור",
+      "other_names_he": [],
+      "common_name_en": "Bird's nest fern",
+      "family": "Aspleniaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עלים רחבים ומבריקים שיוצאים ממרכז דמוי קן; לא להשקות לתוך המרכז.",
+      "native_region_he": "אזורים טרופיים באסיה",
+      "growth_rate": "slow",
+      "max_height_cm": 60,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "fern"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 80,
+        "temp_min_c": 16,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "adiantum-raddianum",
+      "scientific_name": "Adiantum raddianum",
+      "common_name_he": "שערות שולמית",
+      "other_names_he": [
+        "אדיאנטום"
+      ],
+      "common_name_en": "Maidenhair fern",
+      "family": "Pteridaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "hard",
+      "difficulty_he": "מאתגר",
+      "summary_he": "עלים עדינים מאוד; מתייבש מהר אם המצע מתייבש אפילו פעם אחת.",
+      "native_region_he": "דרום אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 40,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "fern",
+        "humidity-lover"
+      ],
+      "care": {
+        "light": "medium",
+        "light_notes_he": "אור בינוני, ליד חלון בלי שמש ישירה חזקה.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 4,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 60,
+        "humidity_max": 90,
+        "temp_min_c": 16,
+        "temp_max_c": 26,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "platycerium-bifurcatum",
+      "scientific_name": "Platycerium bifurcatum",
+      "common_name_he": "קרן אייל",
+      "other_names_he": [],
+      "common_name_en": "Staghorn fern",
+      "family": "Polypodiaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "שרך אפיפיטי שמגדלים על לוח; משקים בהשריה.",
+      "native_region_he": "אוסטרליה",
+      "growth_rate": "slow",
+      "max_height_cm": 90,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "fern",
+        "epiphyte"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 80,
+        "temp_min_c": 13,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "sphagnum"
+        ],
+        "medium_notes_he": "ספגנום על לוח או בסלסלה",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "phalaenopsis",
+      "scientific_name": "Phalaenopsis spp.",
+      "common_name_he": "סחלב פלנופסיס",
+      "other_names_he": [
+        "סחלב",
+        "פלנופסיס"
+      ],
+      "common_name_en": "Moth orchid",
+      "family": "Orchidaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "הסחלב הנפוץ בבית; פורח חודשים ומשקים כשהשורשים מכסיפים.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "slow",
+      "max_height_cm": 60,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "epiphyte"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשהשורשים מכסיפים, לנקז היטב ולא להשאיר מים בתחתית.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 18,
+        "temp_max_c": 29,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "orchid_bark"
+        ],
+        "medium_notes_he": "קליפות אורן לסחלבים",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "saintpaulia-ionantha",
+      "scientific_name": "Saintpaulia ionantha",
+      "common_name_he": "סיגלית אפריקנית",
+      "other_names_he": [
+        "סנטפוליה"
+      ],
+      "common_name_en": "African violet",
+      "family": "Gesneriaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "פורח כמעט כל השנה; משקים מלמטה ולא מרטיבים את העלים.",
+      "native_region_he": "טנזניה",
+      "growth_rate": "slow",
+      "max_height_cm": 15,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "compact"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 18,
+        "temp_max_c": 27,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "kalanchoe-blossfeldiana",
+      "scientific_name": "Kalanchoe blossfeldiana",
+      "common_name_he": "קלנחואה",
+      "other_names_he": [],
+      "common_name_en": "Flaming Katy",
+      "family": "Crassulaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט פורח בצבעים עזים; פריחה חוזרת דורשת לילות ארוכים.",
+      "native_region_he": "מדגסקר",
+      "growth_rate": "moderate",
+      "max_height_cm": 40,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "succulent"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 12,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "cyclamen-persicum",
+      "scientific_name": "Cyclamen persicum",
+      "common_name_he": "רקפת",
+      "other_names_he": [
+        "רקפת מצויה"
+      ],
+      "common_name_en": "Persian cyclamen",
+      "family": "Primulaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "צמח בר ישראלי; פורח בחורף ונח בקיץ – אז מפחיתים השקיה.",
+      "native_region_he": "ארץ ישראל ומזרח הים התיכון",
+      "growth_rate": "moderate",
+      "max_height_cm": 30,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "native-israel",
+        "cool-lover"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 20,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "guzmania-lingulata",
+      "scientific_name": "Guzmania lingulata",
+      "common_name_he": "גוזמניה",
+      "other_names_he": [
+        "ברומליה"
+      ],
+      "common_name_en": "Scarlet star",
+      "family": "Bromeliaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "ברומליה עם עלה חיפוי צבעוני שנשאר חודשים; ממלאים מעט מים במרכז.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 40,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "epiphyte"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 16,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "aroid_mix"
+        ],
+        "medium_notes_he": "תערובת אראואידים אוורירית (אדמה, קליפות, פרלייט)",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "tillandsia",
+      "scientific_name": "Tillandsia spp.",
+      "common_name_he": "טילנדסיה",
+      "other_names_he": [
+        "צמח אוויר"
+      ],
+      "common_name_en": "Air plant",
+      "family": "Bromeliaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גדל בלי אדמה; משרים במים 20 דקות פעם בשבוע ומייבשים היטב.",
+      "native_region_he": "אמריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 20,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "epiphyte",
+        "no-soil"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשרות במים כ-20 דקות פעם בשבוע ולייבש הפוך לפני החזרה.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "none"
+        ],
+        "medium_notes_he": "ללא מצע – תלוי באוויר",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "oxalis-triangularis",
+      "scientific_name": "Oxalis triangularis",
+      "common_name_he": "חמציץ סגול",
+      "other_names_he": [
+        "תלתן סגול"
+      ],
+      "common_name_en": "Purple shamrock",
+      "family": "Oxalidaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים סגולים דמויי פרפר שנסגרים בלילה; עשוי לרדום ולהתעורר.",
+      "native_region_he": "ברזיל",
+      "growth_rate": "moderate",
+      "max_height_cm": 30,
+      "is_toxic_pets": true,
+      "tags": [
+        "colorful",
+        "flowering"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 12,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "schlumbergera",
+      "scientific_name": "Schlumbergera spp.",
+      "common_name_he": "קקטוס חג המולד",
+      "other_names_he": [
+        "שלומברגרה"
+      ],
+      "common_name_en": "Christmas cactus",
+      "family": "Cactaceae",
+      "category": "houseplant",
+      "category_he": "צמח בית",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "קקטוס יערות שפורח בחורף; צריך יותר מים מקקטוס מדברי.",
+      "native_region_he": "ברזיל",
+      "growth_rate": "slow",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "hanging"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 12,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.8
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.6
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "aloe-vera",
+      "scientific_name": "Aloe vera",
+      "common_name_he": "אלוורה",
+      "other_names_he": [
+        "אלוי"
+      ],
+      "common_name_en": "Aloe vera",
+      "family": "Asphodelaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט מרפא עם ג'ל בעלים; צריך שמש ומצע מנוקז.",
+      "native_region_he": "חצי האי ערב",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "succulent",
+        "drought-tolerant",
+        "medicinal"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 10,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "crassula-ovata",
+      "scientific_name": "Crassula ovata",
+      "common_name_he": "עץ הכסף",
+      "other_names_he": [
+        "קרסולה"
+      ],
+      "common_name_en": "Jade plant",
+      "family": "Crassulaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט דמוי עץ עם עלים עבים, חי עשרות שנים.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "succulent",
+        "drought-tolerant",
+        "beginner"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 10,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "echeveria-elegans",
+      "scientific_name": "Echeveria elegans",
+      "common_name_he": "אצ'וריה",
+      "other_names_he": [
+        "ורד אבן"
+      ],
+      "common_name_en": "Mexican snowball",
+      "family": "Crassulaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שושנת עלים כחלחלה; בצל נמתחת ומאבדת צורה.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "slow",
+      "max_height_cm": 15,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "succulent",
+        "compact"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 7,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "haworthiopsis-attenuata",
+      "scientific_name": "Haworthiopsis attenuata",
+      "common_name_he": "הברתיה",
+      "other_names_he": [
+        "הוורתיה זברה"
+      ],
+      "common_name_en": "Zebra haworthia",
+      "family": "Asphodelaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט קטן עם פסים לבנים, מסתדר גם בלי שמש ישירה.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 15,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "succulent",
+        "compact",
+        "beginner"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 10,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "sedum-morganianum",
+      "scientific_name": "Sedum morganianum",
+      "common_name_he": "זנב חמור",
+      "other_names_he": [
+        "סדום"
+      ],
+      "common_name_en": "Burro's tail",
+      "family": "Crassulaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "ענפים משתלשלים עם עלים שנושרים במגע – לא להזיז הרבה.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "slow",
+      "max_height_cm": 60,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "succulent",
+        "hanging"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 10,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "euphorbia-milii",
+      "scientific_name": "Euphorbia milii",
+      "common_name_he": "כתר קוצים",
+      "other_names_he": [],
+      "common_name_en": "Crown of thorns",
+      "family": "Euphorbiaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "פורח כמעט כל השנה; מוהל חלבי מגרה – לעבוד עם כפפות.",
+      "native_region_he": "מדגסקר",
+      "growth_rate": "slow",
+      "max_height_cm": 90,
+      "is_toxic_pets": true,
+      "tags": [
+        "succulent",
+        "flowering",
+        "toxic-sap"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 12,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "adenium-obesum",
+      "scientific_name": "Adenium obesum",
+      "common_name_he": "אדניום",
+      "other_names_he": [
+        "ורד המדבר"
+      ],
+      "common_name_en": "Desert rose",
+      "family": "Apocynaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "גזע מעובה ופרחים ורודים; אוהב חום ושמש, נח בחורף.",
+      "native_region_he": "אפריקה וחצי האי ערב",
+      "growth_rate": "slow",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "succulent",
+        "flowering",
+        "heat-lover"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 15,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "portulacaria-afra",
+      "scientific_name": "Portulacaria afra",
+      "common_name_he": "פורטולקריה",
+      "other_names_he": [
+        "עץ פילים"
+      ],
+      "common_name_en": "Elephant bush",
+      "family": "Didiereaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט דמוי עץ עם עלים קטנים, מתאים לבונסאי.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 200,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "succulent",
+        "bonsai"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 21,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 7,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "agave-americana",
+      "scientific_name": "Agave americana",
+      "common_name_he": "אגבה אמריקנית",
+      "other_names_he": [
+        "אגבה"
+      ],
+      "common_name_en": "Century plant",
+      "family": "Asparagaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "סוקולנט גדול לגינה עם קוצים חדים, כמעט לא צריך השקיה.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "slow",
+      "max_height_cm": 200,
+      "is_toxic_pets": true,
+      "tags": [
+        "succulent",
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 21,
+        "water_interval_max_days": 30,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": 0,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "opuntia-ficus-indica",
+      "scientific_name": "Opuntia ficus-indica",
+      "common_name_he": "צבר",
+      "other_names_he": [
+        "סברס"
+      ],
+      "common_name_en": "Prickly pear",
+      "family": "Cactaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "קקטוס עם פירות אכילים בקיץ; עמיד לחלוטין לתנאי ישראל.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "moderate",
+      "max_height_cm": 400,
+      "is_toxic_pets": false,
+      "tags": [
+        "succulent",
+        "edible",
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 21,
+        "water_interval_max_days": 30,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": 0,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 90,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "aptenia-cordifolia",
+      "scientific_name": "Aptenia cordifolia",
+      "common_name_he": "אפטניה",
+      "other_names_he": [
+        "צמח קיר"
+      ],
+      "common_name_en": "Heartleaf iceplant",
+      "family": "Aizoaceae",
+      "category": "succulent",
+      "category_he": "סוקולנט וקקטוס",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "כיסוי קרקע בשרני עם פרחים קטנים, חסכוני במים.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 15,
+      "is_toxic_pets": null,
+      "tags": [
+        "succulent",
+        "groundcover",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות רק כשהמצע יבש לגמרי. בחורף להפחית מאוד.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": 3,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "cactus_mix"
+        ],
+        "medium_notes_he": "מצע לסוקולנטים וקקטוסים עם הרבה חול ופרלייט",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.9
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ocimum-basilicum",
+      "scientific_name": "Ocimum basilicum",
+      "common_name_he": "בזיליקום",
+      "other_names_he": [
+        "ריחן"
+      ],
+      "common_name_en": "Basil",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "תבלין קיצי שאוהב שמש וחום; קוטמים פרחים כדי להמשיך לקטוף.",
+      "native_region_he": "אסיה הטרופית",
+      "growth_rate": "fast",
+      "max_height_cm": 60,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "annual"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 1,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 15,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 14,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "mentha-spicata",
+      "scientific_name": "Mentha spicata",
+      "common_name_he": "נענע",
+      "other_names_he": [
+        "מנטה"
+      ],
+      "common_name_en": "Spearmint",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מתפשטת מהר ועדיף לגדל בעציץ נפרד; אוהבת מצע לח.",
+      "native_region_he": "אירופה ואסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 50,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "herb",
+        "spreading"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 1,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "salvia-rosmarinus",
+      "scientific_name": "Salvia rosmarinus",
+      "common_name_he": "רוזמרין",
+      "other_names_he": [],
+      "common_name_en": "Rosemary",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח ים-תיכוני ריחני, עמיד ליובש ולשמש חזקה.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "moderate",
+      "max_height_cm": 150,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "thymus-vulgaris",
+      "scientific_name": "Thymus vulgaris",
+      "common_name_he": "טימין",
+      "other_names_he": [],
+      "common_name_en": "Thyme",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "תבלין קטן וריחני שאוהב שמש ומצע מנוקז.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "slow",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "origanum-syriacum",
+      "scientific_name": "Origanum syriacum",
+      "common_name_he": "זעתר",
+      "other_names_he": [
+        "אזוב מצוי"
+      ],
+      "common_name_en": "Syrian oregano",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "צמח בר ישראלי מוגן שמגדלים בגינה; עמיד לחום ויובש.",
+      "native_region_he": "ארץ ישראל והלבנט",
+      "growth_rate": "moderate",
+      "max_height_cm": 80,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "native-israel",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 5,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "salvia-fruticosa",
+      "scientific_name": "Salvia fruticosa",
+      "common_name_he": "מרווה משולשת",
+      "other_names_he": [
+        "מרווה"
+      ],
+      "common_name_en": "Greek sage",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "המרווה המקומית לחליטות; שיח עמיד לשמש.",
+      "native_region_he": "ארץ ישראל ומזרח הים התיכון",
+      "growth_rate": "moderate",
+      "max_height_cm": 100,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "native-israel"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 5,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "petroselinum-crispum",
+      "scientific_name": "Petroselinum crispum",
+      "common_name_he": "פטרוזיליה",
+      "other_names_he": [],
+      "common_name_en": "Parsley",
+      "family": "Apiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלה ירוק בסיסי במטבח; גדל הכי טוב בעונות המעבר.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "moderate",
+      "max_height_cm": 40,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "herb",
+        "biennial"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 4,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 7,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "coriandrum-sativum",
+      "scientific_name": "Coriandrum sativum",
+      "common_name_he": "כוסברה",
+      "other_names_he": [
+        "כוסבר"
+      ],
+      "common_name_en": "Coriander",
+      "family": "Apiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "גדלה בחורף ובאביב; בחום מהר עולה לפריחה.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "fast",
+      "max_height_cm": 50,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "annual",
+        "cool-season"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 7,
+        "temp_max_c": 25,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "anethum-graveolens",
+      "scientific_name": "Anethum graveolens",
+      "common_name_he": "שמיר",
+      "other_names_he": [],
+      "common_name_en": "Dill",
+      "family": "Apiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עשב חד-שנתי לחורף ולאביב, מושך חרקים מועילים.",
+      "native_region_he": "אסיה ואגן הים התיכון",
+      "growth_rate": "fast",
+      "max_height_cm": 90,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "herb",
+        "annual",
+        "cool-season"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 7,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "allium-schoenoprasum",
+      "scientific_name": "Allium schoenoprasum",
+      "common_name_he": "עירית",
+      "other_names_he": [
+        "צ'יבס"
+      ],
+      "common_name_en": "Chives",
+      "family": "Amaryllidaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עלים דקים בטעם בצל עדין; גוזמים וצומח מחדש.",
+      "native_region_he": "אירופה ואסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 40,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "herb",
+        "perennial"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 4,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "aloysia-citrodora",
+      "scientific_name": "Aloysia citrodora",
+      "common_name_he": "לואיזה",
+      "other_names_he": [
+        "ורבנה לימונית"
+      ],
+      "common_name_en": "Lemon verbena",
+      "family": "Verbenaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח עם עלים בריח לימון לחליטות; משיר עלים בחורף.",
+      "native_region_he": "דרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 200,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "herb",
+        "tea"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "cymbopogon-citratus",
+      "scientific_name": "Cymbopogon citratus",
+      "common_name_he": "עשב לימון",
+      "other_names_he": [
+        "למון גראס"
+      ],
+      "common_name_en": "Lemongrass",
+      "family": "Poaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עשב גבוה בריח לימון, אוהב חום ומים בקיץ.",
+      "native_region_he": "דרום-מזרח אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "herb",
+        "heat-lover"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 4,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "lavandula-angustifolia",
+      "scientific_name": "Lavandula angustifolia",
+      "common_name_he": "לבנדר",
+      "other_names_he": [
+        "אזוביון"
+      ],
+      "common_name_en": "Lavender",
+      "family": "Lamiaceae",
+      "category": "herb",
+      "category_he": "תבלין",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "שיח פורח וריחני; העיקר שמש מלאה ומצע מנוקז היטב.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "herb",
+        "flowering",
+        "drought-tolerant",
+        "pollinator"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 0,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "solanum-lycopersicum",
+      "scientific_name": "Solanum lycopersicum",
+      "common_name_he": "עגבנייה",
+      "other_names_he": [
+        "עגבניית שרי"
+      ],
+      "common_name_en": "Tomato",
+      "family": "Solanaceae",
+      "category": "vegetable",
+      "category_he": "ירק",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "ירק קיצי שצריך שמש מלאה, תמיכה והשקיה קבועה.",
+      "native_region_he": "דרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 200,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "vegetable",
+        "annual",
+        "summer"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 15,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 14,
+        "fertilize_season": "growing_season",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "capsicum-annuum",
+      "scientific_name": "Capsicum annuum",
+      "common_name_he": "פלפל",
+      "other_names_he": [
+        "צ'ילי"
+      ],
+      "common_name_en": "Pepper",
+      "family": "Solanaceae",
+      "category": "vegetable",
+      "category_he": "ירק",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "פלפל מתוק או חריף; אוהב חום ומניב עד הסתיו.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 80,
+      "is_toxic_pets": false,
+      "tags": [
+        "edible",
+        "vegetable",
+        "summer"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 4,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 15,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 14,
+        "fertilize_season": "growing_season",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "cucumis-sativus",
+      "scientific_name": "Cucumis sativus",
+      "common_name_he": "מלפפון",
+      "other_names_he": [],
+      "common_name_en": "Cucumber",
+      "family": "Cucurbitaceae",
+      "category": "vegetable",
+      "category_he": "ירק",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מטפס קיצי שצריך הרבה מים ושמש.",
+      "native_region_he": "דרום אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 200,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "vegetable",
+        "annual",
+        "summer",
+        "climber"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 1,
+        "water_interval_max_days": 2,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 18,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 14,
+        "fertilize_season": "growing_season",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "lactuca-sativa",
+      "scientific_name": "Lactuca sativa",
+      "common_name_he": "חסה",
+      "other_names_he": [],
+      "common_name_en": "Lettuce",
+      "family": "Asteraceae",
+      "category": "vegetable",
+      "category_he": "ירק",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "ירק עלים לחורף; בחום הקיץ עולה לפריחה ומריר.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "fast",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "vegetable",
+        "cool-season"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 1,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 7,
+        "temp_max_c": 24,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "growing_season",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "fragaria-ananassa",
+      "scientific_name": "Fragaria × ananassa",
+      "common_name_he": "תות שדה",
+      "other_names_he": [
+        "תות"
+      ],
+      "common_name_en": "Strawberry",
+      "family": "Rosaceae",
+      "category": "vegetable",
+      "category_he": "ירק",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מתאים לעציץ ולאדנית; בישראל העונה העיקרית בחורף-אביב.",
+      "native_region_he": "הכלאה",
+      "growth_rate": "moderate",
+      "max_height_cm": 25,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "fruit"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח אך מנוקז; בימי שרב ייתכן שיידרש מים כל יום.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 7,
+        "temp_max_c": 28,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "growing_season",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.6
+          },
+          "autumn": {
+            "water_factor": 1.1
+          },
+          "winter": {
+            "water_factor": 1.5
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "citrus-limon",
+      "scientific_name": "Citrus limon",
+      "common_name_he": "לימון",
+      "other_names_he": [
+        "עץ לימון"
+      ],
+      "common_name_en": "Lemon",
+      "family": "Rutaceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עץ פרי לגינה או לעציץ גדול; צריך דשן הדרים וברזל.",
+      "native_region_he": "אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 500,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "fruit-tree",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 4,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "olea-europaea",
+      "scientific_name": "Olea europaea",
+      "common_name_he": "זית",
+      "other_names_he": [
+        "עץ זית"
+      ],
+      "common_name_en": "Olive",
+      "family": "Oleaceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עץ ים-תיכוני עמיד מאוד ליובש, מתאים גם לעציץ גדול.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "slow",
+      "max_height_cm": 800,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "fruit-tree",
+        "native-israel",
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 14,
+        "water_interval_max_days": 28,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": -5,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "punica-granatum",
+      "scientific_name": "Punica granatum",
+      "common_name_he": "רימון",
+      "other_names_he": [],
+      "common_name_en": "Pomegranate",
+      "family": "Lythraceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עץ נשיר עמיד לחום, פורח באביב ומניב בסתיו.",
+      "native_region_he": "פרס ומרכז אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 500,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "edible",
+        "fruit-tree",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": -5,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "ficus-carica",
+      "scientific_name": "Ficus carica",
+      "common_name_he": "תאנה",
+      "other_names_he": [],
+      "common_name_en": "Fig",
+      "family": "Moraceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עץ נשיר וחזק; מוהל העלים עלול לגרות את העור בשמש.",
+      "native_region_he": "מערב אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 600,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "fruit-tree",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": -5,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "vitis-vinifera",
+      "scientific_name": "Vitis vinifera",
+      "common_name_he": "גפן",
+      "other_names_he": [
+        "ענבים"
+      ],
+      "common_name_en": "Grapevine",
+      "family": "Vitaceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "מטפס נשיר לפרגולה; דורש גיזום חורף. ענבים רעילים לכלבים.",
+      "native_region_he": "אגן הים התיכון ומערב אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 1000,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "climber",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": -5,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "persea-americana",
+      "scientific_name": "Persea americana",
+      "common_name_he": "אבוקדו",
+      "other_names_he": [],
+      "common_name_en": "Avocado",
+      "family": "Lauraceae",
+      "category": "fruit_tree",
+      "category_he": "עץ פרי",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "עץ פרי גדול; בבית אפשר לגדל מגלעין כצמח עלווה.",
+      "native_region_he": "מרכז אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 1000,
+      "is_toxic_pets": true,
+      "tags": [
+        "edible",
+        "fruit-tree",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "bougainvillea-glabra",
+      "scientific_name": "Bougainvillea glabra",
+      "common_name_he": "בוגנוויליה",
+      "other_names_he": [],
+      "common_name_en": "Bougainvillea",
+      "family": "Nyctaginaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מטפס קוצני עם פריחה צבעונית שופעת; פורח יותר כשלא מפנקים אותו.",
+      "native_region_he": "ברזיל",
+      "growth_rate": "fast",
+      "max_height_cm": 800,
+      "is_toxic_pets": false,
+      "tags": [
+        "flowering",
+        "climber",
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 10,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": 3,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "jasminum-officinale",
+      "scientific_name": "Jasminum officinale",
+      "common_name_he": "יסמין",
+      "other_names_he": [
+        "יסמין רפואי"
+      ],
+      "common_name_en": "Common jasmine",
+      "family": "Oleaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "מטפס עם פרחים לבנים וריחניים בערבי הקיץ.",
+      "native_region_he": "אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 600,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "climber",
+        "fragrant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 30,
+        "humidity_max": 60,
+        "temp_min_c": 0,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "rosa",
+      "scientific_name": "Rosa spp.",
+      "common_name_he": "ורד",
+      "other_names_he": [],
+      "common_name_en": "Rose",
+      "family": "Rosaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "שיח פורח קלאסי שדורש שמש, דישון וגיזום חורף.",
+      "native_region_he": "אסיה, אירופה וצפון אמריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 200,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 0,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "hibiscus-rosa-sinensis",
+      "scientific_name": "Hibiscus rosa-sinensis",
+      "common_name_he": "היביסקוס",
+      "other_names_he": [
+        "ורד סיני"
+      ],
+      "common_name_en": "Chinese hibiscus",
+      "family": "Malvaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח עם פרחים גדולים שחיים יום אחד, פורח כל הקיץ.",
+      "native_region_he": "מזרח אסיה",
+      "growth_rate": "fast",
+      "max_height_cm": 300,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 40,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "pelargonium",
+      "scientific_name": "Pelargonium spp.",
+      "common_name_he": "גרניום",
+      "other_names_he": [
+        "פלרגוניום"
+      ],
+      "common_name_en": "Geranium",
+      "family": "Geraniaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "פורח שופע למרפסות ואדניות, עמיד ליובש.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "balcony",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 5,
+        "water_interval_max_days": 7,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "plumbago-auriculata",
+      "scientific_name": "Plumbago auriculata",
+      "common_name_he": "פלומבגו",
+      "other_names_he": [
+        "כחלית"
+      ],
+      "common_name_en": "Cape leadwort",
+      "family": "Plumbaginaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח עם פריחה תכולה כמעט כל השנה, נפוץ בגינות בישראל.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 300,
+      "is_toxic_pets": null,
+      "tags": [
+        "flowering",
+        "outdoor",
+        "drought-tolerant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 30,
+        "humidity_max": 50,
+        "temp_min_c": 3,
+        "temp_max_c": 38,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "nerium-oleander",
+      "scientific_name": "Nerium oleander",
+      "common_name_he": "הרדוף הנחלים",
+      "other_names_he": [
+        "הרדוף"
+      ],
+      "common_name_en": "Oleander",
+      "family": "Apocynaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח פורח ועמיד מאוד; כל חלקי הצמח רעילים מאוד.",
+      "native_region_he": "אגן הים התיכון",
+      "growth_rate": "fast",
+      "max_height_cm": 400,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "outdoor",
+        "native-israel",
+        "drought-tolerant",
+        "toxic-sap"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": -5,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 60,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "gardenia-jasminoides",
+      "scientific_name": "Gardenia jasminoides",
+      "common_name_he": "גרדניה",
+      "other_names_he": [],
+      "common_name_en": "Gardenia",
+      "family": "Rubiaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "hard",
+      "difficulty_he": "מאתגר",
+      "summary_he": "פרחים לבנים וריחניים; צריך מצע חומצי ומים רכים – קשה עם מים גירניים.",
+      "native_region_he": "מזרח אסיה",
+      "growth_rate": "slow",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "fragrant",
+        "acid-lover"
+      ],
+      "care": {
+        "light": "bright_indirect",
+        "light_notes_he": "אור בהיר עקיף – ליד חלון מואר, עם מעט שמש בוקר לכל היותר.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 50,
+        "humidity_max": 70,
+        "temp_min_c": 10,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "lantana-camara",
+      "scientific_name": "Lantana camara",
+      "common_name_he": "לנטנה",
+      "other_names_he": [],
+      "common_name_en": "Lantana",
+      "family": "Verbenaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "פורח ומושך פרפרים, עמיד לחום; הפירות רעילים.",
+      "native_region_he": "מרכז ודרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "pollinator",
+        "drought-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 50,
+        "temp_min_c": 3,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "chrysanthemum-morifolium",
+      "scientific_name": "Chrysanthemum × morifolium",
+      "common_name_he": "חרצית",
+      "other_names_he": [],
+      "common_name_en": "Florist's chrysanthemum",
+      "family": "Asteraceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "פורח בסתיו במגוון צבעים, מתאים לעציצים ולמרפסת.",
+      "native_region_he": "מזרח אסיה",
+      "growth_rate": "moderate",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "balcony"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 30,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "petunia",
+      "scientific_name": "Petunia × atkinsiana",
+      "common_name_he": "פטוניה",
+      "other_names_he": [],
+      "common_name_en": "Petunia",
+      "family": "Solanaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עונתי פורח לאדניות ולסלים תלויים.",
+      "native_region_he": "דרום אמריקה",
+      "growth_rate": "fast",
+      "max_height_cm": 30,
+      "is_toxic_pets": false,
+      "tags": [
+        "pet-safe",
+        "flowering",
+        "balcony",
+        "annual"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 2,
+        "water_interval_max_days": 3,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 40,
+        "humidity_max": 60,
+        "temp_min_c": 10,
+        "temp_max_c": 32,
+        "fertilize_interval_days": 14,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "tagetes",
+      "scientific_name": "Tagetes spp.",
+      "common_name_he": "טגטס",
+      "other_names_he": [
+        "ציפורני החתול"
+      ],
+      "common_name_en": "Marigold",
+      "family": "Asteraceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "עונתי כתום-צהוב; שותלים ליד ירקות כדי להרחיק מזיקים.",
+      "native_region_he": "מקסיקו",
+      "growth_rate": "fast",
+      "max_height_cm": 60,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "annual",
+        "companion-plant"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 3,
+        "water_interval_max_days": 5,
+        "water_notes_he": "לשמור על מצע לח באופן אחיד, אבל לא רווי מים.",
+        "humidity_min": 30,
+        "humidity_max": 60,
+        "temp_min_c": 10,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 21,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "carissa-macrocarpa",
+      "scientific_name": "Carissa macrocarpa",
+      "common_name_he": "קריסה",
+      "other_names_he": [],
+      "common_name_en": "Natal plum",
+      "family": "Apocynaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "easy",
+      "difficulty_he": "קל",
+      "summary_he": "שיח קוצני לגדר חיה, עמיד לרוח ולמליחות – מתאים לחוף.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "moderate",
+      "max_height_cm": 200,
+      "is_toxic_pets": null,
+      "tags": [
+        "flowering",
+        "hedge",
+        "salt-tolerant",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 14,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 20,
+        "humidity_max": 60,
+        "temp_min_c": 0,
+        "temp_max_c": 40,
+        "fertilize_interval_days": 45,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    },
+    {
+      "slug": "strelitzia-reginae",
+      "scientific_name": "Strelitzia reginae",
+      "common_name_he": "ציפור גן עדן",
+      "other_names_he": [
+        "סטרליציה"
+      ],
+      "common_name_en": "Bird of paradise",
+      "family": "Strelitziaceae",
+      "category": "garden",
+      "category_he": "צמח גינה",
+      "difficulty": "moderate",
+      "difficulty_he": "בינוני",
+      "summary_he": "פרחים כתומים-כחולים דמויי ציפור; פורח בשמש מלאה.",
+      "native_region_he": "דרום אפריקה",
+      "growth_rate": "slow",
+      "max_height_cm": 150,
+      "is_toxic_pets": true,
+      "tags": [
+        "flowering",
+        "outdoor"
+      ],
+      "care": {
+        "light": "direct",
+        "light_notes_he": "שמש ישירה, לפחות 6 שעות ביום.",
+        "water_interval_min_days": 7,
+        "water_interval_max_days": 10,
+        "water_notes_he": "להשקות כשה-2–3 ס״מ העליונים של המצע יבשים.",
+        "humidity_min": 30,
+        "humidity_max": 60,
+        "temp_min_c": 5,
+        "temp_max_c": 35,
+        "fertilize_interval_days": 30,
+        "fertilize_season": "spring_summer",
+        "medium": [
+          "soil"
+        ],
+        "medium_notes_he": "תערובת שתילה איכותית ומנוקזת",
+        "seasonal": {
+          "spring": {
+            "water_factor": 1.0
+          },
+          "summer": {
+            "water_factor": 0.7
+          },
+          "autumn": {
+            "water_factor": 1.2
+          },
+          "winter": {
+            "water_factor": 2.0
+          }
+        }
+      },
+      "images": [],
+      "published": false
+    }
+  ]
+}

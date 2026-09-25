@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* Dark mode only when we turn it on explicitly (<html data-theme="dark">), not from the OS setting. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------- Design tokens (light – the default) ---------- */
+:root {
+  color-scheme: light;
+  --bg: #ffffff;           /* white page background */
+  --surface: #ffffff;      /* cards: white + border + soft shadow */
+  --surface-2: #f2f5f0;    /* subtle fills: chips, info boxes, hover */
+  --text: #16211a;
+  --muted: #56615a;
+  --border: #e3e7e1;
+  --primary: #2f6b45;      /* leaf green */
+  --primary-strong: #245436;
+  --on-primary: #ffffff;
+  --accent: #c2663f;       /* terracotta – alerts, overdue */
+  --accent-soft: #f6e6dd;
+  --leaf-soft: #e3efe4;
+  --sun-soft: #fbf1d6;
+  --water-soft: #e1eef6;
+}
+
+/* ---------- Dark (off for now; enable with data-theme="dark" on <html>) ---------- */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #111613;
+    --surface: #18201b;
+    --surface-2: #1f2922;
+    --text: #e7ece8;
+    --muted: #9aa69d;
+    --border: #2a352e;
+    --primary: #6fbf8a;
+    --primary-strong: #8fd3a6;
+    --on-primary: #0d1a12;
+    --accent: #e08a62;
+    --accent-soft: #3a2519;
+    --leaf-soft: #1e3326;
+    --sun-soft: #3a3219;
+    --water-soft: #172a36;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
+  --color-on-primary: var(--on-primary);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-leaf-soft: var(--leaf-soft);
+  --color-sun-soft: var(--sun-soft);
+  --color-water-soft: var(--water-soft);
+  --font-sans: "Heebo Variable", system-ui, sans-serif; /* self-hosted via @fontsource-variable/heebo */
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Latin fragments (scientific names, numbers) inside Hebrew text */
+.ltr {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
