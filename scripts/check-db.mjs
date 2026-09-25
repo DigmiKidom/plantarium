@@ -39,3 +39,14 @@ else ok(`Hebrew search works: ${hits.map((h) => h.common_name_he).join(", ")}`);
 const { error: pErr } = await db.from("user_plants").select("id").limit(1);
 if (pErr) fail(`user_plants: ${pErr.message}`);
 else ok("user_plants reachable (RLS returns only your own rows)");
+
+// Secret (service role) key – used by signup and admin actions (ban, delete)
+const secret = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!secret) {
+  fail("SUPABASE_SERVICE_ROLE_KEY missing in .env.local (signup and admin actions need it)");
+} else {
+  const admin = createClient(url, secret, { auth: { persistSession: false, autoRefreshToken: false } });
+  const { error: aErr } = await admin.auth.admin.listUsers({ page: 1, perPage: 1 });
+  if (aErr) fail(`secret key rejected: ${aErr.message} – copy the new key from Supabase → Project Settings → API Keys`);
+  else ok("secret key works (admin access)");
+}
