@@ -59,7 +59,12 @@ async function saveArticleInner(input: ArticleInput): Promise<Result<{ id: strin
   }
   const v = parsed.data;
 
-  const content = sanitizeContent(v.content);
+  let content;
+  try {
+    content = sanitizeContent(v.content);
+  } catch {
+    return { ok: false, error: "תוכן המאמר לא תקין. רעננו את הדף ונסו שוב" };
+  }
   if (JSON.stringify(content).length > MAX_CONTENT_BYTES) return { ok: false, error: "המאמר ארוך מדי" };
   if (v.submit) {
     if (v.title.length < 5) return { ok: false, error: "לפני שליחה לאישור: כותרת של לפחות 5 תווים" };

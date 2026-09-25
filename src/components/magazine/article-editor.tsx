@@ -217,7 +217,9 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
         excerpt,
         tags: tags.split(/[,،]/).map((t) => t.trim()).filter(Boolean),
         coverUrl,
-        content: editor.getJSON(),
+        // ProseMirror builds attrs with Object.create(null); React can't send those to a server action,
+        // so turn the document into plain JSON first.
+        content: JSON.parse(JSON.stringify(editor.getJSON())),
         submit,
       });
       if (!res.ok) return setError(res.error);
