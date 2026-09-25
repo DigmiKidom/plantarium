@@ -2,10 +2,11 @@ import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/heebo";
 import { SiteShell } from "@/components/site-shell";
 import { themeInitScript } from "@/lib/settings/schema";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: getSiteUrl(),
   title: {
     default: "פלנטריום – הבית הדיגיטלי של הצמחים שלך",
     template: "%s | פלנטריום",
