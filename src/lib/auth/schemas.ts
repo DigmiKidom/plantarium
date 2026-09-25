@@ -54,6 +54,7 @@ export function toFieldErrors(err: z.ZodError): FieldErrors {
 /** Supabase Auth error → Hebrew message */
 export function authErrorHe(message: string): string {
   const m = message.toLowerCase();
+  if (m.includes("banned")) return "החשבון הושעה על ידי צוות האתר";
   if (m.includes("invalid login credentials")) return "אימייל או סיסמה שגויים";
   if (m.includes("already registered") || m.includes("already been registered")) return "כבר קיים חשבון עם האימייל הזה";
   if (m.includes("email not confirmed"))

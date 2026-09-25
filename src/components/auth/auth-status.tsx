@@ -8,8 +8,9 @@ import { createBrowserSupabase } from "@/lib/supabase/client";
 import { signOut } from "@/lib/auth/actions";
 import { PROFILE_CHANGED, applyTheme, currentTheme } from "@/lib/settings/client";
 import { parseSettings } from "@/lib/settings/schema";
+import type { Role } from "@/lib/auth/roles";
 
-type Me = { name: string; username: string | null } | null;
+type Me = { name: string; username: string | null; role: Role } | null;
 
 const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
@@ -17,7 +18,7 @@ const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.N
  * Signed-in state for the nav, loaded in the browser so public pages stay static.
  * undefined = still loading, null = signed out.
  */
-function useMe(): Me | undefined {
+export function useMe(): Me | undefined {
   const [me, setMe] = useState<Me | undefined>(configured ? undefined : null);
   // Re-check on navigation: login/logout happen in server actions that end with a redirect.
   const pathname = usePathname();
@@ -29,7 +30,7 @@ function useMe(): Me | undefined {
     const load = async (userId: string | undefined, fallbackName: string) => {
       if (!userId) return setMe(null);
       const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
-      setMe({ name: data?.display_name || fallbackName, username: data?.username ?? null });
+      setMe({ name: data?.display_name || fallbackName, username: data?.username ?? null, role: (data?.role as Role) ?? "user" });
       // Signed-in users get their saved theme on every device.
       if (data && "settings" in data) {
         const saved = parseSettings(data.settings).theme;

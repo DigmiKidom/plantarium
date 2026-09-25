@@ -2,6 +2,10 @@ import Link from "next/link";
 import { BookOpen, CalendarCheck, MessagesSquare, Search, Sprout } from "lucide-react";
 import { listSpecies } from "@/lib/species/repo";
 import { SpeciesCard } from "@/components/species/species-card";
+import { listPublished } from "@/lib/magazine/queries";
+import { ArticleCard } from "@/components/magazine/article-card";
+
+export const revalidate = 300;
 
 const FEATURES = [
   { icon: BookOpen, title: "ללמוד", text: "מדריך טיפול לכל צמח: אור, השקיה, לחות, מצע ודישון – מותאם לישראל." },
@@ -11,7 +15,8 @@ const FEATURES = [
 ];
 
 export default async function HomePage() {
-  const featured = (await listSpecies({})).filter((s) => s.tags.includes("beginner")).slice(0, 6);
+  const [all, latest] = await Promise.all([listSpecies({}), listPublished({ limit: 3 })]);
+  const featured = all.filter((s) => s.tags.includes("beginner")).slice(0, 6);
 
   return (
     <div className="flex flex-col gap-14">
@@ -67,6 +72,22 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {latest.length > 0 && (
+        <section aria-labelledby="magazine" className="flex flex-col gap-4">
+          <div className="flex items-end justify-between gap-4">
+            <h2 id="magazine" className="text-2xl font-bold">מהמגזין</h2>
+            <Link href="/magazine" className="shrink-0 text-sm font-medium text-primary hover:underline">
+              לכל הכתבות
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {latest.map((a) => (
+              <ArticleCard key={a.id} article={a} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

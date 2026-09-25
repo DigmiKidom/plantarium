@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, Newspaper, Plus, Settings, Sprout, Trees, User, type LucideIcon } from "lucide-react";
+import { BookOpen, Home, NotebookPen, Newspaper, Plus, Settings, ShieldCheck, Sprout, Trees, User, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { AuthStatusCompact, AuthStatusSidebar } from "@/components/auth/auth-status";
+import { AuthStatusCompact, AuthStatusSidebar, useMe } from "@/components/auth/auth-status";
 
 type NavItem = { href: string; label: string; icon: LucideIcon };
 
@@ -13,6 +13,7 @@ const DESKTOP_NAV: NavItem[] = [
   { href: "/plants", label: "הצמחים שלי", icon: Sprout },
   { href: "/garden", label: "גינה", icon: Trees },
   { href: "/knowledge", label: "ידע", icon: BookOpen },
+  { href: "/magazine", label: "מגזין", icon: NotebookPen },
   { href: "/blog", label: "בלוג", icon: Newspaper },
   { href: "/profile", label: "פרופיל", icon: User },
   { href: "/settings", label: "הגדרות", icon: Settings },
@@ -50,6 +51,9 @@ export function Logo({ className }: { className?: string }) {
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const me = useMe();
+  const nav: NavItem[] =
+    me?.role === "admin" ? [...DESKTOP_NAV, { href: "/admin", label: "ניהול", icon: ShieldCheck }] : DESKTOP_NAV;
 
   return (
     <div className="mx-auto flex min-h-dvh max-w-7xl">
@@ -57,7 +61,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
         <Logo />
         <nav aria-label="ניווט ראשי" className="flex flex-col gap-1">
-          {DESKTOP_NAV.map(({ href, label, icon: Icon }) => {
+          {nav.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
             return (
               <Link

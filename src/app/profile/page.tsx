@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { CalendarDays, LogOut, Mail } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, ExternalLink, LogOut, Mail, NotebookPen, PenLine, ShieldCheck } from "lucide-react";
+import { canWrite } from "@/lib/auth/roles";
 import { requireUser } from "@/lib/auth/session";
 import { signOut } from "@/lib/auth/actions";
 import { ProfileForm } from "@/components/auth/profile-form";
@@ -35,6 +37,31 @@ export default async function ProfilePage() {
           </ul>
         </div>
       </header>
+
+      <nav aria-label="קישורים" className="flex flex-wrap gap-2">
+        {profile?.username && (
+          <Link href={`/u/${profile.username}`} className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-surface-2">
+            <ExternalLink className="size-4" aria-hidden />
+            הפרופיל הציבורי
+          </Link>
+        )}
+        <Link href="/magazine" className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-surface-2">
+          <NotebookPen className="size-4" aria-hidden />
+          מגזין
+        </Link>
+        {canWrite(profile?.role) && (
+          <Link href="/magazine/write" className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-surface-2">
+            <PenLine className="size-4" aria-hidden />
+            המאמרים שלי
+          </Link>
+        )}
+        {profile?.role === "admin" && (
+          <Link href="/admin" className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm hover:bg-surface-2">
+            <ShieldCheck className="size-4" aria-hidden />
+            ניהול האתר
+          </Link>
+        )}
+      </nav>
 
       <section aria-labelledby="edit" className="rounded-3xl border border-border bg-surface p-6 md:p-8">
         <h2 id="edit" className="mb-4 text-xl font-bold">

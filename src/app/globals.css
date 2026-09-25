@@ -78,3 +78,68 @@ body {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
+
+/* ---------- Magazine articles (reader view + editor share these styles) ---------- */
+.article-prose {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.article-prose > * + * {
+  margin-top: 1em;
+}
+.article-prose h2 {
+  margin-top: 1.8em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.article-prose h3 {
+  margin-top: 1.5em;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.article-prose ul {
+  list-style: disc;
+  padding-inline-start: 1.5em;
+}
+.article-prose ol {
+  list-style: decimal;
+  padding-inline-start: 1.5em;
+}
+.article-prose li > * + * {
+  margin-top: 0.4em;
+}
+.article-prose blockquote {
+  border-inline-start: 4px solid var(--primary);
+  padding-inline-start: 1em;
+  color: var(--muted);
+}
+.article-prose a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+.article-prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 1rem;
+}
+.article-prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2em 0;
+}
+.article-prose img.ProseMirror-selectednode {
+  outline: 3px solid var(--primary);
+}
+.article-prose .ProseMirror {
+  outline: none;
+  min-height: 18rem;
+}
+.article-prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  float: inline-start;
+  height: 0;
+  pointer-events: none;
+}

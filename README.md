@@ -33,6 +33,24 @@ Later, with the Supabase CLI (`supabase link`, `supabase db push`) new migration
 3. R2 → Manage API tokens → Create API token (**Object Read & Write**, this bucket). Copy the S3 **Access Key ID** and **Secret Access Key**.
 4. Fill `R2_*` and `NEXT_PUBLIC_IMAGES_URL` in `.env.local`, then `npm run r2:check`.
 
+## Roles, magazine and moderation
+
+| Role | Can |
+| --- | --- |
+| `user` | Read, keep plants, report other accounts (`/u/<username>` → דיווח) |
+| `author` | + write magazine articles at `/magazine/write` and send them for review |
+| `editor` | + edit the plant knowledge base (and write articles) |
+| `admin` | + approve/reject articles, give roles, ban/unban, delete accounts, handle reports at `/admin` |
+
+- Articles are never published by their author: *draft → pending → published* (or *rejected* with a note). Editing a published article sends it back to review.
+- The first admin is set once in the SQL editor: `supabase/snippets/make-admin.sql`. After that, roles are given from `/admin/users`.
+- Admins can't change their own role or another admin from the site – only from Supabase.
+- Ban = the profile is marked `banned_until` **and** sign-in is blocked in Supabase Auth. Delete removes the login; the database cascades remove profile, plants, articles and reports. Every admin action is written to `admin_actions` (`/admin/log`).
+- Security rules live in the database (RLS + guard triggers in migration `20260925000007`), so they hold even if the UI has a bug.
+- Article images upload straight from the browser to R2 with a 5-minute signed URL; the R2 CORS rule must allow `PUT` from the site's origin (localhost and each Vercel domain).
+
+`npm run db:test` applies every migration to an in-memory Postgres and checks the security rules as different users (no Docker needed).
+
 ## Project map
 
 | Path | What |
