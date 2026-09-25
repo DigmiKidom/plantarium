@@ -52,6 +52,18 @@ Later, with the Supabase CLI (`supabase link`, `supabase db push`) new migration
 
 `npm run db:test` applies every migration to an in-memory Postgres and checks the security rules as different users (no Docker needed).
 
+## Database changes (Supabase CLI)
+
+The CLI is a dev dependency – no brew install needed. One-time setup on a new computer:
+
+```
+npx supabase login
+npm run db:link
+npm run db:status
+```
+
+New change: `npm run db:new add_something` → write SQL in the new file under `supabase/migrations/` → `npm run db:test` → `npm run db:push`. Never change the schema by hand in the Supabase dashboard.
+
 ## Project map
 
 | Path | What |

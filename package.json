@@ -12,7 +12,12 @@
     "db:setup-sql": "node scripts/build-setup-sql.mjs",
     "db:check": "node --env-file=.env.local scripts/check-db.mjs",
     "r2:check": "node --env-file=.env.local scripts/check-r2.mjs",
-    "db:test": "node scripts/test-db.mjs --seed"
+    "db:test": "node scripts/test-db.mjs --seed",
+    "db:link": "supabase link --project-ref vnlobcdmswymtzesjdwk",
+    "db:mark-applied": "supabase migration repair --status applied 20260924000001 20260924000002 20260924000003 20260924000004 20260924000005 20260925000006 20260925000007 20260926000008",
+    "db:status": "supabase migration list",
+    "db:new": "supabase migration new",
+    "db:push": "supabase db push"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1140.0",
@@ -42,6 +47,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "supabase": "^2.118.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
