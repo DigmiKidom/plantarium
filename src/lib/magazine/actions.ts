@@ -39,18 +39,31 @@ export type ArticleInput = z.input<typeof articleInput>;
 
 /** Save a draft, or save and send to admin review (submit = true). */
 export async function saveArticle(input: ArticleInput): Promise<Result<{ id: string; status: string }>> {
+  const res = await saveArticleInner(input);
+  // Every outcome goes to the server log, so a failed save is never silent.
+  console.log(
+    JSON.stringify({ at: "magazine.save", ok: res.ok, submit: input.submit, ...(res.ok ? { id: res.id, status: res.status } : { error: res.error }) }),
+  );
+  return res;
+}
+
+async function saveArticleInner(input: ArticleInput): Promise<Result<{ id: string; status: string }>> {
   const writer = await currentWriter();
   if (!writer) return NO_PERMISSION;
 
   const parsed = articleInput.safeParse(input);
-  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "נתונים לא תקינים" };
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    const where = issue?.path[0] === "tags" ? "תגית ארוכה מדי (עד 30 תווים לתגית)" : issue?.message;
+    return { ok: false, error: where ?? "נתונים לא תקינים" };
+  }
   const v = parsed.data;
 
   const content = sanitizeContent(v.content);
   if (JSON.stringify(content).length > MAX_CONTENT_BYTES) return { ok: false, error: "המאמר ארוך מדי" };
   if (v.submit) {
     if (v.title.length < 5) return { ok: false, error: "לפני שליחה לאישור: כותרת של לפחות 5 תווים" };
-    if (readingMinutes(content) < 1 || !content.content?.length) return { ok: false, error: "לפני שליחה לאישור: צריך תוכן למאמר" };
+    if (!content.content?.length) return { ok: false, error: "לפני שליחה לאישור: צריך תוכן למאמר" };
   }
   const coverUrl = v.coverUrl && isOwnImageUrl(v.coverUrl) ? v.coverUrl : firstImage(content);
 
@@ -70,8 +83,8 @@ export async function saveArticle(input: ArticleInput): Promise<Result<{ id: str
     : await supabase.from("magazine_articles").insert(row).select("id, status").single();
 
   if (res.error || !res.data) {
-    console.error(JSON.stringify({ at: "magazine.save", error: res.error?.message }));
-    return { ok: false, error: "השמירה נכשלה. נסו שוב" };
+    console.error(JSON.stringify({ at: "magazine.save.db", code: res.error?.code, error: res.error?.message, details: res.error?.details }));
+    return { ok: false, error: `השמירה נכשלה: ${res.error?.message ?? "לא נמצא מאמר"}` };
   }
 
   revalidatePath("/magazine", "layout");

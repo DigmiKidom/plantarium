@@ -268,8 +268,6 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
         <p className="rounded-2xl bg-water-soft px-4 py-3 text-sm">המאמר ממתין לאישור מנהל. אפשר להמשיך לערוך.</p>
       )}
 
-      <FormAlert error={error} message={message} />
-
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
@@ -347,6 +345,11 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
       <input ref={coverFile} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { upload(e.target.files?.[0], "cover"); e.target.value = ""; }} />
 
       <div className="sticky bottom-20 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/95 p-3 backdrop-blur md:bottom-4">
+        {(error || message) && (
+          <div className="w-full" aria-live="polite">
+            <FormAlert error={error} message={message} />
+          </div>
+        )}
         <button
           type="button"
           disabled={busy}
