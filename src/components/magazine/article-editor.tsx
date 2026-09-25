@@ -268,23 +268,34 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
         <p className="rounded-2xl bg-water-soft px-4 py-3 text-sm">המאמר ממתין לאישור מנהל. אפשר להמשיך לערוך.</p>
       )}
 
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        maxLength={140}
-        placeholder="כותרת המאמר"
-        aria-label="כותרת המאמר"
-        className="w-full bg-transparent text-3xl font-bold outline-none placeholder:text-muted md:text-4xl"
-      />
-      <textarea
-        value={excerpt}
-        onChange={(e) => setExcerpt(e.target.value)}
-        maxLength={300}
-        rows={2}
-        placeholder="תקציר קצר שיופיע בכרטיס המאמר (עד 300 תווים)"
-        aria-label="תקציר"
-        className="w-full resize-none rounded-xl border border-border bg-bg px-3.5 py-3 outline-none focus:border-primary"
-      />
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="article-title" className="text-sm font-medium">
+          כותרת <span className="text-accent">*</span>
+        </label>
+        <input
+          id="article-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          maxLength={140}
+          placeholder="למשל: מונסטרה – הצמח שיהפוך את הבית לירוק יותר"
+          className="w-full rounded-xl border border-border bg-bg px-3.5 py-3 text-xl font-bold outline-none placeholder:font-normal placeholder:text-muted focus:border-primary md:text-2xl"
+        />
+        <p className="text-xs text-muted">{title.trim().length}/140 · לפחות 5 תווים</p>
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="article-excerpt" className="text-sm font-medium">
+          תקציר
+        </label>
+        <textarea
+          id="article-excerpt"
+          value={excerpt}
+          onChange={(e) => setExcerpt(e.target.value)}
+          maxLength={300}
+          rows={2}
+          placeholder="משפט או שניים שיופיעו בכרטיס המאמר ובתחילתו"
+          className="w-full resize-none rounded-xl border border-border bg-bg px-3.5 py-3 outline-none focus:border-primary"
+        />
+      </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-1.5">
