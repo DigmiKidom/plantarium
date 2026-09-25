@@ -133,7 +133,8 @@ export function TodayBar() {
 
       <span className="hidden h-8 w-px bg-border sm:block" aria-hidden />
 
-      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-1">
+      {/* On phones the weather gets its own full-width row under the clock */}
+      <div className="flex w-full min-w-0 flex-wrap items-center gap-x-4 gap-y-2 sm:w-auto sm:flex-1">
         {w && desc ? (
           <>
             <span className="flex items-center gap-2">
@@ -164,18 +165,17 @@ export function TodayBar() {
         ) : (
           <span className="h-8 w-48 animate-pulse rounded-lg bg-surface-2" aria-hidden />
         )}
+        <button
+          type="button"
+          onClick={locateMe}
+          disabled={locating}
+          title="מזג אוויר לפי המיקום שלי"
+          aria-label="מזג אוויר לפי המיקום שלי"
+          className="ms-auto rounded-full p-2 text-muted hover:bg-surface-2 hover:text-primary disabled:animate-pulse"
+        >
+          <LocateFixed className="size-5" aria-hidden />
+        </button>
       </div>
-
-      <button
-        type="button"
-        onClick={locateMe}
-        disabled={locating}
-        title="מזג אוויר לפי המיקום שלי"
-        aria-label="מזג אוויר לפי המיקום שלי"
-        className="rounded-full p-2 text-muted hover:bg-surface-2 hover:text-primary disabled:animate-pulse"
-      >
-        <LocateFixed className="size-5" aria-hidden />
-      </button>
     </section>
   );
 }

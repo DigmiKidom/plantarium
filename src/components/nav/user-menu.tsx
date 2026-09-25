@@ -9,7 +9,6 @@ import {
   LogIn,
   LogOut,
   Menu,
-  Newspaper,
   PenLine,
   Settings,
   ShieldCheck,
@@ -27,14 +26,12 @@ import { cn } from "@/lib/cn";
 type Item = { href: string; label: string; icon: LucideIcon };
 
 /** Personal pages live in the account menu, not in the main nav. */
-function accountItems(me: NonNullable<Me>, mobile: boolean): Item[] {
+function accountItems(me: NonNullable<Me>): Item[] {
   return [
     { href: "/profile", label: "הפרופיל שלי", icon: User },
     { href: "/garden", label: "הגינה שלי", icon: Trees },
     ...(canWrite(me.role) ? [{ href: "/magazine/write", label: "המאמרים שלי", icon: PenLine }] : []),
     ...(me.role === "admin" ? [{ href: "/admin", label: "ניהול האתר", icon: ShieldCheck }] : []),
-    // Blog isn't in the mobile bottom bar, so it lives here on phones
-    ...(mobile ? [{ href: "/blog", label: "בלוג", icon: Newspaper }] : []),
     { href: "/settings", label: "הגדרות", icon: Settings },
   ];
 }
@@ -42,7 +39,6 @@ function accountItems(me: NonNullable<Me>, mobile: boolean): Item[] {
 const guestItems: Item[] = [
   { href: "/login", label: "התחברות", icon: LogIn },
   { href: "/signup", label: "הרשמה", icon: UserPlus },
-  { href: "/blog", label: "בלוג", icon: Newspaper },
   { href: "/settings", label: "הגדרות", icon: Settings },
 ];
 
@@ -160,7 +156,7 @@ export function SidebarUserMenu() {
           id={menuId}
           className="absolute inset-x-0 bottom-full mb-2 overflow-hidden rounded-2xl border border-border bg-surface shadow-lg"
         >
-          <MenuList items={accountItems(me, false)} pathname={pathname} withSignOut />
+          <MenuList items={accountItems(me)} pathname={pathname} withSignOut />
         </div>
       )}
       <button
@@ -236,7 +232,7 @@ export function CompactUserMenu() {
                 </span>
               </Link>
             )}
-              <MenuList items={me ? accountItems(me, true) : guestItems} pathname={pathname} withSignOut={Boolean(me)} />
+              <MenuList items={me ? accountItems(me) : guestItems} pathname={pathname} withSignOut={Boolean(me)} />
             </div>
           </div>,
           document.body,
