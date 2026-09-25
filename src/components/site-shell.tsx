@@ -21,10 +21,11 @@ const DESKTOP_NAV: NavItem[] = [
   { href: "/blog", label: "בלוג", icon: Newspaper },
 ];
 
+/** Two on each side of the raised + button. Home is the logo in the top bar. */
 const MOBILE_NAV: NavItem[] = [
-  { href: "/", label: "בית", icon: Home },
   { href: "/plants", label: "צמחים", icon: Sprout },
   { href: "/knowledge", label: "ידע", icon: BookOpen },
+  { href: "/plants/new", label: "הוספה", icon: Plus },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },
   { href: "/blog", label: "בלוג", icon: Newspaper },
 ];
@@ -110,6 +111,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         >
           {MOBILE_NAV.map(({ href, label, icon: Icon }) => {
             const active = isActive(pathname, href);
+            const isAdd = href === "/plants/new";
             return (
               <Link
                 key={href}
@@ -117,24 +119,18 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
                 aria-current={active ? "page" : undefined}
                 className={cn("flex flex-col items-center gap-1 py-2 text-[11px]", active ? "font-semibold text-primary" : "text-muted")}
               >
-                <Icon className="size-5" aria-hidden />
+                {isAdd ? (
+                  <span className="-mt-5 grid size-12 place-items-center rounded-full bg-primary text-on-primary shadow-lg">
+                    <Icon className="size-6" aria-hidden />
+                  </span>
+                ) : (
+                  <Icon className="size-5" aria-hidden />
+                )}
                 {label}
               </Link>
             );
           })}
         </nav>
-
-        {/* Mobile "add plant" – floating button above the bottom bar (bottom-left in RTL).
-            Hidden where a page has its own sticky action bar (the article editor). */}
-        {pathname !== "/plants/new" && !pathname.startsWith("/magazine/write") && (
-          <Link
-            href="/plants/new"
-            aria-label="הוספת צמח"
-            className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] end-4 z-30 grid size-14 place-items-center rounded-full bg-primary text-on-primary shadow-lg hover:bg-primary-strong md:hidden"
-          >
-            <Plus className="size-7" aria-hidden />
-          </Link>
-        )}
       </div>
     </MeProvider>
   );
