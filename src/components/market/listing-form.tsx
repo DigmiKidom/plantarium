@@ -4,7 +4,7 @@ import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { createListingImageUpload, saveListing } from "@/lib/market/actions";
-import { MARKET_CATEGORIES, SIZES, SIZE_HE, type Size } from "@/lib/market/types";
+import { MARKET_CATEGORIES, OTHER_SPECIES, SIZES, SIZE_HE, type Size } from "@/lib/market/types";
 import type { Category } from "@/lib/species/types";
 import { uploadImage } from "@/lib/uploads/client";
 import { FormAlert } from "@/components/ui/form";
@@ -13,7 +13,10 @@ import { cn } from "@/lib/cn";
 export type SpeciesOption = { slug: string; name: string; scientific: string; category: Category };
 export type ListingFormValues = {
   id?: string;
+  category: Category | "";
+  /** A species slug, or OTHER_SPECIES with otherName. */
   speciesSlug: string;
+  otherName: string;
   price: string;
   size: Size | "";
   city: string;
@@ -21,7 +24,6 @@ export type ListingFormValues = {
   photos: string[];
   phone: string;
   whatsapp: boolean;
-  email: string;
 };
 
 const input = "w-full rounded-xl border border-border bg-bg px-3.5 py-3 outline-none focus:border-primary";
@@ -45,8 +47,9 @@ export function ListingForm({
   quota?: { used: number; limit: number };
 }) {
   const router = useRouter();
-  const initialCategory = species.find((s) => s.slug === initial.speciesSlug)?.category ?? "";
-  const [category, setCategory] = useState<Category | "">(initialCategory);
+  const [category, setCategory] = useState<Category | "">(
+    initial.category || (species.find((s) => s.slug === initial.speciesSlug)?.category ?? ""),
+  );
   const [v, setV] = useState(initial);
   const [free, setFree] = useState(initial.price === "0");
   const [uploading, setUploading] = useState(0);
@@ -83,11 +86,15 @@ export function ListingForm({
     e.preventDefault();
     setError(undefined);
     const price = free ? 0 : Number(v.price);
+    if (!category) return setError("נא לבחור קטגוריה");
+    if (!v.speciesSlug) return setError("נא לבחור צמח מהרשימה, או ״אחר – לא ברשימה״");
     if (!free && (v.price.trim() === "" || !Number.isFinite(price))) return setError("נא להזין מחיר, או לסמן ״למסירה בחינם״");
     startTransition(async () => {
       const res = await saveListing({
         id: v.id,
+        category,
         speciesSlug: v.speciesSlug,
+        otherName: v.otherName,
         price: Math.round(price),
         size: v.size || null,
         city: v.city,
@@ -95,7 +102,6 @@ export function ListingForm({
         photos: v.photos,
         phone: v.phone,
         whatsapp: v.whatsapp,
-        email: v.email,
       });
       if (!res.ok) {
         setError(res.error);
@@ -156,15 +162,31 @@ export function ListingForm({
                   {s.name} · {s.scientific}
                 </option>
               ))}
+              {category && <option value={OTHER_SPECIES}>אחר – לא ברשימה</option>}
             </select>
           </div>
         </div>
-        {chosen && (
+        {v.speciesSlug === OTHER_SPECIES && (
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="otherName" required>
+              שם הצמח
+            </Label>
+            <input
+              id="otherName"
+              value={v.otherName}
+              onChange={(e) => set("otherName", e.target.value)}
+              maxLength={80}
+              placeholder="למשל: פטוניה כפולה"
+              className={input}
+            />
+            <p className="text-xs text-muted">צמחים שלא במאגר מופיעים בקטגוריה תחת ״אחר״, בלי מדריך גידול.</p>
+          </div>
+        )}
+        {chosen && v.speciesSlug !== OTHER_SPECIES && (
           <p className="text-sm text-muted">
             המודעה תקושר לדף הצמח <span className="font-medium text-text">{chosen.name}</span> במאגר, עם כל הוראות הגידול.
           </p>
         )}
-        <p className="text-xs text-muted">אפשר לפרסם רק צמחים שקיימים במאגר, כדי שלכל מודעה יהיה מדריך גידול מלא.</p>
       </fieldset>
 
       {/* 2. Photos */}
@@ -275,37 +297,29 @@ export function ListingForm({
       </fieldset>
 
       {/* 4. Contact */}
-      <fieldset className="grid gap-4 rounded-3xl border border-border bg-surface p-5 md:grid-cols-2">
+      <fieldset className="flex flex-col gap-3 rounded-3xl border border-border bg-surface p-5">
         <legend className="px-1 text-lg font-bold">
           יצירת קשר <span className="text-accent">*</span>
         </legend>
-        <p className="text-sm text-muted md:col-span-2">לפחות טלפון או אימייל. הפרטים מוצגים רק למשתמשים מחוברים.</p>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="phone">טלפון</Label>
+        <p className="text-sm text-muted">מספר הטלפון מוצג רק למשתמשים מחוברים.</p>
+        <div className="flex max-w-sm flex-col gap-1.5">
+          <Label htmlFor="phone" required>
+            טלפון
+          </Label>
           <input
             id="phone"
             type="tel"
             inputMode="tel"
+            autoComplete="tel"
             value={v.phone}
             onChange={(e) => set("phone", e.target.value)}
             placeholder="050-1234567"
             className={cn(input, "ltr text-start")}
           />
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={v.whatsapp} onChange={(e) => set("whatsapp", e.target.checked)} disabled={!v.phone} />
+            <input type="checkbox" checked={v.whatsapp} onChange={(e) => set("whatsapp", e.target.checked)} />
             אפשר לפנות גם בוואטסאפ
           </label>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email">אימייל</Label>
-          <input
-            id="email"
-            type="email"
-            value={v.email}
-            onChange={(e) => set("email", e.target.value)}
-            placeholder="name@example.com"
-            className={cn(input, "ltr text-start")}
-          />
         </div>
       </fieldset>
 

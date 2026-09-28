@@ -323,7 +323,7 @@ await allowed("user lists a plant", async () => {
 });
 await allowed("seller adds contact details", () =>
   as(alice, () => q(`insert into public.market_listing_contacts (listing_id, phone, whatsapp) values ($1, '050-1234567', true)`, [listingId])));
-await denied("contact needs a phone or an email", () =>
+await denied("contact needs a phone", () =>
   as(alice, async () => {
     const { rows } = await listAs(alice);
     await q(`insert into public.market_listing_contacts (listing_id) values ($1)`, [rows[0].id]);
@@ -394,6 +394,22 @@ await allowed("…and another listing of the same seller", () =>
   as(dave, () => q(`insert into public.reports (user_id, listing_id, reason) values ($1, $2, 'spam')`, [mallory, ml3[0].id])));
 await denied("…but not the same listing twice", () =>
   as(dave, () => q(`insert into public.reports (user_id, listing_id, reason) values ($1, $2, 'other')`, [mallory, ml2[0].id])));
+
+// other species + phone only
+await allowed("listing a plant that isn't in the database (other + category)", () =>
+  as(dave, () =>
+    q(`insert into public.market_listings (other_species, category, price, photos) values ('פטוניה כפולה', 'garden', 20, $1)`, [photo])));
+await denied("other plant needs a category", () =>
+  as(dave, () => q(`insert into public.market_listings (other_species, price, photos) values ('משהו', 5, $1)`, [photo])));
+await expectCount("a database species wins over a typed name", 1, () =>
+  as(dave, () =>
+    q(`insert into public.market_listings (species_id, other_species, category, price, photos) values ($1, 'x y', 'garden', 5, $2) returning other_species`, [speciesId, photo]).then((r) => ({ rows: r.rows.filter((x) => x.other_species === null) }))));
+await denied("needs a species or an other name", () =>
+  as(dave, () => q(`insert into public.market_listings (category, price, photos) values ('garden', 5, $1)`, [photo])));
+await expectCount("species decides the category", 1, () =>
+  q(`select 1 from public.market_listings l join public.species s on s.id = l.species_id where l.id = $1 and l.category = s.category`, [ml2[0].id]));
+await denied("email contact is no longer accepted", () =>
+  as(mallory, () => q(`insert into public.market_listing_contacts (listing_id, phone, email) values ($1, '0501234567', 'a@b.co')`, [ml3[0].id])));
 
 // ---------- follows ----------
 console.log("\nFollows");

@@ -1,7 +1,7 @@
 import "server-only";
 import { createPublicClient, createUserClient, hasSupabase } from "@/lib/supabase/server";
 import type { Category } from "@/lib/species/types";
-import { LISTING_COLUMNS, type Contact, type ListingRow, type Sort } from "./types";
+import { LISTING_COLUMNS, OTHER_SPECIES, type Contact, type ListingRow, type Sort } from "./types";
 
 const log = (at: string, error: { message: string } | null) =>
   error && console.error(JSON.stringify({ at, error: error.message }));
@@ -26,10 +26,26 @@ export async function speciesCounts(category?: Category): Promise<SpeciesCount[]
   return data ?? [];
 }
 
+/** Active listings per category (database species and "other" plants). */
 export async function categoryCounts(): Promise<Partial<Record<Category, number>>> {
   const out: Partial<Record<Category, number>> = {};
-  for (const s of await speciesCounts()) out[s.category] = (out[s.category] ?? 0) + s.active_count;
+  if (!hasSupabase()) return out;
+  const { data, error } = await createPublicClient().from("market_listings").select("category").eq("status", "active").limit(10000);
+  log("market.categoryCounts", error);
+  for (const r of (data ?? []) as { category: Category }[]) out[r.category] = (out[r.category] ?? 0) + 1;
   return out;
+}
+
+/** Active "other" listings (plants not in the database) in a category. */
+export async function otherCount(category: Category) {
+  if (!hasSupabase()) return 0;
+  const { count } = await createPublicClient()
+    .from("market_listings")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "active")
+    .eq("category", category)
+    .is("species_id", null);
+  return count ?? 0;
 }
 
 /** Active listings, newest first by default. */
@@ -41,9 +57,15 @@ export async function listListings({
   limit = 60,
 }: { category?: Category; speciesSlug?: string; sellerId?: string; sort?: Sort; limit?: number }) {
   if (!hasSupabase()) return [] as ListingRow[];
-  let q = createPublicClient().from("market_listings").select(LISTING_COLUMNS).eq("status", "active").limit(limit);
-  if (category) q = q.eq("species.category", category);
-  if (speciesSlug) q = q.eq("species.slug", speciesSlug);
+  const db = createPublicClient();
+  let q = db.from("market_listings").select(LISTING_COLUMNS).eq("status", "active").limit(limit);
+  if (category) q = q.eq("category", category);
+  if (speciesSlug === OTHER_SPECIES) q = q.is("species_id", null);
+  else if (speciesSlug) {
+    const { data: sp } = await db.from("species").select("id").eq("slug", speciesSlug).maybeSingle();
+    if (!sp) return [];
+    q = q.eq("species_id", sp.id);
+  }
   if (sellerId) q = q.eq("seller_id", sellerId);
   q =
     sort === "price_asc"
@@ -71,7 +93,7 @@ export async function getListing(id: string) {
   if (auth.user) {
     const { data } = await supabase
       .from("market_listing_contacts")
-      .select("phone, whatsapp, email")
+      .select("phone, whatsapp")
       .eq("listing_id", id)
       .maybeSingle<Contact>();
     contact = data;

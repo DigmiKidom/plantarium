@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Plus } from "lucide-react";
-import { listListings, speciesCounts } from "@/lib/market/queries";
-import { SORTS, categoryHe, formatPrice, isMarketCategory, type Sort } from "@/lib/market/types";
+import { listListings, otherCount, speciesCounts } from "@/lib/market/queries";
+import { OTHER_SPECIES, SORTS, categoryHe, formatPrice, isMarketCategory, type Sort } from "@/lib/market/types";
 import { ListingTable } from "@/components/market/listing-table";
 import { cn } from "@/lib/cn";
 
@@ -21,8 +21,13 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
   const speciesSlug = typeof sp.species === "string" && /^[a-z0-9-]+$/.test(sp.species) ? sp.species : undefined;
   const sort: Sort = typeof sp.sort === "string" && sp.sort in SORTS ? (sp.sort as Sort) : "new";
 
-  const [species, listings] = await Promise.all([speciesCounts(category), listListings({ category, speciesSlug, sort })]);
+  const [species, others, listings] = await Promise.all([
+    speciesCounts(category),
+    otherCount(category),
+    listListings({ category, speciesSlug, sort }),
+  ]);
   const chosen = species.find((s) => s.slug === speciesSlug);
+  const isOther = speciesSlug === OTHER_SPECIES;
 
   const href = (patch: { species?: string | null; sort?: Sort }) => {
     const p = new URLSearchParams();
@@ -66,7 +71,7 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
           <li>
             <Link href={href({ species: null })} aria-current={!speciesSlug ? "page" : undefined} className={chip(!speciesSlug)}>
               הכל
-              <span className="tabular-nums opacity-80">{species.reduce((n, s) => n + s.active_count, 0)}</span>
+              <span className="tabular-nums opacity-80">{species.reduce((n, s) => n + s.active_count, 0) + others}</span>
             </Link>
           </li>
           {species.map((s) => (
@@ -77,12 +82,20 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
               </Link>
             </li>
           ))}
+          {others > 0 && (
+            <li>
+              <Link href={href({ species: OTHER_SPECIES })} aria-current={isOther ? "page" : undefined} className={chip(isOther)}>
+                אחר
+                <span className="tabular-nums opacity-80">{others}</span>
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-bold">
-          {chosen ? chosen.common_name_he : `כל ה${categoryHe(category)}`}
+          {chosen ? chosen.common_name_he : isOther ? "צמחים נוספים (לא במאגר)" : `כל ה${categoryHe(category)}`}
           <span className="ms-2 text-base font-normal text-muted">
             {listings.length} מודעות{chosen ? ` · החל מ-${formatPrice(chosen.min_price)}` : ""}
           </span>

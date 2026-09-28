@@ -37,14 +37,23 @@ export type ListingRow = {
   created_at: string;
   sold_at: string | null;
   seller_id: string;
+  category: Category;
+  /** Free-text plant name when the plant isn't in our database ("אחר"). */
+  other_species: string | null;
   species: { slug: string; common_name_he: string; scientific_name: string; category: Category } | null;
   seller: { username: string | null; display_name: string } | null;
 };
 
 export const LISTING_COLUMNS =
-  "id, price, size, city, description, photos, status, removed_reason, created_at, sold_at, seller_id, species:species!inner(slug, common_name_he, scientific_name, category), seller:profiles!market_listings_seller_id_fkey(username, display_name)";
+  "id, price, size, city, description, photos, status, removed_reason, created_at, sold_at, seller_id, category, other_species, species:species(slug, common_name_he, scientific_name, category), seller:profiles!market_listings_seller_id_fkey(username, display_name)";
 
-export type Contact = { phone: string | null; whatsapp: boolean; email: string | null };
+export type Contact = { phone: string | null; whatsapp: boolean };
+
+/** The plant's display name: the database species, or what the seller typed. */
+export const listingName = (l: Pick<ListingRow, "species" | "other_species">) => l.species?.common_name_he ?? l.other_species ?? "צמח";
+
+/** Value of the "other" choice in the species picker and in ?species= on category pages. */
+export const OTHER_SPECIES = "other";
 
 export const SORTS = { new: "חדש ביותר", price_asc: "מחיר: מהנמוך", price_desc: "מחיר: מהגבוה" } as const;
 export type Sort = keyof typeof SORTS;

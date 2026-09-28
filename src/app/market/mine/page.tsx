@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/lib/auth/session";
 import { listingQuota, myListings } from "@/lib/market/queries";
-import { LISTING_STATUS_HE, formatPrice } from "@/lib/market/types";
+import { LISTING_STATUS_HE, formatPrice, listingName } from "@/lib/market/types";
 import { SellerActions } from "@/components/market/listing-actions";
 import { formatDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
@@ -40,7 +40,7 @@ export default async function MyListingsPage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={l.photos[0]} alt="" className="size-16 shrink-0 rounded-xl object-cover" />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-semibold">{l.species?.common_name_he}</span>
+                  <span className="block truncate font-semibold">{listingName(l)}</span>
                   <span className="text-xs text-muted">פורסם {formatDate(l.created_at)}</span>
                 </span>
                 <span className="font-bold">{formatPrice(l.price)}</span>

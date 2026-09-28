@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import { SIZE_SHORT_HE, formatPrice, type ListingRow } from "@/lib/market/types";
+import { SIZE_SHORT_HE, formatPrice, listingName, type ListingRow } from "@/lib/market/types";
 import { formatDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 
@@ -51,9 +51,13 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
                 {showSpecies && (
                   <td className="px-4 py-2">
                     <Link href={`/market/l/${l.id}`} className="font-semibold after:absolute after:inset-0 hover:text-primary">
-                      {l.species?.common_name_he}
+                      {listingName(l)}
                     </Link>
-                    <span className="ltr block text-xs italic text-muted">{l.species?.scientific_name}</span>
+                    {l.species ? (
+                      <span className="ltr block text-xs italic text-muted">{l.species.scientific_name}</span>
+                    ) : (
+                      <span className="block text-xs text-muted">לא במאגר</span>
+                    )}
                   </td>
                 )}
                 <td className={cn("px-4 py-2 font-bold", l.price === 0 && "text-primary")}>
@@ -83,7 +87,7 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={l.photos[0]} alt="" loading="lazy" className="size-16 shrink-0 rounded-xl object-cover" />
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold">{l.species?.common_name_he}</span>
+                <span className="block truncate font-semibold">{listingName(l)}</span>
                 <span className="flex flex-wrap items-center gap-x-2 text-xs text-muted">
                   {l.size && <span>{SIZE_SHORT_HE[l.size]}</span>}
                   {l.city && (

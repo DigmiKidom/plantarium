@@ -4,6 +4,7 @@ import { requireUser } from "@/lib/auth/session";
 import { getListing } from "@/lib/market/queries";
 import { speciesOptions } from "@/lib/market/species-options";
 import { ListingForm } from "@/components/market/listing-form";
+import { OTHER_SPECIES } from "@/lib/market/types";
 
 export const metadata: Metadata = { title: "עריכת מודעה | שוק הצמחים", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -23,7 +24,9 @@ export default async function EditListingPage({ params }: PageProps<"/market/edi
         species={species}
         initial={{
           id: l.id,
-          speciesSlug: l.species?.slug ?? "",
+          category: l.category,
+          speciesSlug: l.species?.slug ?? OTHER_SPECIES,
+          otherName: l.other_species ?? "",
           price: String(l.price),
           size: l.size ?? "",
           city: l.city ?? "",
@@ -31,7 +34,6 @@ export default async function EditListingPage({ params }: PageProps<"/market/edi
           photos: l.photos,
           phone: contact?.phone ?? "",
           whatsapp: contact?.whatsapp ?? false,
-          email: contact?.email ?? "",
         }}
       />
     </div>

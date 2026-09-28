@@ -6,7 +6,10 @@ import { z } from "zod";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { isBannedNow, type Role } from "@/lib/auth/roles";
 import { IMAGE_TYPES, MAX_IMAGE_BYTES, hasR2, presignImageUpload } from "@/lib/r2";
-import { SIZES } from "./types";
+import { OTHER_SPECIES, SIZES } from "./types";
+import type { Category } from "@/lib/species/types";
+
+const CATEGORIES = ["houseplant", "succulent", "herb", "vegetable", "fruit_tree", "garden"] as const satisfies readonly Category[];
 
 type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string };
 
@@ -54,17 +57,18 @@ const phoneRe = /^\+?[0-9][0-9 -]{6,18}$/;
 const listingInput = z
   .object({
     id: z.uuid().optional(),
-    speciesSlug: z.string().regex(/^[a-z0-9-]+$/, { error: "נא לבחור צמח מהרשימה" }),
+    category: z.enum(CATEGORIES, { error: "נא לבחור קטגוריה" }),
+    speciesSlug: z.string().regex(/^[a-z0-9-]+$/, { error: "נא לבחור צמח מהרשימה, או ״אחר״" }),
+    otherName: z.string().trim().max(80, { error: "שם הצמח עד 80 תווים" }),
     price: z.number({ error: "נא להזין מחיר" }).int({ error: "מחיר בשקלים שלמים" }).min(0, { error: "מחיר לא תקין" }).max(100000, { error: "מחיר עד ₪100,000" }),
     size: z.enum(SIZES).nullable(),
     city: z.string().trim().max(60, { error: "עיר עד 60 תווים" }),
     description: z.string().trim().max(2000, { error: "תיאור עד 2000 תווים" }),
     photos: z.array(z.string()).min(1, { error: "צריך לפחות תמונה אחת" }).max(6, { error: "עד 6 תמונות" }),
-    phone: z.string().trim().refine((v) => v === "" || phoneRe.test(v), { error: "מספר טלפון לא תקין" }),
+    phone: z.string().trim().min(1, { error: "נא להזין מספר טלפון ליצירת קשר" }).regex(phoneRe, { error: "מספר טלפון לא תקין" }),
     whatsapp: z.boolean(),
-    email: z.string().trim().refine((v) => v === "" || z.email().safeParse(v).success, { error: "אימייל לא תקין" }),
   })
-  .refine((v) => v.phone !== "" || v.email !== "", { path: ["phone"], error: "צריך לפחות דרך יצירת קשר אחת: טלפון או אימייל" });
+  .refine((v) => v.speciesSlug !== OTHER_SPECIES || v.otherName.length >= 2, { path: ["otherName"], error: "כתבו את שם הצמח (לפחות 2 תווים)" });
 export type ListingInput = z.input<typeof listingInput>;
 
 export async function saveListing(raw: ListingInput): Promise<Result<{ id: string }>> {
@@ -80,18 +84,24 @@ export async function saveListing(raw: ListingInput): Promise<Result<{ id: strin
     return { ok: false, error: "אחת התמונות לא תקינה. העלו אותה מחדש" };
   }
 
-  const { data: sp } = await s.supabase.from("species").select("id").eq("slug", v.speciesSlug).maybeSingle();
-  if (!sp) return { ok: false, error: "הצמח לא נמצא במאגר" };
+  let speciesId: string | null = null;
+  if (v.speciesSlug !== OTHER_SPECIES) {
+    const { data: sp } = await s.supabase.from("species").select("id").eq("slug", v.speciesSlug).maybeSingle();
+    if (!sp) return { ok: false, error: "הצמח לא נמצא במאגר" };
+    speciesId = sp.id as string;
+  }
 
   const row = {
-    species_id: sp.id as string,
+    species_id: speciesId,
+    other_species: speciesId ? null : v.otherName,
+    category: v.category,
     price: v.price,
     size: v.size,
     city: v.city || null,
     description: v.description || null,
     photos: v.photos,
   };
-  const contact = { phone: v.phone || null, whatsapp: v.phone ? v.whatsapp : false, email: v.email || null };
+  const contact = { phone: v.phone, whatsapp: v.whatsapp };
 
   if (v.id) {
     const { data, error } = await s.supabase.from("market_listings").update(row).eq("id", v.id).eq("seller_id", s.userId).select("id").maybeSingle();
@@ -158,8 +168,8 @@ export async function adminRemoveListing(id: string, reason: string): Promise<Re
     .from("market_listings")
     .update({ status: "removed", removed_reason: note.slice(0, 500) })
     .eq("id", id)
-    .select("id, seller_id, species:species(common_name_he)")
-    .maybeSingle<{ id: string; seller_id: string; species: { common_name_he: string } | null }>();
+    .select("id, seller_id, other_species, species:species(common_name_he)")
+    .maybeSingle<{ id: string; seller_id: string; other_species: string | null; species: { common_name_he: string } | null }>();
   if (error || !data) return { ok: false, error: "ההסרה נכשלה" };
 
   await s.supabase
@@ -170,7 +180,7 @@ export async function adminRemoveListing(id: string, reason: string): Promise<Re
   await s.supabase.from("admin_actions").insert({
     admin_id: s.userId,
     target_id: data.seller_id,
-    target_label: `מודעה: ${data.species?.common_name_he ?? id}`,
+    target_label: `מודעה: ${data.species?.common_name_he ?? data.other_species ?? id}`,
     action: "remove_listing",
     reason: note,
     meta: { listing_id: id },

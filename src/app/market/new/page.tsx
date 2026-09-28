@@ -15,12 +15,12 @@ export default async function NewListingPage() {
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <header>
         <h1 className="text-3xl font-bold">פרסום צמח למכירה</h1>
-        <p className="text-muted">בוחרים את הזן מהמאגר, מוסיפים תמונה, מחיר ודרך ליצירת קשר.</p>
+        <p className="text-muted">בוחרים קטגוריה וזן, מוסיפים תמונה, מחיר וטלפון ליצירת קשר.</p>
       </header>
       <ListingForm
         species={species}
         quota={quota}
-        initial={{ speciesSlug: "", price: "", size: "", city: "", description: "", photos: [], phone: "", whatsapp: true, email: "" }}
+        initial={{ category: "", speciesSlug: "", otherName: "", price: "", size: "", city: "", description: "", photos: [], phone: "", whatsapp: true }}
       />
     </div>
   );

@@ -5,7 +5,7 @@ import { getFeed } from "@/lib/feed/queries";
 import type { FeedTab } from "@/lib/feed/types";
 import { listPublished } from "@/lib/magazine/queries";
 import { listListings } from "@/lib/market/queries";
-import { formatPrice } from "@/lib/market/types";
+import { formatPrice, listingName } from "@/lib/market/types";
 import { speciesOptions } from "@/lib/market/species-options";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { TodayBar } from "@/components/home/today-bar";
@@ -156,7 +156,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
                     <Link href={`/market/l/${l.id}`} className="group flex flex-col gap-1">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={l.photos[0]} alt="" className="aspect-square w-full rounded-xl object-cover" />
-                      <span className="truncate text-xs font-medium group-hover:text-primary">{l.species?.common_name_he}</span>
+                      <span className="truncate text-xs font-medium group-hover:text-primary">{listingName(l)}</span>
                       <span className="text-xs text-muted">{formatPrice(l.price)}</span>
                     </Link>
                   </li>
