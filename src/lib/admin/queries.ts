@@ -36,7 +36,7 @@ export type OpenReport = {
 /** Open reports about accounts, grouped by the reported account (most reported first). */
 export async function openReportsByUser() {
   const supabase = await createUserClient();
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from("reports")
     .select(
       "id, reason, details, listing_id, post_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)",
@@ -46,6 +46,7 @@ export async function openReportsByUser() {
     .order("created_at", { ascending: true })
     .limit(500)
     .returns<OpenReport[]>();
+  if (error) console.error(JSON.stringify({ at: "admin.openReports", code: error.code, error: error.message }));
 
   const groups = new Map<string, { target: ProfileRef; reports: OpenReport[] }>();
   for (const r of data ?? []) {
@@ -64,17 +65,37 @@ const cleanQuery = (q: string) => q.replace(/[,()*%\\:."']/g, " ").trim().slice(
 
 export async function searchUsers({ q, role, banned }: { q?: string; role?: Role; banned?: boolean }) {
   const supabase = await createUserClient();
-  let query = supabase
-    .from("profiles")
-    .select("id, username, display_name, role, plan, banned_until, ban_reason, created_at")
-    .order("created_at", { ascending: false })
-    .limit(50);
-  const text = q ? cleanQuery(q) : "";
-  if (text) query = query.or(`username.ilike.*${text}*,display_name.ilike.*${text}*`);
-  if (role) query = query.eq("role", role);
-  if (banned) query = query.gt("banned_until", new Date().toISOString());
-  const { data } = await query.returns<AdminUserRow[]>();
+  const run = (columns: string) => {
+    let query = supabase.from("profiles").select(columns).order("created_at", { ascending: false }).limit(50);
+    const text = q ? cleanQuery(q) : "";
+    if (text) query = query.or(`username.ilike.*${text}*,display_name.ilike.*${text}*`);
+    if (role) query = query.eq("role", role);
+    if (banned) query = query.gt("banned_until", new Date().toISOString());
+    return query.returns<AdminUserRow[]>();
+  };
+
+  let { data, error } = await run("id, username, display_name, role, plan, banned_until, ban_reason, created_at");
+  if (error) {
+    // Usually a database update that wasn't applied yet (e.g. the "plan" column) – still show the users.
+    console.error(JSON.stringify({ at: "admin.searchUsers", code: error.code, error: error.message }));
+    ({ data, error } = await run("id, username, display_name, role, banned_until, created_at"));
+    if (error) console.error(JSON.stringify({ at: "admin.searchUsers.fallback", code: error.code, error: error.message }));
+    data = (data ?? []).map((u) => ({ ...u, plan: u.plan ?? "free", ban_reason: u.ban_reason ?? null }));
+  }
   return data ?? [];
+}
+
+/** Which recent database updates are missing (so the admin panel can say "run npm run db:push"). */
+export async function missingDbUpdates() {
+  const supabase = await createUserClient();
+  const checks: [string, PromiseLike<{ error: { code?: string } | null }>][] = [
+    ["0009 שוק ומנויים", supabase.from("profiles").select("plan").limit(1)],
+    ["0010 החממה", supabase.from("post_media").select("id").limit(1)],
+    ["0011 ״אחר״ בשוק", supabase.from("market_listings").select("other_species").limit(1)],
+    ["0012 הצעות צמחים", supabase.from("species_suggestions").select("id").limit(1)],
+  ];
+  const results = await Promise.all(checks.map(async ([name, p]) => ((await p).error ? name : null)));
+  return results.filter(Boolean) as string[];
 }
 
 export type LogRow = {
