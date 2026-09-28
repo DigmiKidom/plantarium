@@ -43,7 +43,7 @@ export function Logo({ className }: { className?: string }) {
     <Link href="/" aria-label="פלנטריום – לדף הבית" className={cn("block w-fit", className)}>
       {/* The full brand logo (public/brand/logo.png) everywhere */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src="/brand/logo.png" alt="פלנטריום" width={512} height={512} className="size-full object-contain dark:brightness-150" />
+      <img src="/brand/logo.png" alt="פלנטריום" width={1200} height={279} className="h-full w-auto object-contain dark:brightness-150" />
     </Link>
   );
 }
@@ -56,7 +56,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       <div className="mx-auto flex min-h-dvh max-w-7xl">
         {/* Desktop sidebar – first in DOM, so it sits on the right in RTL */}
         <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
-          <Logo className="mx-auto size-28" />
+          <Logo className="h-12" />
           <nav aria-label="ניווט ראשי" className="flex flex-col gap-1">
             {DESKTOP_NAV.map(({ href, label, icon: Icon }) => {
               const active = isActive(pathname, href);
@@ -91,7 +91,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Mobile top bar */}
           <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-bg/90 px-4 backdrop-blur md:hidden">
-            <Logo className="size-14" />
+            <Logo className="h-9" />
             <CompactUserMenu />
           </header>
 
