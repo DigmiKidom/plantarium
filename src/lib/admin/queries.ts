@@ -5,17 +5,19 @@ import type { Role } from "@/lib/auth/roles";
 export async function adminCounts() {
   const supabase = await createUserClient();
   const head = { count: "exact" as const, head: true };
-  const [reports, pending, users, banned] = await Promise.all([
+  const [reports, pending, users, banned, species] = await Promise.all([
     supabase.from("reports").select("id", head).eq("status", "open"),
     supabase.from("magazine_articles").select("id", head).eq("status", "pending"),
     supabase.from("profiles").select("id", head),
     supabase.from("profiles").select("id", head).gt("banned_until", new Date().toISOString()),
+    supabase.from("species_suggestions").select("id", head).eq("status", "pending"),
   ]);
   return {
     reports: reports.count ?? 0,
     pending: pending.count ?? 0,
     users: users.count ?? 0,
     banned: banned.count ?? 0,
+    species: species.count ?? 0,
   };
 }
 

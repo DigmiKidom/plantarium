@@ -8,13 +8,15 @@ const TABS = [
   { href: "/admin", label: "סקירה" },
   { href: "/admin/reports", label: "דיווחים" },
   { href: "/admin/articles", label: "מאמרים" },
+  { href: "/admin/species", label: "צמחים" },
   { href: "/admin/users", label: "משתמשים" },
   { href: "/admin/log", label: "יומן" },
 ];
 
-export function AdminNav({ counts }: { counts: { reports: number; pending: number } }) {
+export function AdminNav({ counts }: { counts: { reports: number; pending: number; species: number } }) {
   const pathname = usePathname();
-  const badge = (href: string) => (href === "/admin/reports" ? counts.reports : href === "/admin/articles" ? counts.pending : 0);
+  const badge = (href: string) =>
+    href === "/admin/reports" ? counts.reports : href === "/admin/articles" ? counts.pending : href === "/admin/species" ? counts.species : 0;
   return (
     <nav aria-label="ניהול" className="-mx-4 overflow-x-auto px-4">
       <ul className="flex gap-1 border-b border-border">

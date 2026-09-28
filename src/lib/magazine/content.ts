@@ -1,18 +1,21 @@
 import type { JSONContent } from "@tiptap/core";
+import { CALLOUT_VARIANTS, HIGHLIGHT_COLORS, IMAGE_SIZES, TEXT_COLORS } from "./extensions";
 
 /** Allowed nodes and the attributes each may keep. Everything else is dropped. */
 const NODES: Record<string, string[]> = {
   doc: [],
-  paragraph: [],
+  paragraph: ["textAlign"],
   text: [],
-  heading: ["level"],
+  heading: ["level", "textAlign"],
   bulletList: [],
   orderedList: ["start"],
   listItem: [],
   blockquote: [],
   horizontalRule: [],
   hardBreak: [],
-  image: ["src", "alt", "title"],
+  image: ["src", "alt", "title", "size", "caption"],
+  callout: ["variant"],
+  youtube: ["src"],
 };
 const MARKS: Record<string, string[]> = {
   bold: [],
@@ -20,9 +23,15 @@ const MARKS: Record<string, string[]> = {
   underline: [],
   strike: [],
   link: ["href"],
+  highlight: ["color"],
+  textStyle: ["color"],
 };
 
-export const MAX_CONTENT_BYTES = 200_000;
+const HIGHLIGHTS = new Set<string>(Object.values(HIGHLIGHT_COLORS).map((c) => c.value));
+const COLORS = new Set<string>(Object.values(TEXT_COLORS).map((c) => c.value));
+const ALIGNS = new Set(["right", "center", "left"]);
+
+export const MAX_CONTENT_BYTES = 300_000;
 export const EMPTY_DOC: JSONContent = { type: "doc", content: [] };
 
 const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
@@ -43,21 +52,53 @@ function safeHref(href: unknown): string | null {
   }
 }
 
+/** Any YouTube link → canonical watch URL; anything else → null. */
+export function youtubeUrl(src: unknown): string | null {
+  if (typeof src !== "string") return null;
+  try {
+    const u = new URL(src);
+    const host = u.hostname.replace(/^www\.|^m\./, "");
+    let id: string | null = null;
+    if (host === "youtu.be") id = u.pathname.slice(1);
+    else if (host === "youtube.com" || host === "youtube-nocookie.com") {
+      id = u.searchParams.get("v") ?? u.pathname.match(/^\/(?:embed|shorts)\/([\w-]{11})/)?.[1] ?? null;
+    }
+    return id && /^[\w-]{11}$/.test(id) ? `https://www.youtube.com/watch?v=${id}` : null;
+  } catch {
+    return null;
+  }
+}
+
 function cleanAttrs(type: string, allowed: string[], attrs: Record<string, unknown> | undefined) {
   if (!attrs || allowed.length === 0) return undefined;
   const out: Record<string, unknown> = {};
   for (const k of allowed) {
     const v = attrs[k];
     if (v === undefined || v === null) continue;
-    if (k === "level") out.level = v === 3 ? 3 : 2;
+    if (k === "level") out.level = v === 3 ? 3 : v === 4 ? 4 : 2;
     else if (k === "start") out.start = Number.isInteger(v) && (v as number) > 0 && (v as number) < 10000 ? v : 1;
-    else if (k === "href") {
+    else if (k === "textAlign") {
+      if (typeof v === "string" && ALIGNS.has(v)) out.textAlign = v;
+    } else if (k === "size") {
+      if (typeof v === "string" && v in IMAGE_SIZES) out.size = v;
+    } else if (k === "variant") {
+      out.variant = typeof v === "string" && v in CALLOUT_VARIANTS ? v : "tip";
+    } else if (k === "color") {
+      const ok = type === "highlight" ? HIGHLIGHTS.has(String(v)) : COLORS.has(String(v));
+      if (!ok) return type === "highlight" ? {} : null; // unknown text color → drop the mark
+      out.color = v;
+    } else if (k === "href") {
       const h = safeHref(v);
       if (!h) return null; // bad link → drop the mark
       out.href = h;
+    } else if (k === "src" && type === "youtube") {
+      const y = youtubeUrl(v);
+      if (!y) return null;
+      out.src = y;
     } else if (typeof v === "string") out[k] = v.slice(0, 300);
   }
   if (type === "image" && !isOwnImageUrl(out.src)) return null;
+  if (type === "youtube" && !out.src) return null;
   return out;
 }
 
@@ -91,10 +132,12 @@ function cleanNode(node: JSONContent, depth: number): JSONContent | null {
     const children = node.content.map((c) => cleanNode(c, depth + 1)).filter(Boolean) as JSONContent[];
     if (children.length) out.content = children;
   }
+  // A callout must contain at least one block
+  if (type === "callout" && !out.content) return null;
   return out;
 }
 
-/** Returns a safe copy of the editor JSON with only allowed nodes, marks, links and our own images. */
+/** Returns a safe copy of the editor JSON with only allowed nodes, marks, links, colors and our own images. */
 export function sanitizeContent(input: unknown): JSONContent {
   const cleaned = cleanNode(input as JSONContent, 0);
   return cleaned && cleaned.type === "doc" ? cleaned : EMPTY_DOC;
@@ -103,8 +146,7 @@ export function sanitizeContent(input: unknown): JSONContent {
 export function plainText(node: JSONContent | undefined): string {
   if (!node) return "";
   if (node.type === "text") return node.text ?? "";
-  const inner = (node.content ?? []).map(plainText).join(node.type === "doc" ? "\n" : " ");
-  return inner;
+  return (node.content ?? []).map(plainText).join(node.type === "doc" ? "\n" : " ");
 }
 
 /** Hebrew prose: about 200 words a minute. */

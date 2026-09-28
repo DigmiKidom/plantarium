@@ -66,7 +66,11 @@ export async function listSpecies(filters: SpeciesFilters = {}): Promise<Species
   if (!hasSupabase()) return applyFilters(local, filters);
 
   const db = createPublicClient();
-  const { data, error } = await db.from("species").select(SELECT).not("published_at", "is", null);
+  const { data, error } = await db
+    .from("species")
+    .select(SELECT)
+    .not("published_at", "is", null)
+    .order("sort", { referencedTable: "species_images" });
   if (error) throw error;
   // Filtering is done in JS for now (~hundreds of rows). Move to the search_species RPC past ~2k species.
   return applyFilters((data as unknown as Row[]).map(fromRow), filters);
@@ -81,6 +85,7 @@ export async function getSpecies(slug: string): Promise<Species | null> {
     .select(SELECT)
     .eq("slug", slug)
     .not("published_at", "is", null)
+    .order("sort", { referencedTable: "species_images" })
     .maybeSingle();
   if (error) throw error;
   return data ? fromRow(data as unknown as Row) : null;

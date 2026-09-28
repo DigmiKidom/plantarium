@@ -143,3 +143,84 @@ body {
   height: 0;
   pointer-events: none;
 }
+
+/* ---------- Article extras: headings 4, figures, callouts, video, marks ---------- */
+.article-prose h4 {
+  margin-top: 1.3em;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-strong);
+}
+.article-prose .article-figure {
+  margin-inline: 0;
+}
+.article-prose .article-figure figcaption {
+  margin-top: 0.4em;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.article-prose .article-figure[data-size="half"] {
+  display: inline-block;
+  width: calc(50% - 0.5rem);
+  vertical-align: top;
+  margin-inline-end: 0.5rem;
+}
+.article-prose .article-figure[data-size="small"] {
+  width: min(100%, 18rem);
+  margin-inline: auto;
+}
+.article-prose .callout {
+  border-radius: 1rem;
+  padding: 0.9em 1.1em;
+  border-inline-start: 4px solid;
+}
+.article-prose .callout > * + * {
+  margin-top: 0.5em;
+}
+.article-prose .callout[data-variant="tip"] {
+  background: var(--leaf-soft);
+  border-color: var(--primary);
+}
+.article-prose .callout[data-variant="warning"] {
+  background: var(--sun-soft);
+  border-color: #d97706;
+}
+.article-prose .callout[data-variant="info"] {
+  background: var(--water-soft);
+  border-color: #2f6a8a;
+}
+.article-prose .callout::before {
+  display: block;
+  margin-bottom: 0.25em;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.article-prose .callout[data-variant="tip"]::before { content: "💡 טיפ"; }
+.article-prose .callout[data-variant="warning"]::before { content: "⚠️ שימו לב"; }
+.article-prose .callout[data-variant="info"]::before { content: "ℹ️ מידע"; }
+.article-prose mark {
+  border-radius: 0.2em;
+  padding: 0 0.15em;
+  color: inherit;
+}
+.article-prose .article-video-wrap,
+.article-prose div[data-youtube-video] {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: var(--surface-2);
+}
+.article-prose .article-video-wrap iframe,
+.article-prose div[data-youtube-video] iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.article-prose .article-figure.ProseMirror-selectednode img,
+.article-prose div[data-youtube-video].ProseMirror-selectednode {
+  outline: 3px solid var(--primary);
+}

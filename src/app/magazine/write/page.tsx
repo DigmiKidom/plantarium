@@ -7,6 +7,7 @@ import { listMine } from "@/lib/magazine/queries";
 import { STATUS_HE, type ArticleStatus } from "@/lib/magazine/types";
 import { formatDateTime } from "@/lib/dates";
 import { cn } from "@/lib/cn";
+import { SUGGESTION_STATUS_HE, mySuggestions } from "@/lib/species/suggestions";
 
 export const metadata: Metadata = { title: "אזור הכותבים", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -38,7 +39,7 @@ export default async function WriterHome() {
     );
   }
 
-  const articles = await listMine(user.id);
+  const [articles, suggestions] = await Promise.all([listMine(user.id), mySuggestions(user.id)]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
@@ -75,6 +76,52 @@ export default async function WriterHome() {
           ))}
         </ul>
       )}
+
+      <section className="flex flex-col gap-3 border-t border-border pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-bold">הצעות לצמחים חדשים</h2>
+            <p className="text-sm text-muted">צמח שחסר במאגר? הציעו אותו ומנהל יוסיף.</p>
+          </div>
+          <Link href="/magazine/plants/suggest" className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-surface-2">
+            <Plus className="size-4" aria-hidden />
+            הצעת צמח
+          </Link>
+        </div>
+        {suggestions.length > 0 && (
+          <ul className="flex flex-col divide-y divide-border rounded-3xl border border-border bg-surface">
+            {suggestions.map((sg) => (
+              <li key={sg.id} className="flex flex-col gap-1 p-4">
+                <div className="flex items-center gap-3">
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-semibold">{sg.common_name_he}</span>
+                    <span className="ltr block text-xs italic text-muted">{sg.scientific_name}</span>
+                  </span>
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-full px-3 py-1 text-xs font-medium",
+                      sg.status === "approved" ? "bg-leaf-soft text-primary-strong" : sg.status === "rejected" ? "bg-sun-soft" : "bg-water-soft",
+                    )}
+                  >
+                    {SUGGESTION_STATUS_HE[sg.status]}
+                  </span>
+                  {sg.status === "pending" && (
+                    <Link href={`/magazine/plants/suggest?id=${sg.id}`} className="text-sm text-primary underline">
+                      עריכה
+                    </Link>
+                  )}
+                  {sg.status === "approved" && sg.species && (
+                    <Link href={`/magazine/plants/${sg.species.slug}`} className="text-sm text-primary underline">
+                      לדף הצמח
+                    </Link>
+                  )}
+                </div>
+                {sg.status === "rejected" && sg.review_note && <p className="text-sm text-muted">הערת המנהל: {sg.review_note}</p>}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

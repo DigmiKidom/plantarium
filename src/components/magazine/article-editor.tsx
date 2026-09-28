@@ -7,9 +7,17 @@ import { EditorContent, useEditor, useEditorState, type Editor } from "@tiptap/r
 import { Placeholder } from "@tiptap/extensions";
 import type { JSONContent } from "@tiptap/core";
 import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
   Bold,
   Heading2,
   Heading3,
+  Heading4,
+  Highlighter,
+  Lightbulb,
+  Palette,
+  SquarePlay,
   ImagePlus,
   Italic,
   Link2,
@@ -27,7 +35,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { articleExtensions } from "@/lib/magazine/extensions";
+import { CALLOUT_VARIANTS, HIGHLIGHT_COLORS, IMAGE_SIZES, TEXT_COLORS, articleExtensions } from "@/lib/magazine/extensions";
 import { createArticleImageUpload, deleteArticle, saveArticle } from "@/lib/magazine/actions";
 import { uploadImage } from "@/lib/uploads/client";
 import { STATUS_HE, type ArticleStatus } from "@/lib/magazine/types";
@@ -78,12 +86,29 @@ function ToolButton({
   );
 }
 
-function Toolbar({ editor, onImage, uploading }: { editor: Editor; onImage: () => void; uploading: boolean }) {
+type Panel = null | "link" | "highlight" | "color" | "callout" | "video";
+
+function Swatch({ color, label, onClick }: { color: string; label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      title={label}
+      aria-label={label}
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      className="size-7 rounded-full border border-border"
+      style={{ background: color }}
+    />
+  );
+}
+
+function Toolbar({ editor, onImages, uploading }: { editor: Editor; onImages: () => void; uploading: boolean }) {
   const s = useEditorState({
     editor,
     selector: ({ editor: e }) => ({
       h2: e.isActive("heading", { level: 2 }),
       h3: e.isActive("heading", { level: 3 }),
+      h4: e.isActive("heading", { level: 4 }),
       bold: e.isActive("bold"),
       italic: e.isActive("italic"),
       underline: e.isActive("underline"),
@@ -91,76 +116,187 @@ function Toolbar({ editor, onImage, uploading }: { editor: Editor; onImage: () =
       bullet: e.isActive("bulletList"),
       ordered: e.isActive("orderedList"),
       quote: e.isActive("blockquote"),
+      callout: e.isActive("callout"),
       link: e.isActive("link"),
+      highlight: e.isActive("highlight"),
+      colored: Boolean(e.getAttributes("textStyle").color),
+      alignRight: e.isActive({ textAlign: "right" }),
+      alignCenter: e.isActive({ textAlign: "center" }),
+      alignLeft: e.isActive({ textAlign: "left" }),
+      image: e.isActive("image"),
+      imageSize: (e.getAttributes("image").size as string | undefined) ?? "full",
+      imageCaption: (e.getAttributes("image").caption as string | undefined) ?? "",
       href: (e.getAttributes("link").href as string | undefined) ?? "",
       canUndo: e.can().undo(),
       canRedo: e.can().redo(),
     }),
   });
-  const [linkOpen, setLinkOpen] = useState(false);
+  const [panel, setPanel] = useState<Panel>(null);
   const [href, setHref] = useState("");
+  const [video, setVideo] = useState("");
   const c = () => editor.chain().focus();
+  const open = (p: Panel) => setPanel((cur) => (cur === p ? null : p));
 
   const applyLink = () => {
     const url = href.trim();
     if (!url) c().extendMarkRange("link").unsetLink().run();
     else c().extendMarkRange("link").setLink({ href: /^(https?:|mailto:)/i.test(url) ? url : `https://${url}` }).run();
-    setLinkOpen(false);
+    setPanel(null);
   };
+  const addVideo = () => {
+    if (video.trim()) c().setYoutubeVideo({ src: video.trim() }).run();
+    setVideo("");
+    setPanel(null);
+  };
+  const sep = <span className="mx-1 h-6 w-px bg-border" aria-hidden />;
 
   return (
-    <div className="sticky top-14 z-10 border-b border-border bg-surface/95 backdrop-blur md:top-0">
-      <div role="toolbar" aria-label="עיצוב טקסט" className="flex flex-wrap items-center gap-0.5 p-1.5">
+    <div className="sticky top-16 z-10 border-b border-border bg-surface/95 backdrop-blur md:top-0">
+      <div role="toolbar" aria-label="עיצוב המאמר" className="flex flex-wrap items-center gap-0.5 p-1.5">
         <ToolButton icon={Heading2} label="כותרת" active={s.h2} onClick={() => c().toggleHeading({ level: 2 }).run()} />
         <ToolButton icon={Heading3} label="כותרת משנה" active={s.h3} onClick={() => c().toggleHeading({ level: 3 }).run()} />
-        <span className="mx-1 h-6 w-px bg-border" aria-hidden />
+        <ToolButton icon={Heading4} label="כותרת קטנה" active={s.h4} onClick={() => c().toggleHeading({ level: 4 }).run()} />
+        {sep}
         <ToolButton icon={Bold} label="מודגש" active={s.bold} onClick={() => c().toggleBold().run()} />
         <ToolButton icon={Italic} label="נטוי" active={s.italic} onClick={() => c().toggleItalic().run()} />
         <ToolButton icon={Underline} label="קו תחתון" active={s.underline} onClick={() => c().toggleUnderline().run()} />
         <ToolButton icon={Strikethrough} label="קו חוצה" active={s.strike} onClick={() => c().toggleStrike().run()} />
-        <span className="mx-1 h-6 w-px bg-border" aria-hidden />
+        <ToolButton icon={Highlighter} label="מרקר" active={s.highlight || panel === "highlight"} onClick={() => open("highlight")} />
+        <ToolButton icon={Palette} label="צבע טקסט" active={s.colored || panel === "color"} onClick={() => open("color")} />
+        {sep}
+        <ToolButton icon={AlignRight} label="יישור לימין" active={s.alignRight} onClick={() => c().setTextAlign("right").run()} />
+        <ToolButton icon={AlignCenter} label="מרכוז" active={s.alignCenter} onClick={() => c().setTextAlign("center").run()} />
+        <ToolButton icon={AlignLeft} label="יישור לשמאל" active={s.alignLeft} onClick={() => c().setTextAlign("left").run()} />
+        {sep}
         <ToolButton icon={List} label="רשימה" active={s.bullet} onClick={() => c().toggleBulletList().run()} />
         <ToolButton icon={ListOrdered} label="רשימה ממוספרת" active={s.ordered} onClick={() => c().toggleOrderedList().run()} />
         <ToolButton icon={Quote} label="ציטוט" active={s.quote} onClick={() => c().toggleBlockquote().run()} />
+        <ToolButton icon={Lightbulb} label="תיבת טיפ" active={s.callout || panel === "callout"} onClick={() => open("callout")} />
         <ToolButton icon={Minus} label="קו מפריד" onClick={() => c().setHorizontalRule().run()} />
-        <span className="mx-1 h-6 w-px bg-border" aria-hidden />
+        {sep}
         <ToolButton
           icon={Link2}
           label="קישור"
-          active={s.link || linkOpen}
+          active={s.link || panel === "link"}
           onClick={() => {
             setHref(s.href);
-            setLinkOpen((o) => !o);
+            open("link");
           }}
         />
-        <ToolButton icon={uploading ? Loader2 : ImagePlus} label="הוספת תמונה" disabled={uploading} onClick={onImage} />
+        <ToolButton icon={uploading ? Loader2 : ImagePlus} label="הוספת תמונות" disabled={uploading} onClick={onImages} />
+        <ToolButton icon={SquarePlay} label="סרטון יוטיוב" active={panel === "video"} onClick={() => open("video")} />
         <span className="ms-auto flex">
           <ToolButton icon={Undo2} label="ביטול" disabled={!s.canUndo} onClick={() => c().undo().run()} />
           <ToolButton icon={Redo2} label="חזרה" disabled={!s.canRedo} onClick={() => c().redo().run()} />
         </span>
       </div>
-      {linkOpen && (
+
+      {/* Selected image: size + caption */}
+      {s.image && (
+        <div className="flex flex-wrap items-center gap-2 border-t border-border p-2 text-sm">
+          <span className="font-medium">תמונה:</span>
+          {(Object.keys(IMAGE_SIZES) as (keyof typeof IMAGE_SIZES)[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => c().updateAttributes("image", { size: k }).run()}
+              className={cn("rounded-full border px-3 py-1", s.imageSize === k ? "border-primary bg-leaf-soft font-medium" : "border-border hover:bg-surface-2")}
+            >
+              {IMAGE_SIZES[k]}
+            </button>
+          ))}
+          <input
+            key={s.imageCaption}
+            defaultValue={s.imageCaption}
+            onBlur={(e) => editor.chain().updateAttributes("image", { caption: e.target.value.trim() || null }).run()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                (e.target as HTMLInputElement).blur();
+              }
+            }}
+            placeholder="כיתוב לתמונה (Enter לשמירה)"
+            aria-label="כיתוב לתמונה"
+            className="min-w-40 flex-1 rounded-lg border border-border bg-bg px-3 py-1.5 outline-none focus:border-primary"
+          />
+        </div>
+      )}
+
+      {panel === "highlight" && (
+        <div className="flex items-center gap-2 border-t border-border p-2 text-sm">
+          <span>מרקר:</span>
+          {Object.values(HIGHLIGHT_COLORS).map((h) => (
+            <Swatch key={h.value} color={h.value} label={h.he} onClick={() => c().setHighlight({ color: h.value }).run()} />
+          ))}
+          <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => c().unsetHighlight().run()} className="rounded-full px-3 py-1 text-muted hover:bg-surface-2">
+            הסרה
+          </button>
+        </div>
+      )}
+      {panel === "color" && (
+        <div className="flex items-center gap-2 border-t border-border p-2 text-sm">
+          <span>צבע:</span>
+          {Object.values(TEXT_COLORS).map((t) => (
+            <Swatch key={t.value} color={t.value} label={t.he} onClick={() => c().setColor(t.value).run()} />
+          ))}
+          <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => c().unsetColor().run()} className="rounded-full px-3 py-1 text-muted hover:bg-surface-2">
+            רגיל
+          </button>
+        </div>
+      )}
+      {panel === "callout" && (
+        <div className="flex flex-wrap items-center gap-2 border-t border-border p-2 text-sm">
+          <span>תיבה:</span>
+          {(Object.keys(CALLOUT_VARIANTS) as (keyof typeof CALLOUT_VARIANTS)[]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => {
+                if (s.callout) c().updateAttributes("callout", { variant: k }).run();
+                else c().wrapIn("callout", { variant: k }).run();
+                setPanel(null);
+              }}
+              className="rounded-full border border-border px-3 py-1 hover:bg-surface-2"
+            >
+              {CALLOUT_VARIANTS[k]}
+            </button>
+          ))}
+          {s.callout && (
+            <button type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => c().lift("callout").run()} className="rounded-full px-3 py-1 text-muted hover:bg-surface-2">
+              הוצאה מהתיבה
+            </button>
+          )}
+        </div>
+      )}
+      {(panel === "link" || panel === "video") && (
         <div className="flex items-center gap-2 border-t border-border p-2">
           <input
             autoFocus
             dir="ltr"
-            value={href}
-            onChange={(e) => setHref(e.target.value)}
+            value={panel === "link" ? href : video}
+            onChange={(e) => (panel === "link" ? setHref(e.target.value) : setVideo(e.target.value))}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                applyLink();
+                if (panel === "link") applyLink();
+                else addVideo();
               }
-              if (e.key === "Escape") setLinkOpen(false);
+              if (e.key === "Escape") setPanel(null);
             }}
-            placeholder="https://"
-            aria-label="כתובת הקישור"
+            placeholder={panel === "link" ? "https://" : "https://www.youtube.com/watch?v=…"}
+            aria-label={panel === "link" ? "כתובת הקישור" : "קישור לסרטון ביוטיוב"}
             className="min-w-0 flex-1 rounded-lg border border-border bg-bg px-3 py-2 text-start text-sm outline-none focus:border-primary"
           />
-          <button type="button" onClick={applyLink} className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary">
-            {href.trim() ? "החלה" : "הסרה"}
+          <button
+            type="button"
+            onClick={panel === "link" ? applyLink : addVideo}
+            className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-on-primary"
+          >
+            {panel === "link" ? (href.trim() ? "החלה" : "הסרה") : "הוספה"}
           </button>
-          <button type="button" aria-label="סגירה" onClick={() => setLinkOpen(false)} className="rounded-full p-2 text-muted hover:bg-surface-2">
+          <button type="button" aria-label="סגירה" onClick={() => setPanel(null)} className="rounded-full p-2 text-muted hover:bg-surface-2">
             <X className="size-4" aria-hidden />
           </button>
         </div>
@@ -191,14 +327,18 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
     editorProps: { attributes: { dir: "rtl", "aria-label": "תוכן המאמר", class: "px-5 py-6 md:px-8" } },
   });
 
-  const upload = async (file: File | undefined, target: "body" | "cover") => {
-    if (!file) return;
+  const upload = async (files: FileList | null, target: "body" | "cover") => {
+    const list = Array.from(files ?? []).slice(0, target === "cover" ? 1 : 10);
+    if (!list.length) return;
     setError(undefined);
     setUploading(target);
     try {
-      const url = await uploadImage(file, createArticleImageUpload);
-      if (target === "cover") setCoverUrl(url);
-      else editor?.chain().focus().setImage({ src: url, alt: "" }).run();
+      for (const file of list) {
+        const url = await uploadImage(file, createArticleImageUpload);
+        if (target === "cover") setCoverUrl(url);
+        // Two or more photos at once → side by side (half width)
+        else editor?.chain().focus().insertContent({ type: "image", attrs: { src: url, alt: "", size: list.length > 1 ? "half" : "full" } }).run();
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : "העלאת התמונה נכשלה");
     } finally {
@@ -344,7 +484,7 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
       <div className="overflow-hidden rounded-3xl border border-border bg-surface">
         {editor ? (
           <>
-            <Toolbar editor={editor} uploading={uploading === "body"} onImage={() => bodyFile.current?.click()} />
+            <Toolbar editor={editor} uploading={uploading === "body"} onImages={() => bodyFile.current?.click()} />
             <div className="article-prose">
               <EditorContent editor={editor} />
             </div>
@@ -354,8 +494,8 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
         )}
       </div>
 
-      <input ref={bodyFile} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { upload(e.target.files?.[0], "body"); e.target.value = ""; }} />
-      <input ref={coverFile} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { upload(e.target.files?.[0], "cover"); e.target.value = ""; }} />
+      <input ref={bodyFile} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onChange={(e) => { upload(e.target.files, "body"); e.target.value = ""; }} />
+      <input ref={coverFile} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { upload(e.target.files, "cover"); e.target.value = ""; }} />
 
       <div className="sticky bottom-20 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/95 p-3 backdrop-blur md:bottom-4">
         {(error || message) && (

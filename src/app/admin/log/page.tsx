@@ -19,6 +19,9 @@ const ACTION_HE: Record<string, string> = {
   set_plan: "שינוי חבילה",
   remove_listing: "הסרת מודעה מהשוק",
   delete_post: "מחיקת פוסט מהחממה",
+  edit_species: "עריכת צמח במאגר",
+  approve_species: "צמח חדש נוסף למאגר",
+  reject_species: "הצעת צמח נדחתה",
 };
 
 function detail(action: string, meta: Record<string, unknown>) {

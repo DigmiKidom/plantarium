@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, Droplets, FlaskConical, Layers, PawPrint, Plus, Sun, Thermometer, Waves } from "lucide-react";
+import { ChevronRight, Droplet, Droplets, FlaskConical, Layers, Leaf, Plus, Scissors, Sprout, Sun, Thermometer, Waves } from "lucide-react";
 import { allSlugs, getSpecies, relatedSpecies } from "@/lib/species/repo";
 import type { Season } from "@/lib/species/types";
 import { CATEGORY_HE, DIFFICULTY_HE, GROWTH_HE, LIGHT_HE, MEDIUM_HE, SEASON_HE, tagLabel } from "@/lib/labels";
 import { SpeciesVisual } from "@/components/species/species-visual";
 import { SpeciesCard } from "@/components/species/species-card";
 import { DifficultyPill } from "@/components/species/difficulty-pill";
+import { Meter, TraitBadges } from "@/components/species/trait-badges";
+import { AdminEditLink } from "@/components/species/admin-edit-link";
+import { PhotoGallery } from "@/components/market/photo-gallery";
+import { humidityLevel, lightLevel, plantTraits, waterLevel } from "@/lib/species/traits";
 
 export const revalidate = 3600;
 
@@ -41,10 +45,10 @@ function CareCard({
   tone: string;
 }) {
   return (
-    <div className="flex flex-col gap-2 rounded-2xl border border-border bg-surface p-4">
+    <div className="flex flex-col gap-2 rounded-3xl border border-border bg-surface p-5">
       <div className="flex items-center gap-2">
-        <span className={`grid size-9 place-items-center rounded-xl ${tone}`}>
-          <Icon className="size-5" aria-hidden />
+        <span className={`grid size-11 place-items-center rounded-2xl ${tone}`}>
+          <Icon className="size-6" aria-hidden />
         </span>
         <h3 className="text-sm font-medium text-muted">{title}</h3>
       </div>
@@ -61,6 +65,7 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
   const related = await relatedSpecies(s);
   const c = s.care;
   const mid = (c.water_interval_min_days + c.water_interval_max_days) / 2;
+  const traits = plantTraits(s);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -84,20 +89,14 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
       </nav>
 
       <header className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
-        <SpeciesVisual species={s} className="aspect-square w-full rounded-3xl" />
+        {s.images.length > 0 ? (
+          <PhotoGallery photos={s.images.map((i) => i.url)} alt={s.common_name_he} />
+        ) : (
+          <SpeciesVisual species={s} className="aspect-square w-full rounded-3xl" />
+        )}
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center gap-2">
             <DifficultyPill value={s.difficulty} label={`קושי: ${DIFFICULTY_HE[s.difficulty]}`} />
-            {s.is_toxic_pets === false && (
-              <span className="flex items-center gap-1 rounded-full bg-leaf-soft px-2.5 py-0.5 text-xs font-medium text-primary-strong">
-                <PawPrint className="size-3.5" aria-hidden /> בטוח לחיות מחמד
-              </span>
-            )}
-            {s.is_toxic_pets === true && (
-              <span className="flex items-center gap-1 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">
-                <PawPrint className="size-3.5" aria-hidden /> רעיל לחיות מחמד
-              </span>
-            )}
           </div>
           <div>
             <h1 className="text-4xl font-bold">{s.common_name_he}</h1>
@@ -107,6 +106,20 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
             )}
           </div>
           <p className="text-lg leading-relaxed">{s.summary_he}</p>
+          <div className="grid grid-cols-3 gap-2 rounded-3xl bg-surface-2 p-4 text-sm">
+            <div className="flex flex-col gap-1">
+              <span className="text-muted">אור</span>
+              <Meter icon={Sun} level={lightLevel(s)} tone="text-amber-500" label="אור" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-muted">מים</span>
+              <Meter icon={Droplet} level={waterLevel(s)} tone="text-sky-500" label="מים" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-muted">לחות</span>
+              <Meter icon={Leaf} level={humidityLevel(s)} tone="text-emerald-500" label="לחות" />
+            </div>
+          </div>
           <dl className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
             {[
               ["משפחה", <span key="f" className="ltr">{s.family}</span>],
@@ -121,6 +134,7 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
             ))}
           </dl>
           <div className="flex flex-wrap gap-3">
+            <AdminEditLink slug={s.slug} />
             <Link
               href={`/plants/new?species=${s.slug}`}
               className="flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-on-primary hover:bg-primary-strong"
@@ -131,33 +145,46 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
         </div>
       </header>
 
+      {traits.length > 0 && (
+        <section aria-labelledby="traits" className="flex flex-col gap-4">
+          <h2 id="traits" className="text-2xl font-bold">האופי של {s.common_name_he}</h2>
+          <TraitBadges traits={traits} />
+        </section>
+      )}
+
       <section aria-labelledby="care" className="flex flex-col gap-4">
         <h2 id="care" className="text-2xl font-bold">מדריך טיפול</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <CareCard icon={Sun} title="אור" value={LIGHT_HE[c.light]} note={c.light_notes_he} tone="bg-sun-soft text-[#8a6d1f] dark:text-[#e3c56b]" />
+          <CareCard icon={Sun} title="אור" value={LIGHT_HE[c.light]} note={c.light_notes_he} tone="bg-amber-100 text-amber-600 dark:bg-amber-400/15 dark:text-amber-300" />
           <CareCard
             icon={Droplets}
             title="השקיה"
             value={`כל ${c.water_interval_min_days}–${c.water_interval_max_days} ימים באביב`}
             note={c.water_notes_he}
-            tone="bg-water-soft text-[#2f6a8a] dark:text-[#8cc4e3]"
+            tone="bg-sky-100 text-sky-600 dark:bg-sky-400/15 dark:text-sky-300"
           />
-          <CareCard icon={Waves} title="לחות" value={<span className="ltr">{c.humidity_min}–{c.humidity_max}%</span>} tone="bg-water-soft text-[#2f6a8a] dark:text-[#8cc4e3]" />
-          <CareCard icon={Thermometer} title="טמפרטורה" value={<span className="ltr">{c.temp_min_c}–{c.temp_max_c}°C</span>} tone="bg-accent-soft text-accent" />
+          <CareCard icon={Waves} title="לחות" value={<span className="ltr">{c.humidity_min}–{c.humidity_max}%</span>} tone="bg-emerald-100 text-emerald-600 dark:bg-emerald-400/15 dark:text-emerald-300" />
+          <CareCard icon={Thermometer} title="טמפרטורה" value={<span className="ltr">{c.temp_min_c}–{c.temp_max_c}°C</span>} tone="bg-red-100 text-red-500 dark:bg-red-400/15 dark:text-red-300" />
           <CareCard
             icon={FlaskConical}
             title="דישון"
             value={`כל ${c.fertilize_interval_days} ימים`}
             note={c.fertilize_season === "spring_summer" ? "בעונת הגדילה – אביב וקיץ. בחורף להפסיק או לצמצם." : "לאורך עונת הגידול."}
-            tone="bg-leaf-soft text-primary"
+            tone="bg-lime-100 text-lime-700 dark:bg-lime-400/15 dark:text-lime-300"
           />
           <CareCard
             icon={Layers}
             title="מצע"
             value={c.medium.map((m) => MEDIUM_HE[m] ?? m).join(" / ")}
             note={c.medium_notes_he}
-            tone="bg-surface-2 text-text"
+            tone="bg-stone-200 text-stone-600 dark:bg-stone-400/15 dark:text-stone-300"
           />
+          {c.pruning_he && (
+            <CareCard icon={Scissors} title="גיזום" value="מתי ואיך" note={c.pruning_he} tone="bg-violet-100 text-violet-600 dark:bg-violet-400/15 dark:text-violet-300" />
+          )}
+          {c.propagation_he && (
+            <CareCard icon={Sprout} title="ריבוי" value="איך מרבים" note={c.propagation_he} tone="bg-green-100 text-green-700 dark:bg-green-400/15 dark:text-green-300" />
+          )}
         </div>
       </section>
 

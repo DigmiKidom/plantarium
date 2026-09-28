@@ -24,6 +24,8 @@ export interface SpeciesCare {
   fertilize_season: string;
   medium: string[];
   medium_notes_he: string;
+  pruning_he?: string | null;
+  propagation_he?: string | null;
   seasonal: Record<Season, { water_factor: number }>;
 }
 

@@ -6,6 +6,7 @@ import type { Category, Difficulty, LightLevel, SpeciesFilters } from "@/lib/spe
 import { CATEGORY_HE, DIFFICULTY_HE, LIGHT_HE } from "@/lib/labels";
 import { SpeciesCard } from "@/components/species/species-card";
 import { cn } from "@/lib/cn";
+import { SuggestSpeciesLink } from "@/components/species/suggest-link";
 
 export const metadata: Metadata = {
   title: "מאגר הצמחים",
@@ -43,9 +44,12 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/magazi
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold">מאגר הצמחים</h1>
-        <p className="text-muted">איך לגדל כל צמח: אור, השקיה, לחות, טמפרטורה, מצע ודישון.</p>
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold">מאגר הצמחים</h1>
+          <p className="text-muted">איך לגדל כל צמח: אור, השקיה, לחות, טמפרטורה, מצע ודישון.</p>
+        </div>
+        <SuggestSpeciesLink />
       </header>
 
       <form action="/magazine/plants" className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4">

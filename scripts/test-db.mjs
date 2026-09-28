@@ -486,6 +486,54 @@ await allowed("author deletes own post", () =>
     if (r.affectedRows < 1) throw new Error("0 rows");
   }));
 
+// ---------- plant database ----------
+console.log("\nPlant database");
+const { rows: anySp } = await q(`select id, slug from public.species order by slug limit 1`);
+const spId = anySp[0].id;
+await denied("regular user can't edit a species", () =>
+  as(alice, () => q(`update public.species set summary_he = 'x' where id = $1`, [spId])));
+await q(`update public.profiles set role = 'editor' where id = $1`, [mallory]);
+await denied("editors can no longer edit species (admins only)", () =>
+  as(mallory, () => q(`update public.species set summary_he = 'x' where id = $1`, [spId])));
+await q(`update public.profiles set role = 'user' where id = $1`, [mallory]);
+await allowed("admin edits a species", () =>
+  as(carol, async () => {
+    const r = await q(`update public.species set summary_he = 'עודכן' where id = $1`, [spId]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await allowed("admin edits care info", () =>
+  as(carol, () => q(`update public.species_care set water_notes_he = 'עודכן' where species_id = $1`, [spId])));
+await allowed("admin adds a photo", () =>
+  as(carol, () => q(`insert into public.species_images (species_id, storage_path) values ($1, 'https://img.test/species/a.webp')`, [spId])));
+await denied("user can't add a photo", () =>
+  as(alice, () => q(`insert into public.species_images (species_id, storage_path) values ($1, 'https://img.test/x.webp')`, [spId])));
+
+console.log("\nSpecies suggestions");
+await q(`update public.profiles set role = 'author', banned_until = null where id = $1`, [mallory]);
+let sugId;
+await allowed("author suggests a new plant", () =>
+  as(mallory, async () => {
+    const { rows } = await q(`insert into public.species_suggestions (common_name_he, scientific_name, category, data) values ('פטוניה', 'Petunia hybrida', 'garden', '{"summary_he":"פורחת"}') returning id`);
+    sugId = rows[0].id;
+  }));
+await denied("regular user can't suggest", () =>
+  as(alice, () => q(`insert into public.species_suggestions (common_name_he, scientific_name, category) values ('אא', 'Aaa bbb', 'garden')`)));
+await denied("author can't approve own suggestion", () =>
+  as(mallory, () => q(`update public.species_suggestions set status = 'approved' where id = $1`, [sugId])));
+await allowed("author edits own pending suggestion", () =>
+  as(mallory, () => q(`update public.species_suggestions set common_name_he = 'פטוניה כפולה' where id = $1`, [sugId])));
+await expectCount("others can't see the suggestion", 0, () =>
+  as(alice, () => q(`select id from public.species_suggestions where id = $1`, [sugId])));
+await expectCount("admin sees pending suggestions", 1, () =>
+  as(carol, () => q(`select id from public.species_suggestions where status = 'pending'`)));
+await allowed("admin approves", () =>
+  as(carol, () => q(`update public.species_suggestions set status = 'approved' where id = $1`, [sugId])));
+await expectCount("reviewer is stamped", 1, () =>
+  q(`select 1 from public.species_suggestions where id = $1 and reviewed_by = $2`, [sugId, carol]));
+await denied("author can't edit after review", () =>
+  as(mallory, () => q(`update public.species_suggestions set common_name_he = 'שינוי' where id = $1`, [sugId])));
+await q(`update public.profiles set role = 'user' where id = $1`, [mallory]);
+
 // ---------- cascade ----------
 console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);
