@@ -119,6 +119,16 @@ const bob = await createUser("bob", "author");
 const carol = await createUser("carol", "admin");
 const dave = await createUser("dave", "admin");
 
+// ---------- signup ----------
+console.log("\nSignup");
+{
+  const { rows } = await q(`insert into auth.users (email, raw_user_meta_data) values ('noa.levi@test.local', $1) returning id`, [
+    { display_name: "נועה לוי", username: "noa_l" },
+  ]);
+  await expectCount("new account gets the typed name and username, not the email", 1, () =>
+    q(`select 1 from public.profiles where id = $1 and display_name = 'נועה לוי' and username = 'noa_l'`, [rows[0].id]));
+}
+
 // ---------- profiles & roles ----------
 console.log("\nProfiles & roles");
 await denied("user can't make themselves admin", () =>

@@ -40,13 +40,22 @@ export async function signUp(_prev: FormState, fd: FormData): Promise<FormState>
   // then sign in. Works whatever the "Confirm email" setting in Supabase is.
   if (!hasAdmin()) return { error: "חסר SUPABASE_SERVICE_ROLE_KEY ב-.env.local", values };
   const admin = createAdminClient();
-  const { error: createError } = await admin.auth.admin.createUser({
+  const { data: created, error: createError } = await admin.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
     user_metadata: { display_name: displayName, username },
   });
   if (createError) return { error: authErrorHe(createError.message), values };
+
+  // The database trigger creates the profile; set the name and username explicitly too,
+  // so the account never ends up named after the email address.
+  if (created.user) {
+    const { error: profileError } = await admin
+      .from("profiles")
+      .upsert({ id: created.user.id, display_name: displayName, username }, { onConflict: "id" });
+    if (profileError) console.error(JSON.stringify({ at: "auth.signUp.profile", error: profileError.message }));
+  }
 
   const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
   if (signInError) return { error: authErrorHe(signInError.message), values };
