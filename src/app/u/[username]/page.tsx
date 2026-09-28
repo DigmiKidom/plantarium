@@ -11,6 +11,7 @@ import { ListingTable } from "@/components/market/listing-table";
 import { followCounts, isFollowing } from "@/lib/follows/queries";
 import { listListings } from "@/lib/market/queries";
 import Link from "next/link";
+import { UserManage } from "@/components/admin/user-manage";
 import { formatDate } from "@/lib/dates";
 
 type PublicProfile = {
@@ -44,8 +45,19 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
   const profile = await getProfile((await params).username.toLowerCase());
   if (!profile) notFound();
 
-  const { data: auth } = await (await createUserClient()).auth.getUser();
+  const db = await createUserClient();
+  const { data: auth } = await db.auth.getUser();
   const viewerId = auth.user?.id;
+  let viewerIsAdmin = false;
+  if (viewerId) {
+    const { data: me } = await db.from("profiles").select("role").eq("id", viewerId).maybeSingle();
+    viewerIsAdmin = me?.role === "admin";
+  }
+  let targetPlan: "free" | "plus" = "free";
+  if (viewerIsAdmin) {
+    const { data: p, error } = await db.from("profiles").select("plan").eq("id", profile.id).maybeSingle();
+    if (!error && p?.plan === "plus") targetPlan = "plus";
+  }
   const banned = isBannedNow(profile.banned_until);
   const [articles, listings, counts, following] = await Promise.all([
     banned ? [] : listPublished({ authorId: profile.id, limit: 12 }),
@@ -91,6 +103,16 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
           </Link>
         </li>
       </ul>
+
+      {viewerIsAdmin && viewerId !== profile.id && (
+        <section aria-label="ניהול" className="flex flex-col gap-3 rounded-3xl border border-dashed border-accent p-4">
+          <h2 className="text-sm font-semibold text-accent">ניהול החשבון (מנהל)</h2>
+          <UserManage
+            isSelf={false}
+            user={{ id: profile.id, username: profile.username, display_name: profile.display_name, role: profile.role, plan: targetPlan, banned }}
+          />
+        </section>
+      )}
 
       {banned ? (
         <p className="flex items-center gap-2 rounded-2xl bg-accent-soft px-4 py-3 text-accent">

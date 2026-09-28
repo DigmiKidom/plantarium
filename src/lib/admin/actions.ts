@@ -179,7 +179,9 @@ export async function deleteUser(raw: z.input<typeof deleteInput>): Promise<Admi
   const target = await getTarget(s, userId);
   if (!target) return fail("המשתמש לא נמצא");
   if (target.role === "admin") return fail("אי אפשר למחוק מנהל");
-  if (confirm.trim().toLowerCase() !== (target.username ?? "").toLowerCase()) return fail("שם המשתמש לאישור לא תואם");
+  // Confirm by typing the username, or the word "מחיקה" for accounts without one
+  const expected = target.username ? target.username.toLowerCase() : "מחיקה";
+  if (confirm.trim().toLowerCase() !== expected) return fail("מילת האישור לא תואמת");
 
   await log(s, { action: "delete_user", targetId: userId, label: labelOf(target), reason });
   const { error } = await createAdminClient().auth.admin.deleteUser(userId);

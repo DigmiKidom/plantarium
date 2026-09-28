@@ -30,6 +30,7 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
   const [duration, setDuration] = useState<BanDuration>("7d");
   const [reason, setReason] = useState("");
   const [confirmName, setConfirmName] = useState("");
+  const confirmWord = user.username ? user.username.toLowerCase() : "מחיקה";
   const [result, setResult] = useState<AdminResult>();
   const [pending, startTransition] = useTransition();
 
@@ -179,18 +180,17 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
             <input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={500} className={inputCls} />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            לאישור, הקלידו את שם המשתמש: <span className="ltr font-semibold">{user.username ?? "—"}</span>
-            <input value={confirmName} onChange={(e) => setConfirmName(e.target.value)} dir="ltr" className={cn(inputCls, "text-start")} />
+            לאישור, הקלידו: <span className={cn("font-semibold", user.username && "ltr")}>{confirmWord}</span>
+            <input value={confirmName} onChange={(e) => setConfirmName(e.target.value)} dir={user.username ? "ltr" : undefined} className={cn(inputCls, "text-start")} />
           </label>
           <button
             type="button"
-            disabled={pending || !user.username || confirmName.trim().toLowerCase() !== user.username}
+            disabled={pending || confirmName.trim().toLowerCase() !== confirmWord}
             onClick={() => run(() => deleteUser({ userId: user.id, confirm: confirmName, reason }))}
             className="self-start rounded-full bg-accent px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
           >
             מחיקה לצמיתות
           </button>
-          {!user.username && <p className="text-xs">לחשבון אין שם משתמש – אפשר למחוק רק דרך Supabase.</p>}
         </div>
       )}
     </div>
