@@ -6,8 +6,20 @@ import { reportUser } from "@/lib/reports/actions";
 import { REPORT_REASONS, REPORT_REASON_HE, type ReportReason } from "@/lib/reports/reasons";
 import { FormAlert } from "@/components/ui/form";
 
-/** Report an account, or one of its marketplace listings (listingId). */
-export function ReportButton({ userId, name, listingId }: { userId: string; name: string; listingId?: string }) {
+/** Report an account, or one of its marketplace listings (listingId) or feed posts (postId). */
+export function ReportButton({
+  userId,
+  name,
+  listingId,
+  postId,
+  compact,
+}: {
+  userId: string;
+  name: string;
+  listingId?: string;
+  postId?: string;
+  compact?: boolean;
+}) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [reason, setReason] = useState<ReportReason | "">("");
   const [details, setDetails] = useState("");
@@ -20,7 +32,7 @@ export function ReportButton({ userId, name, listingId }: { userId: string; name
     if (!reason) return setError("נא לבחור סיבה");
     setError(undefined);
     startTransition(async () => {
-      const res = await reportUser({ userId, listingId, reason, details });
+      const res = await reportUser({ userId, listingId, postId, reason, details });
       if (!res.ok) return setError(res.error);
       setDone(true);
     });
@@ -31,10 +43,16 @@ export function ReportButton({ userId, name, listingId }: { userId: string; name
       <button
         type="button"
         onClick={() => dialog.current?.showModal()}
-        className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted hover:border-accent hover:text-accent"
+        aria-label={compact ? "דיווח" : undefined}
+        title={compact ? "דיווח" : undefined}
+        className={
+          compact
+            ? "rounded-full p-2 text-muted hover:bg-accent-soft hover:text-accent"
+            : "flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-muted hover:border-accent hover:text-accent"
+        }
       >
         <Flag className="size-4" aria-hidden />
-        דיווח
+        {!compact && "דיווח"}
       </button>
       <dialog
         ref={dialog}
@@ -54,7 +72,7 @@ export function ReportButton({ userId, name, listingId }: { userId: string; name
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-4 p-6">
             <h2 id="report-title" className="text-xl font-bold">
-              {listingId ? "דיווח על המודעה" : `דיווח על ${name}`}
+              {postId ? "דיווח על הפוסט" : listingId ? "דיווח על המודעה" : `דיווח על ${name}`}
             </h2>
             <FormAlert error={error} />
             <fieldset className="flex flex-col gap-2">

@@ -419,6 +419,57 @@ await allowed("user unfollows", () =>
     if (r.affectedRows !== 1) throw new Error("0 rows");
   }));
 
+// ---------- feed (החממה) ----------
+console.log("\nFeed");
+let postId;
+await allowed("user writes a post", () =>
+  as(alice, async () => {
+    const { rows } = await q(`insert into public.posts (body) values ('עלה חדש במונסטרה!') returning id`);
+    postId = rows[0].id;
+  }));
+await allowed("user adds a photo from their own folder", () =>
+  as(alice, () => q(`insert into public.post_media (post_id, storage_path) values ($1, $2)`, [postId, `feed/${alice}/a.webp`])));
+await denied("photo from someone else's folder is rejected", () =>
+  as(alice, () => q(`insert into public.post_media (post_id, storage_path) values ($1, $2)`, [postId, `feed/${mallory}/x.webp`])));
+await denied("more than 4 photos is rejected", () =>
+  as(alice, async () => {
+    for (let i = 0; i < 4; i++) await q(`insert into public.post_media (post_id, storage_path) values ($1, $2)`, [postId, `feed/${alice}/${i}.webp`]);
+  }));
+await denied("can't post in someone else's name", () =>
+  as(alice, () => q(`insert into public.posts (author_id, body) values ($1, 'x')`, [mallory])));
+await denied("visitors can't post", () => as(null, () => q(`insert into public.posts (body) values ('x')`)));
+await expectCount("visitors read public posts", 1, () => as(null, () => q(`select id from public.posts where id = $1`, [postId])));
+await allowed("user likes a post", () => as(mallory, () => q(`insert into public.reactions (post_id) values ($1)`, [postId])));
+await expectCount("like counter goes up", 1, () => q(`select like_count as n from public.posts where id = $1`, [postId]));
+await denied("can't like twice", () => as(mallory, () => q(`insert into public.reactions (post_id) values ($1)`, [postId])));
+await allowed("user comments", () => as(mallory, () => q(`insert into public.comments (post_id, body) values ($1, ' יפה! ')`, [postId])));
+await expectCount("comment counter goes up", 1, () => q(`select comment_count as n from public.posts where id = $1`, [postId]));
+await denied("user can't change counters", () =>
+  as(alice, () => q(`update public.posts set like_count = 999 where id = $1`, [postId])));
+await denied("others can't delete the post", () =>
+  as(mallory, () => q(`delete from public.posts where id = $1`, [postId])));
+await q(`update public.profiles set banned_until = 'infinity' where id = $1`, [mallory]);
+await denied("banned user can't post", () => as(mallory, () => q(`insert into public.posts (body) values ('x')`)));
+await denied("banned user can't comment", () =>
+  as(mallory, () => q(`insert into public.comments (post_id, body) values ($1, 'x')`, [postId])));
+await q(`update public.profiles set banned_until = null where id = $1`, [mallory]);
+await denied("more than 5 posts in 10 minutes is blocked", () =>
+  as(mallory, async () => {
+    for (let i = 0; i < 6; i++) await q(`insert into public.posts (body) values ($1)`, [`p${i}`]);
+  }));
+await allowed("user reports a post", () =>
+  as(dave, () => q(`insert into public.reports (user_id, post_id, reason) values ($1, $2, 'spam')`, [alice, postId])));
+await allowed("admin deletes a post", () =>
+  as(carol, async () => {
+    const r = await q(`delete from public.posts where id = $1`, [postId]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await allowed("author deletes own post", () =>
+  as(mallory, async () => {
+    const r = await q(`delete from public.posts where author_id = $1`, [mallory]);
+    if (r.affectedRows < 1) throw new Error("0 rows");
+  }));
+
 // ---------- cascade ----------
 console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);

@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Newspaper, NotebookPen, type LucideIcon } from "lucide-react";
+import { BookOpen, NotebookPen, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const TABS: { href: string; label: string; icon: LucideIcon }[] = [
   { href: "/magazine", label: "כתבות", icon: NotebookPen },
   { href: "/magazine/plants", label: "מאגר הצמחים", icon: BookOpen },
-  { href: "/magazine/blog", label: "בלוג", icon: Newspaper },
 ];
 
 export function HubTabs() {

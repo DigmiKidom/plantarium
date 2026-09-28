@@ -47,6 +47,11 @@ export default async function AdminReportsPage() {
                       · {r.reporter?.username ? `@${r.reporter.username}` : r.reporter?.display_name} · {formatDateTime(r.created_at)}
                     </span>
                   </p>
+                  {r.post_id && (
+                    <Link href={`/p/${r.post_id}`} className="text-primary underline">
+                      על פוסט בחממה
+                    </Link>
+                  )}
                   {r.listing_id && (
                     <Link href={`/market/l/${r.listing_id}`} className="text-primary underline">
                       על מודעה בשוק

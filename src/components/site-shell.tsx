@@ -14,7 +14,7 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
  * settings) are in the account menu under the user's name, on both desktop and mobile.
  */
 const DESKTOP_NAV: NavItem[] = [
-  { href: "/", label: "בית", icon: Home },
+  { href: "/", label: "החממה", icon: Home },
   { href: "/plants", label: "הצמחים שלי", icon: Sprout },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },
   { href: "/market", label: "שוק הצמחים", icon: Store },
@@ -22,7 +22,7 @@ const DESKTOP_NAV: NavItem[] = [
 
 /** Two on each side of the raised + button. */
 const MOBILE_NAV: NavItem[] = [
-  { href: "/", label: "בית", icon: Home },
+  { href: "/", label: "החממה", icon: Home },
   { href: "/plants", label: "צמחים", icon: Sprout },
   { href: "/plants/new", label: "הוספה", icon: Plus },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },

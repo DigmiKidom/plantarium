@@ -18,6 +18,7 @@ const ACTION_HE: Record<string, string> = {
   delete_comment: "מחיקת תגובה",
   set_plan: "שינוי חבילה",
   remove_listing: "הסרת מודעה מהשוק",
+  delete_post: "מחיקת פוסט מהחממה",
 };
 
 function detail(action: string, meta: Record<string, unknown>) {

@@ -6,7 +6,9 @@ const nextConfig: NextConfig = {
     return [
       { source: "/knowledge", destination: "/magazine/plants", permanent: true },
       { source: "/knowledge/:slug", destination: "/magazine/plants/:slug", permanent: true },
-      { source: "/blog", destination: "/magazine/blog", permanent: true },
+      // The blog became "החממה", the community feed on the home page
+      { source: "/blog", destination: "/", permanent: true },
+      { source: "/magazine/blog", destination: "/", permanent: true },
     ];
   },
 };

@@ -25,6 +25,7 @@ export type OpenReport = {
   reason: string;
   details: string | null;
   listing_id: string | null;
+  post_id: string | null;
   created_at: string;
   reporter: { username: string | null; display_name: string } | null;
   target: ProfileRef | null;
@@ -36,7 +37,7 @@ export async function openReportsByUser() {
   const { data } = await supabase
     .from("reports")
     .select(
-      "id, reason, details, listing_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)",
+      "id, reason, details, listing_id, post_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)",
     )
     .eq("status", "open")
     .not("user_id", "is", null)
