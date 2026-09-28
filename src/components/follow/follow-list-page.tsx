@@ -47,7 +47,7 @@ export async function FollowListPage({ username, kind }: { username: string; kin
           {people.map((p) => (
             <li key={p.id}>
               <Link href={p.username ? `/u/${p.username}` : "#"} className="flex items-center gap-3 p-4 hover:bg-surface-2">
-                <Avatar name={p.display_name} />
+                <Avatar name={p.display_name} url={p.avatar_url} />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-semibold">{p.display_name}</span>
                   {p.username && <span className="ltr block text-xs text-muted">@{p.username}</span>}

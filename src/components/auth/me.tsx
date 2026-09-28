@@ -7,7 +7,7 @@ import { PROFILE_CHANGED, applyTheme, currentTheme } from "@/lib/settings/client
 import { parseSettings } from "@/lib/settings/schema";
 import type { Role } from "@/lib/auth/roles";
 
-export type Me = { name: string; username: string | null; role: Role } | null;
+export type Me = { name: string; username: string | null; role: Role; avatarUrl: string | null } | null;
 
 const configured = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
@@ -32,7 +32,12 @@ export function MeProvider({ children }: { children: React.ReactNode }) {
       if (!userId) return active && setMe(null);
       const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
       if (!active) return;
-      setMe({ name: data?.display_name || fallbackName, username: data?.username ?? null, role: (data?.role as Role) ?? "user" });
+      setMe({
+        name: data?.display_name || fallbackName,
+        username: data?.username ?? null,
+        role: (data?.role as Role) ?? "user",
+        avatarUrl: data?.avatar_url ?? null,
+      });
       // Signed-in users get their saved theme on every device.
       if (data && "settings" in data) {
         const saved = parseSettings(data.settings).theme;
@@ -59,10 +64,17 @@ export function MeProvider({ children }: { children: React.ReactNode }) {
 
 export const useMe = () => useContext(MeContext);
 
-export function Avatar({ name, className }: { name: string; className?: string }) {
+/** Profile photo, or the first letter of the name on a green circle. */
+export function Avatar({ name, url, className }: { name: string; url?: string | null; className?: string }) {
+  if (url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={url} alt="" className={`size-9 shrink-0 rounded-full bg-surface-2 object-cover ${className ?? ""}`} aria-hidden />;
+  }
+  // Default letter size only when the caller didn't choose one (Tailwind can't tell which class wins)
+  const text = /(^|\s)(md:)?text-(xs|sm|base|lg|xl|\d?xl|\[)/.test(className ?? "") ? "" : "text-sm";
   return (
     <span
-      className={`grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-on-primary ${className ?? ""}`}
+      className={`grid size-9 shrink-0 place-items-center rounded-full bg-primary font-bold text-on-primary ${text} ${className ?? ""}`}
       aria-hidden
     >
       {name.trim().charAt(0) || "?"}

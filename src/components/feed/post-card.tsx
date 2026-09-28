@@ -84,7 +84,7 @@ export function PostCard({
   return (
     <article className="flex flex-col gap-3 rounded-3xl border border-border bg-surface p-4 md:p-5">
       <header className="flex items-center gap-3">
-        <Avatar name={name} />
+        <Avatar name={name} url={post.author?.avatar_url} />
         <div className="min-w-0 flex-1">
           <p className="flex flex-wrap items-center gap-x-2">
             {post.author?.username ? (

@@ -22,7 +22,7 @@ export async function isFollowing(viewerId: string, userId: string) {
   return Boolean(data);
 }
 
-export type PersonRow = { id: string; username: string | null; display_name: string; bio: string | null };
+export type PersonRow = { id: string; username: string | null; display_name: string; bio: string | null; avatar_url: string | null };
 
 /** People who follow userId ("followers") or whom userId follows ("following"), newest first. */
 export async function followList(userId: string, kind: "followers" | "following") {
@@ -31,11 +31,11 @@ export async function followList(userId: string, kind: "followers" | "following"
     kind === "followers"
       ? db
           .from("follows")
-          .select("created_at, person:profiles!follows_follower_id_fkey(id, username, display_name, bio)")
+          .select("created_at, person:profiles!follows_follower_id_fkey(id, username, display_name, bio, avatar_url)")
           .eq("followee_id", userId)
       : db
           .from("follows")
-          .select("created_at, person:profiles!follows_followee_id_fkey(id, username, display_name, bio)")
+          .select("created_at, person:profiles!follows_followee_id_fkey(id, username, display_name, bio, avatar_url)")
           .eq("follower_id", userId);
   const { data, error } = await q.order("created_at", { ascending: false }).limit(200).returns<{ person: PersonRow | null }[]>();
   if (error) console.error(JSON.stringify({ at: "follows.list", error: error.message }));

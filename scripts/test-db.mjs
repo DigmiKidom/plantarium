@@ -153,6 +153,15 @@ await denied("admin can't ban another admin", () =>
 await denied("admin can't edit another user's name", () =>
   as(carol, () => q(`update public.profiles set display_name = 'hacked' where id = $1`, [alice])));
 
+// ---------- profile photos ----------
+console.log("\nProfile photos");
+await allowed("user sets own profile and cover photo", () =>
+  as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/profiles/a.webp', cover_url = 'https://img.test/profiles/c.webp' where id = $1`, [alice])));
+await denied("user can't change someone else's photo", () =>
+  as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/x.webp' where id = $1`, [bob])));
+await denied("photo must be an https URL", () =>
+  as(alice, () => q(`update public.profiles set cover_url = 'javascript:alert(1)' where id = $1`, [alice])));
+
 // ---------- magazine ----------
 console.log("\nMagazine");
 await denied("regular user can't write an article", () =>

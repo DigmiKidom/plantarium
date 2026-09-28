@@ -13,13 +13,13 @@ type Comment = {
   body: string;
   created_at: string;
   author_id: string;
-  author: { username: string | null; display_name: string } | null;
+  author: { username: string | null; display_name: string; avatar_url: string | null } | null;
 };
 
 async function fetchComments(postId: string) {
   const { data } = await createBrowserSupabase()
     .from("comments")
-    .select("id, body, created_at, author_id, author:profiles!comments_author_id_fkey(username, display_name)")
+    .select("id, body, created_at, author_id, author:profiles!comments_author_id_fkey(username, display_name, avatar_url)")
     .eq("post_id", postId)
     .order("created_at", { ascending: true })
     .limit(200)
@@ -76,7 +76,7 @@ export function PostComments({
       ) : (
         comments.map((c) => (
           <div key={c.id} className="flex gap-2">
-            <Avatar name={c.author?.display_name ?? "?"} className="size-8 text-xs" />
+            <Avatar name={c.author?.display_name ?? "?"} url={c.author?.avatar_url} className="size-8 text-xs" />
             <div className="min-w-0 flex-1 rounded-2xl bg-surface-2 px-3 py-2 text-sm">
               <p className="flex items-center gap-2">
                 {c.author?.username ? (

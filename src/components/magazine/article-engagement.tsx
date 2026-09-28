@@ -8,13 +8,14 @@ import { addComment, deleteComment, setLike } from "@/lib/magazine/engagement-ac
 import type { Role } from "@/lib/auth/roles";
 import { formatDateTime } from "@/lib/dates";
 import { cn } from "@/lib/cn";
+import { Avatar } from "@/components/auth/me";
 
 type Comment = {
   id: string;
   body: string;
   created_at: string;
   user_id: string;
-  author: { username: string | null; display_name: string } | null;
+  author: { username: string | null; display_name: string; avatar_url: string | null } | null;
 };
 type Viewer = { id: string; role: Role } | null;
 
@@ -34,7 +35,7 @@ async function fetchEngagement(articleId: string): Promise<Engagement> {
       : Promise.resolve({ data: null }),
     supabase
       .from("magazine_comments")
-      .select("id, body, created_at, user_id, author:profiles!magazine_comments_user_id_fkey(username, display_name)")
+      .select("id, body, created_at, user_id, author:profiles!magazine_comments_user_id_fkey(username, display_name, avatar_url)")
       .eq("article_id", articleId)
       .order("created_at", { ascending: true })
       .limit(300)
@@ -200,9 +201,7 @@ export function ArticleEngagement({ articleId, slug }: { articleId: string; slug
             const canDelete = viewer && (viewer.id === c.user_id || viewer.role === "admin");
             return (
               <li key={c.id} className="flex gap-3">
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-on-primary" aria-hidden>
-                  {c.author?.display_name.charAt(0) ?? "?"}
-                </span>
+                <Avatar name={c.author?.display_name ?? "?"} url={c.author?.avatar_url} />
                 <div className="min-w-0 flex-1 rounded-2xl bg-surface-2 px-4 py-3">
                   <p className="flex flex-wrap items-center gap-x-2 text-sm">
                     {c.author?.username ? (

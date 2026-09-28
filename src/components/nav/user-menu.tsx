@@ -15,6 +15,7 @@ import {
   Tag,
   Trees,
   User,
+  UserPen,
   UserPlus,
   X,
   type LucideIcon,
@@ -29,7 +30,8 @@ type Item = { href: string; label: string; icon: LucideIcon };
 /** Personal pages live in the account menu, not in the main nav. */
 function accountItems(me: NonNullable<Me>): Item[] {
   return [
-    { href: "/profile", label: "הפרופיל שלי", icon: User },
+    { href: me.username ? `/u/${me.username}` : "/profile", label: "הפרופיל שלי", icon: User },
+    { href: "/profile", label: "עריכת פרופיל", icon: UserPen },
     { href: "/garden", label: "הגינה שלי", icon: Trees },
     { href: "/market/mine", label: "המודעות שלי", icon: Tag },
     ...(canWrite(me.role) ? [{ href: "/magazine/write", label: "המאמרים שלי", icon: PenLine }] : []),
@@ -172,7 +174,7 @@ export function SidebarUserMenu() {
           highlighted ? "bg-leaf-soft" : "hover:bg-surface-2",
         )}
       >
-        <Avatar name={me.name} />
+        <Avatar name={me.name} url={me.avatarUrl} />
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-semibold">{me.name}</span>
           {me.username && <span className="ltr block truncate text-xs text-muted">@{me.username}</span>}
@@ -211,7 +213,7 @@ export function CompactUserMenu() {
         {open ? (
           <X className="size-5" aria-hidden />
         ) : me ? (
-          <Avatar name={me.name} className={cn(isAccountPath(pathname) && "ring-2 ring-primary ring-offset-2 ring-offset-bg")} />
+          <Avatar name={me.name} url={me.avatarUrl} className={cn(isAccountPath(pathname) && "ring-2 ring-primary ring-offset-2 ring-offset-bg")} />
         ) : (
           <Menu className="size-5" aria-hidden />
         )}
@@ -226,8 +228,8 @@ export function CompactUserMenu() {
               className="fixed inset-x-3 top-18 z-50 max-h-[calc(100dvh-10rem)] overflow-y-auto rounded-2xl border border-border bg-surface text-text shadow-xl"
             >
             {me && (
-              <Link href="/profile" className="flex items-center gap-3 border-b border-border p-4">
-                <Avatar name={me.name} className="size-11 text-base" />
+              <Link href={me.username ? `/u/${me.username}` : "/profile"} className="flex items-center gap-3 border-b border-border p-4">
+                <Avatar name={me.name} url={me.avatarUrl} className="size-11 text-base" />
                 <span className="min-w-0">
                   <span className="block truncate font-semibold">{me.name}</span>
                   {me.username && <span className="ltr block truncate text-sm text-muted">@{me.username}</span>}

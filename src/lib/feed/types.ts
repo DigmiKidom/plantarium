@@ -9,7 +9,7 @@ export type FeedPost = {
   like_count: number;
   comment_count: number;
   author_id: string;
-  author: { username: string | null; display_name: string } | null;
+  author: { username: string | null; display_name: string; avatar_url: string | null } | null;
   species: { slug: string; common_name_he: string } | null;
   photos: string[];
   liked: boolean;
@@ -21,7 +21,7 @@ export const MAX_POST_PHOTOS = 4;
 export const MAX_POST_CHARS = 2000;
 
 export const POST_COLUMNS =
-  "id, type, body, created_at, like_count, comment_count, author_id, author:profiles!posts_author_id_fkey(username, display_name), species:species(slug, common_name_he), media:post_media(storage_path, sort)";
+  "id, type, body, created_at, like_count, comment_count, author_id, author:profiles!posts_author_id_fkey(username, display_name, avatar_url), species:species(slug, common_name_he), media:post_media(storage_path, sort)";
 
 export type PostRow = Omit<FeedPost, "photos" | "liked"> & { media: { storage_path: string; sort: number }[] | null };
 

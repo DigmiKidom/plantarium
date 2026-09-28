@@ -12,7 +12,7 @@ import type { SpeciesOption } from "@/components/market/listing-form";
 import { Avatar } from "@/components/auth/me";
 import { cn } from "@/lib/cn";
 
-export function Composer({ name, species }: { name: string; species: SpeciesOption[] }) {
+export function Composer({ name, avatarUrl, species }: { name: string; avatarUrl?: string | null; species: SpeciesOption[] }) {
   const router = useRouter();
   const [body, setBody] = useState("");
   const [type, setType] = useState<"post" | "question">("post");
@@ -66,7 +66,7 @@ export function Composer({ name, species }: { name: string; species: SpeciesOpti
   return (
     <form onSubmit={submit} className="flex flex-col gap-3 rounded-3xl border border-border bg-surface p-4 md:p-5">
       <div className="flex gap-3">
-        <Avatar name={name} />
+        <Avatar name={name} url={avatarUrl} />
         <label htmlFor="new-post" className="sr-only">
           פוסט חדש
         </label>

@@ -142,7 +142,7 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
 
           {/* Seller */}
           <section aria-label="המוכר/ת" className="flex flex-wrap items-center gap-3">
-            <Avatar name={sellerName} />
+            <Avatar name={sellerName} url={l.seller?.avatar_url} />
             <span className="min-w-0 flex-1">
               {l.seller?.username ? (
                 <Link href={`/u/${l.seller.username}`} className="font-semibold hover:text-primary">

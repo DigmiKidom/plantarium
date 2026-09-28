@@ -152,8 +152,9 @@ export async function deletePostComment(id: string): Promise<Result> {
 }
 
 // ---------- paging ----------
-export async function loadMorePosts(tab: FeedTab, before: string) {
+export async function loadMorePosts(tab: FeedTab, before: string, authorId?: string) {
   if (!["all", "following"].includes(tab) || Number.isNaN(Date.parse(before))) return { posts: [], hasMore: false };
-  const { posts, hasMore } = await getFeed({ tab, before });
+  if (authorId && !uuid.safeParse(authorId).success) return { posts: [], hasMore: false };
+  const { posts, hasMore } = await getFeed({ tab, before, authorId });
   return { posts, hasMore };
 }

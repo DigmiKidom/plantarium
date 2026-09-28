@@ -12,12 +12,15 @@ export function FeedList({
   tab,
   viewer,
   empty,
+  authorId,
 }: {
   initial: FeedPost[];
   hasMore: boolean;
   tab: FeedTab;
   viewer: Viewer;
   empty: React.ReactNode;
+  /** Only this person's posts (profile page). */
+  authorId?: string;
 }) {
   // The server list is the source of truth after router.refresh(); extra pages are appended.
   const [extra, setExtra] = useState<FeedPost[]>([]);
@@ -32,7 +35,7 @@ export function FeedList({
     startTransition(async () => {
       const last = posts[posts.length - 1];
       if (!last) return;
-      const res = await loadMorePosts(tab, last.created_at);
+      const res = await loadMorePosts(tab, last.created_at, authorId);
       setExtra((e) => [...e, ...res.posts]);
       setHasMore(res.hasMore);
     });

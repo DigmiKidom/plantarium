@@ -6,12 +6,17 @@ import { followCounts } from "@/lib/follows/queries";
 import { requireUser } from "@/lib/auth/session";
 import { signOut } from "@/lib/auth/actions";
 import { ProfileForm } from "@/components/auth/profile-form";
+import { Avatar } from "@/components/auth/me";
+import { PhotoButton, RemovePhotoButton } from "@/components/profile/photo-button";
 
-export const metadata: Metadata = { title: "הפרופיל שלי", robots: { index: false } };
+export const metadata: Metadata = { title: "עריכת פרופיל", robots: { index: false } };
 export const dynamic = "force-dynamic"; // per-user page, never prerendered
 
 export default async function ProfilePage() {
-  const { user, profile } = await requireUser("/profile");
+  const { user, profile, supabase } = await requireUser("/profile");
+  // cover_url arrives with database update 0014
+  const { data: cover } = await supabase.from("profiles").select("cover_url").eq("id", user.id).maybeSingle();
+  const coverUrl = (cover?.cover_url as string | null | undefined) ?? null;
   const name = profile?.display_name || user.email || "";
   const counts = await followCounts(user.id);
   const joined = new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" }).format(
@@ -21,9 +26,7 @@ export default async function ProfilePage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-8">
       <header className="flex items-center gap-4">
-        <span className="grid size-20 shrink-0 place-items-center rounded-full bg-primary text-3xl font-bold text-on-primary" aria-hidden>
-          {name.charAt(0)}
-        </span>
+        <Avatar name={name} url={profile?.avatar_url} className="size-20 text-3xl" />
         <div className="min-w-0">
           <h1 className="truncate text-3xl font-bold">{name}</h1>
           {profile?.username && <p className="ltr text-muted">@{profile.username}</p>}
@@ -76,6 +79,29 @@ export default async function ProfilePage() {
           </Link>
         )}
       </nav>
+
+      <section aria-labelledby="photos" className="flex flex-col gap-4 rounded-3xl border border-border bg-surface p-6 md:p-8">
+        <h2 id="photos" className="text-xl font-bold">
+          תמונות
+        </h2>
+        <div className="relative h-32 overflow-hidden rounded-2xl bg-gradient-to-l from-leaf-soft via-surface-2 to-water-soft">
+          {coverUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={coverUrl} alt="" className="absolute inset-0 size-full object-cover" />
+          )}
+          <div className="absolute bottom-2 end-2">
+            <PhotoButton kind="cover" label={coverUrl ? "החלפת תמונת נושא" : "הוספת תמונת נושא"} showLabel />
+          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="relative">
+            <Avatar name={name} url={profile?.avatar_url} className="size-20 text-3xl" />
+          </div>
+          <PhotoButton kind="avatar" label={profile?.avatar_url ? "החלפת תמונת פרופיל" : "הוספת תמונת פרופיל"} showLabel className="border border-border shadow-none" />
+          {profile?.avatar_url && <RemovePhotoButton kind="avatar" label="הסרת תמונת פרופיל" />}
+          {coverUrl && <RemovePhotoButton kind="cover" label="הסרת תמונת נושא" />}
+        </div>
+      </section>
 
       <section aria-labelledby="edit" className="rounded-3xl border border-border bg-surface p-6 md:p-8">
         <h2 id="edit" className="mb-4 text-xl font-bold">

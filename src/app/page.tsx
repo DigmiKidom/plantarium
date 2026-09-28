@@ -41,10 +41,10 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
     listListings({ limit: 4 }),
   ]);
 
-  let me: { name: string; isAdmin: boolean } | null = null;
+  let me: { name: string; isAdmin: boolean; avatarUrl?: string | null } | null = null;
   if (viewerId && hasSupabase()) {
-    const { data } = await (await createUserClient()).from("profiles").select("display_name, role").eq("id", viewerId).maybeSingle();
-    me = { name: data?.display_name ?? "", isAdmin: data?.role === "admin" };
+    const { data } = await (await createUserClient()).from("profiles").select("display_name, role, avatar_url").eq("id", viewerId).maybeSingle();
+    me = { name: data?.display_name ?? "", isAdmin: data?.role === "admin", avatarUrl: data?.avatar_url ?? null };
   }
   const species = me ? await speciesOptions() : [];
 
@@ -67,7 +67,7 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
         </header>
 
         {me ? (
-          <Composer name={me.name} species={species} />
+          <Composer name={me.name} avatarUrl={me.avatarUrl} species={species} />
         ) : (
           <section className="relative overflow-hidden rounded-3xl bg-leaf-soft p-6">
             <div className="relative z-10 flex max-w-md flex-col gap-3">

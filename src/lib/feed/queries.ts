@@ -25,7 +25,7 @@ async function withLikes(db: Db, rows: PostRow[], viewerId: string | null): Prom
  * One page of the feed, newest first. "following" = people you follow + yourself.
  * Visibility (public / blocked / deleted) is decided by the database rules.
  */
-export async function getFeed({ tab = "all", before }: { tab?: FeedTab; before?: string } = {}) {
+export async function getFeed({ tab = "all", before, authorId }: { tab?: FeedTab; before?: string; authorId?: string } = {}) {
   if (!hasSupabase()) return { posts: [] as FeedPost[], viewerId: null as string | null, hasMore: false };
   const db = await createUserClient();
   const { data: auth } = await db.auth.getUser();
@@ -39,6 +39,7 @@ export async function getFeed({ tab = "all", before }: { tab?: FeedTab; before?:
     .order("created_at", { ascending: false })
     .limit(FEED_PAGE + 1);
   if (before) q = q.lt("created_at", before);
+  if (authorId) q = q.eq("author_id", authorId);
 
   if (tab === "following") {
     if (!viewerId) return { posts: [], viewerId, hasMore: false };

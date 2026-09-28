@@ -41,11 +41,11 @@ export type ListingRow = {
   /** Free-text plant name when the plant isn't in our database ("אחר"). */
   other_species: string | null;
   species: { slug: string; common_name_he: string; scientific_name: string; category: Category } | null;
-  seller: { username: string | null; display_name: string } | null;
+  seller: { username: string | null; display_name: string; avatar_url: string | null } | null;
 };
 
 export const LISTING_COLUMNS =
-  "id, price, size, city, description, photos, status, removed_reason, created_at, sold_at, seller_id, category, other_species, species:species(slug, common_name_he, scientific_name, category), seller:profiles!market_listings_seller_id_fkey(username, display_name)";
+  "id, price, size, city, description, photos, status, removed_reason, created_at, sold_at, seller_id, category, other_species, species:species(slug, common_name_he, scientific_name, category), seller:profiles!market_listings_seller_id_fkey(username, display_name, avatar_url)";
 
 export type Contact = { phone: string | null; whatsapp: boolean };
 
