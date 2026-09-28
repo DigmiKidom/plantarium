@@ -2,6 +2,8 @@ export function AuthCard({ title, subtitle, children }: { title: string; subtitl
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 py-6 md:py-12">
       <div className="flex flex-col items-center gap-3 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/brand/logo.png" alt="פלנטריום" width={112} height={112} className="size-28 dark:brightness-150" />
         <h1 className="text-3xl font-bold">{title}</h1>
         <p className="text-muted">{subtitle}</p>
       </div>

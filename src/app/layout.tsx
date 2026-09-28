@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   },
   description:
     "מאגר ידע על צמחים, ניהול הצמחים והגינה שלך, תזכורות השקיה וקהילה של מגדלים – הכל במקום אחד.",
-  openGraph: { locale: "he_IL", siteName: "Plantarium" },
+  openGraph: { locale: "he_IL", siteName: "פלנטריום" },
 };
 
 export const viewport: Viewport = {

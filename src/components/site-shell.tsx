@@ -40,16 +40,12 @@ function isActive(pathname: string, href: string) {
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <Link href="/" className={cn("flex items-center gap-2 font-bold text-primary", className)}>
-      <svg viewBox="0 0 32 32" className="size-8" aria-hidden>
-        <circle cx="16" cy="16" r="15" fill="currentColor" opacity="0.14" />
-        <path
-          d="M16 25c0-7 3-12 9-14-1 7-4 11-9 14Zm0 0c0-5-2-9-7-11 0 6 3 9 7 11Z"
-          fill="currentColor"
-        />
-        <path d="M16 25v-9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      </svg>
-      <span className="text-xl tracking-tight">פלנטריום</span>
+    <Link href="/" aria-label="פלנטריום – לדף הבית" className={cn("flex items-center gap-2", className)}>
+      {/* Brand files live in public/brand (mark = the two leaves, wordmark = the Hebrew name) */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/mark.png" alt="" width={34} height={34} className="size-[34px] dark:brightness-150" />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/brand/wordmark.png" alt="פלנטריום" width={94} height={26} className="h-[26px] w-auto dark:brightness-150" />
     </Link>
   );
 }
