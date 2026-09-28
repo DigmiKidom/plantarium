@@ -13,10 +13,7 @@ export const metadata: Metadata = { title: "עריכת פרופיל", robots: { 
 export const dynamic = "force-dynamic"; // per-user page, never prerendered
 
 export default async function ProfilePage() {
-  const { user, profile, supabase } = await requireUser("/profile");
-  // cover_url arrives with database update 0014
-  const { data: cover } = await supabase.from("profiles").select("cover_url").eq("id", user.id).maybeSingle();
-  const coverUrl = (cover?.cover_url as string | null | undefined) ?? null;
+  const { user, profile } = await requireUser("/profile");
   const name = profile?.display_name || user.email || "";
   const counts = await followCounts(user.id);
   const joined = new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" }).format(
@@ -82,24 +79,14 @@ export default async function ProfilePage() {
 
       <section aria-labelledby="photos" className="flex flex-col gap-4 rounded-3xl border border-border bg-surface p-6 md:p-8">
         <h2 id="photos" className="text-xl font-bold">
-          תמונות
+          תמונת פרופיל
         </h2>
-        <div className="relative h-32 overflow-hidden rounded-2xl bg-gradient-to-l from-leaf-soft via-surface-2 to-water-soft">
-          {coverUrl && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={coverUrl} alt="" className="absolute inset-0 size-full object-cover" />
-          )}
-          <div className="absolute bottom-2 end-2">
-            <PhotoButton kind="cover" label={coverUrl ? "החלפת תמונת נושא" : "הוספת תמונת נושא"} showLabel />
-          </div>
-        </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
             <Avatar name={name} url={profile?.avatar_url} className="size-20 text-3xl" />
           </div>
           <PhotoButton kind="avatar" label={profile?.avatar_url ? "החלפת תמונת פרופיל" : "הוספת תמונת פרופיל"} showLabel className="border border-border shadow-none" />
           {profile?.avatar_url && <RemovePhotoButton kind="avatar" label="הסרת תמונת פרופיל" />}
-          {coverUrl && <RemovePhotoButton kind="cover" label="הסרת תמונת נושא" />}
         </div>
       </section>
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
+import type { Role } from "@/lib/auth/roles";
 
 const TABS = [
   { href: "/admin", label: "סקירה" },
@@ -13,14 +14,17 @@ const TABS = [
   { href: "/admin/log", label: "יומן" },
 ];
 
-export function AdminNav({ counts }: { counts: { reports: number; pending: number; species: number } }) {
+/** Tabs a chief editor may open; admins see everything. */
+const EDITOR_TABS = new Set(["/admin", "/admin/articles", "/admin/species"]);
+
+export function AdminNav({ counts, role }: { counts: { reports: number; pending: number; species: number }; role: Role }) {
   const pathname = usePathname();
   const badge = (href: string) =>
     href === "/admin/reports" ? counts.reports : href === "/admin/articles" ? counts.pending : href === "/admin/species" ? counts.species : 0;
   return (
     <nav aria-label="ניהול" className="-mx-4 overflow-x-auto px-4">
       <ul className="flex gap-1 border-b border-border">
-        {TABS.map(({ href, label }) => {
+        {TABS.filter((t) => role === "admin" || EDITOR_TABS.has(t.href)).map(({ href, label }) => {
           const active = href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
           const n = badge(href);
           return (

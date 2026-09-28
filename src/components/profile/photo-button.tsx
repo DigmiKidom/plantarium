@@ -8,7 +8,7 @@ import { uploadImage } from "@/lib/uploads/client";
 import { notifyProfileChanged } from "@/lib/settings/client";
 import { cn } from "@/lib/cn";
 
-/** Camera button that uploads a new profile or cover photo (avatar is cropped square, 512px). */
+/** Camera button that uploads a new profile photo (cropped square, 512px). */
 export function PhotoButton({ kind, label, className, showLabel }: { kind: PhotoKind; label: string; className?: string; showLabel?: boolean }) {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
@@ -23,7 +23,7 @@ export function PhotoButton({ kind, label, className, showLabel }: { kind: Photo
       const url = await uploadImage(
         file,
         createProfilePhotoUpload.bind(null, kind),
-        kind === "avatar" ? { maxSide: 512, square: true } : { maxSide: 1800 },
+        { maxSide: 512, square: true },
       );
       const res = await setProfilePhoto(kind, url);
       if (!res.ok) throw new Error(res.error);

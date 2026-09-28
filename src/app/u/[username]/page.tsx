@@ -30,18 +30,13 @@ type PublicProfile = {
   banned_until: string | null;
   created_at: string;
   avatar_url: string | null;
-  cover_url?: string | null;
 };
 
 const BASE = "id, username, display_name, bio, role, banned_until, created_at, avatar_url";
 
 async function getProfile(username: string) {
   if (!hasSupabase() || !/^[a-z0-9_]{3,24}$/.test(username)) return null;
-  const db = createPublicClient();
-  const res = await db.from("profiles").select(`${BASE}, cover_url`).eq("username", username).maybeSingle<PublicProfile>();
-  if (!res.error) return res.data;
-  // cover_url arrives with database update 0014 – still show the profile before it's applied
-  const { data } = await db.from("profiles").select(BASE).eq("username", username).maybeSingle<PublicProfile>();
+  const { data } = await createPublicClient().from("profiles").select(BASE).eq("username", username).maybeSingle<PublicProfile>();
   return data;
 }
 
@@ -99,40 +94,27 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
-      {/* ---------- Header: cover + avatar ---------- */}
+      {/* ---------- Header: photo, name, counts, actions ---------- */}
       <section className="overflow-hidden rounded-3xl border border-border bg-surface">
-        <div className="relative h-40 bg-gradient-to-l from-leaf-soft via-surface-2 to-water-soft sm:h-56 md:h-64">
-          {profile.cover_url && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={profile.cover_url} alt="" className="absolute inset-0 size-full object-cover" />
-          )}
-          {isOwn && (
-            <div className="absolute bottom-3 end-3">
-              <PhotoButton kind="cover" label={profile.cover_url ? "החלפת תמונת נושא" : "הוספת תמונת נושא"} showLabel />
-            </div>
-          )}
-        </div>
-
-        <div className="relative flex flex-col gap-4 px-4 pb-4 md:flex-row md:items-end md:gap-6 md:px-8">
-          <div className="relative -mt-16 w-fit md:-mt-20">
-            <Avatar
-              name={profile.display_name}
-              url={profile.avatar_url}
-              className="size-32 border-4 border-surface text-5xl md:size-40 md:text-6xl"
-            />
+        <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-center md:p-8">
+          <div className="relative w-fit">
+            <Avatar name={profile.display_name} url={profile.avatar_url} className="size-28 text-5xl ring-4 ring-leaf-soft md:size-36 md:text-6xl" />
             {isOwn && (
-              <div className="absolute bottom-1 end-1">
-                <PhotoButton kind="avatar" label="החלפת תמונת פרופיל" className="p-2.5" />
+              <div className="absolute bottom-0 end-0">
+                <PhotoButton kind="avatar" label={profile.avatar_url ? "החלפת תמונת פרופיל" : "הוספת תמונת פרופיל"} className="p-2.5" />
               </div>
             )}
           </div>
 
-          <div className="min-w-0 flex-1 md:pb-2">
+          <div className="min-w-0 flex-1">
             <h1 className="truncate text-3xl font-bold">{profile.display_name}</h1>
             <p className="text-muted">
               <span className="ltr">@{profile.username}</span>
             </p>
-            <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+            {profile.role !== "user" && (
+              <span className="mt-2 inline-block rounded-full bg-leaf-soft px-2.5 py-0.5 text-sm text-primary-strong">{ROLE_HE[profile.role]}</span>
+            )}
+            <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm">
               <li>
                 <span className="font-bold tabular-nums">{postCount}</span> <span className="text-muted">פוסטים</span>
               </li>
@@ -149,7 +131,7 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
             </ul>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 md:pb-2">
+          <div className="flex flex-wrap items-center gap-2">
             {isOwn ? (
               <Link href="/profile" className="flex items-center gap-2 rounded-full border border-border px-5 py-2 font-medium hover:bg-surface-2">
                 <Pencil className="size-4" aria-hidden />
@@ -208,11 +190,6 @@ export default async function PublicProfilePage({ params, searchParams }: PagePr
               <p className="text-sm text-muted">{isOwn ? "עוד לא כתבת כלום על עצמך." : "עוד לא נכתב כלום."}</p>
             )}
             <ul className="flex flex-col gap-2 text-sm text-muted">
-              {profile.role !== "user" && (
-                <li>
-                  <span className="rounded-full bg-leaf-soft px-2.5 py-0.5 text-primary-strong">{ROLE_HE[profile.role]}</span>
-                </li>
-              )}
               <li className="flex items-center gap-2">
                 <CalendarDays className="size-4" aria-hidden />
                 הצטרפות: {formatDate(profile.created_at)}

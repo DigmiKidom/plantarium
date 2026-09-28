@@ -7,7 +7,7 @@ import { formatDateTime } from "@/lib/dates";
 export const metadata = { title: "הצעות לצמחים" };
 
 export default async function AdminSpeciesPage() {
-  await requireRole(["admin"], "/admin/species");
+  await requireRole(["admin", "editor"], "/admin/species");
   const list = await pendingSuggestions();
   return (
     <div className="flex flex-col gap-4">

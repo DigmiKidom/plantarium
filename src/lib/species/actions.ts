@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
-import { canWrite, isBannedNow, type Role } from "@/lib/auth/roles";
+import { canWrite, isBannedNow, isReviewer, type Role } from "@/lib/auth/roles";
 import { IMAGE_TYPES, MAX_IMAGE_BYTES, hasR2, presignImageUpload } from "@/lib/r2";
 import { slugFromScientific, speciesFormSchema, type SpeciesFormValues } from "./form-schema";
 
@@ -25,7 +25,7 @@ async function session() {
 }
 type S = NonNullable<Awaited<ReturnType<typeof session>>>;
 
-const NO_ADMIN = { ok: false as const, error: "אין הרשאת מנהל" };
+const NO_ADMIN = { ok: false as const, error: "רק עורכים ראשיים ומנהלים יכולים לעשות את זה" };
 const NO_WRITER = { ok: false as const, error: "רק כותבים יכולים להציע צמחים" };
 const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
 
@@ -122,7 +122,7 @@ export async function createSpeciesImageUpload(input: z.input<typeof uploadInput
 // ---------- admin: edit an existing plant ----------
 export async function updateSpecies(slug: string, values: SpeciesFormValues): Promise<Result<{ slug: string }>> {
   const s = await session();
-  if (!s || s.role !== "admin") return NO_ADMIN;
+  if (!s || !isReviewer(s.role)) return NO_ADMIN;
   const { data: sp } = await s.supabase.from("species").select("id, species_images(storage_path)").eq("slug", slug).maybeSingle();
   if (!sp) return { ok: false, error: "הצמח לא נמצא" };
   const current = new Set(((sp.species_images ?? []) as { storage_path: string }[]).map((i) => i.storage_path));
@@ -176,7 +176,7 @@ export async function deleteSuggestion(id: string): Promise<Result> {
 // ---------- admin: review suggestions ----------
 export async function approveSuggestion(id: string, values: SpeciesFormValues): Promise<Result<{ slug: string }>> {
   const s = await session();
-  if (!s || s.role !== "admin") return NO_ADMIN;
+  if (!s || !isReviewer(s.role)) return NO_ADMIN;
   const p = parse(values);
   if (!p.ok) return p;
   const v = p.v;
@@ -210,7 +210,7 @@ export async function approveSuggestion(id: string, values: SpeciesFormValues): 
 
 export async function rejectSuggestion(id: string, note: string): Promise<Result> {
   const s = await session();
-  if (!s || s.role !== "admin") return NO_ADMIN;
+  if (!s || !isReviewer(s.role)) return NO_ADMIN;
   if (note.trim().length < 3) return { ok: false, error: "נא לכתוב לכותב/ת למה" };
   const { data } = await s.supabase
     .from("species_suggestions")

@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
 export const metadata = { title: "מאמרים" };
 
 export default async function AdminArticlesPage({ searchParams }: PageProps<"/admin/articles">) {
-  await requireRole(["admin"], "/admin/articles");
+  await requireRole(["admin", "editor"], "/admin/articles");
   const tab = (await searchParams).tab === "published" ? "published" : "pending";
   const articles = await listByStatus(tab);
 

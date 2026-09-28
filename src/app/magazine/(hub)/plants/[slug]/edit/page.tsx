@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function EditSpeciesPage({ params }: PageProps<"/magazine/plants/[slug]/edit">) {
   const { slug } = await params;
-  await requireRole(["admin"], `/magazine/plants/${slug}/edit`);
+  await requireRole(["admin", "editor"], `/magazine/plants/${slug}/edit`);
   const s = await getSpecies(slug);
   if (!s) notFound();
 

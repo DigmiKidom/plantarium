@@ -11,7 +11,7 @@ export const metadata = { title: "בדיקת הצעה" };
 
 export default async function ReviewSuggestionPage({ params }: PageProps<"/admin/species/[id]">) {
   const { id } = await params;
-  await requireRole(["admin"], `/admin/species/${id}`);
+  await requireRole(["admin", "editor"], `/admin/species/${id}`);
   const s = await getSuggestion(id);
   if (!s) notFound();
 

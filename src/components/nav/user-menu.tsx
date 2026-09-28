@@ -36,6 +36,7 @@ function accountItems(me: NonNullable<Me>): Item[] {
     { href: "/market/mine", label: "המודעות שלי", icon: Tag },
     ...(canWrite(me.role) ? [{ href: "/magazine/write", label: "המאמרים שלי", icon: PenLine }] : []),
     ...(me.role === "admin" ? [{ href: "/admin", label: "ניהול האתר", icon: ShieldCheck }] : []),
+    ...(me.role === "editor" ? [{ href: "/admin/articles", label: "אישור תוכן", icon: ShieldCheck }] : []),
     { href: "/settings", label: "הגדרות", icon: Settings },
   ];
 }

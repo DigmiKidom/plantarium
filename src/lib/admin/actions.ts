@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { createAdminClient, hasAdmin } from "@/lib/supabase/admin";
-import { ROLES, isBannedNow, type Role } from "@/lib/auth/roles";
+import { ROLES, isBannedNow, isReviewer, type Role } from "@/lib/auth/roles";
 import { BAN_DURATIONS, type BanDuration } from "./bans";
 
 export type AdminResult = { ok: true; message?: string } | { ok: false; error: string };
@@ -29,6 +29,21 @@ async function adminSession() {
   return { supabase, adminId: data.user.id };
 }
 type Session = NonNullable<Awaited<ReturnType<typeof adminSession>>>;
+
+/** Chief editors (role "editor") and admins: content review only. */
+async function reviewerSession(): Promise<Session | null> {
+  if (!hasSupabase()) return null;
+  const supabase = await createUserClient();
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) return null;
+  const { data: me } = await supabase
+    .from("profiles")
+    .select("role, banned_until")
+    .eq("id", data.user.id)
+    .single<{ role: Role; banned_until: string | null }>();
+  if (!isReviewer(me?.role) || isBannedNow(me?.banned_until)) return null;
+  return { supabase, adminId: data.user.id };
+}
 
 async function getTarget(s: Session, userId: string) {
   const { data } = await s.supabase
@@ -213,8 +228,8 @@ async function reviewArticle(
   action: "approve_article" | "reject_article" | "unpublish_article",
   note?: string,
 ): Promise<AdminResult> {
-  const s = await adminSession();
-  if (!s) return fail("אין הרשאת מנהל");
+  const s = await reviewerSession();
+  if (!s) return fail("אין הרשאת עריכה");
   if (!uuid.safeParse(id).success) return fail("נתונים לא תקינים");
   if (status === "rejected" && (!note || note.trim().length < 3)) return fail("נא לכתוב לכותב/ת מה לתקן");
 

@@ -155,12 +155,12 @@ await denied("admin can't edit another user's name", () =>
 
 // ---------- profile photos ----------
 console.log("\nProfile photos");
-await allowed("user sets own profile and cover photo", () =>
-  as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/profiles/a.webp', cover_url = 'https://img.test/profiles/c.webp' where id = $1`, [alice])));
+await allowed("user sets own profile photo", () =>
+  as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/profiles/a.webp' where id = $1`, [alice])));
 await denied("user can't change someone else's photo", () =>
   as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/x.webp' where id = $1`, [bob])));
 await denied("photo must be an https URL", () =>
-  as(alice, () => q(`update public.profiles set cover_url = 'javascript:alert(1)' where id = $1`, [alice])));
+  as(alice, () => q(`update public.profiles set avatar_url = 'javascript:alert(1)' where id = $1`, [alice])));
 
 // ---------- magazine ----------
 console.log("\nMagazine");
@@ -511,8 +511,8 @@ const { rows: anySp } = await q(`select id, slug from public.species order by sl
 const spId = anySp[0].id;
 await denied("regular user can't edit a species", () =>
   as(alice, () => q(`update public.species set summary_he = 'x' where id = $1`, [spId])));
-await q(`update public.profiles set role = 'editor' where id = $1`, [mallory]);
-await denied("editors can no longer edit species (admins only)", () =>
+await q(`update public.profiles set role = 'author' where id = $1`, [mallory]);
+await denied("authors can't edit species", () =>
   as(mallory, () => q(`update public.species set summary_he = 'x' where id = $1`, [spId])));
 await q(`update public.profiles set role = 'user' where id = $1`, [mallory]);
 await allowed("admin edits a species", () =>
@@ -552,6 +552,50 @@ await expectCount("reviewer is stamped", 1, () =>
 await denied("author can't edit after review", () =>
   as(mallory, () => q(`update public.species_suggestions set common_name_he = 'שינוי' where id = $1`, [sugId])));
 await q(`update public.profiles set role = 'user' where id = $1`, [mallory]);
+
+// ---------- chief editor ----------
+console.log("\nChief editor");
+const chief = await createUser("chief", "editor");
+const writer = await createUser("writer", "author");
+let artId;
+await as(writer, async () => {
+  const { rows } = await q(`insert into public.magazine_articles (title, status) values ('כתבה לאישור', 'pending') returning id`);
+  artId = rows[0].id;
+});
+await expectCount("chief editor sees the review queue", 1, () =>
+  as(chief, () => q(`select id from public.magazine_articles where id = $1`, [artId])));
+await allowed("chief editor approves an article", () =>
+  as(chief, async () => {
+    const r = await q(`update public.magazine_articles set status = 'published' where id = $1`, [artId]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await denied("an author still can't publish", () =>
+  as(writer, () => q(`insert into public.magazine_articles (title, status) values ('x', 'published')`)));
+await allowed("chief editor writes own articles", () =>
+  as(chief, () => q(`insert into public.magazine_articles (title) values ('טיוטה של העורך')`)));
+let sug2;
+await as(writer, async () => {
+  const { rows } = await q(`insert into public.species_suggestions (common_name_he, scientific_name, category) values ('לבנדר', 'Lavandula angustifolia', 'herb') returning id`);
+  sug2 = rows[0].id;
+});
+await allowed("chief editor approves a plant suggestion", () =>
+  as(chief, async () => {
+    const r = await q(`update public.species_suggestions set status = 'approved' where id = $1`, [sug2]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await allowed("chief editor edits plant info", () =>
+  as(chief, async () => {
+    const r = await q(`update public.species set summary_he = 'עורך ראשי' where id = $1`, [spId]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+await allowed("chief editor logs the review", () =>
+  as(chief, () => q(`insert into public.admin_actions (admin_id, action) values ($1, 'approve_article')`, [chief])));
+await expectCount("chief editor can't read reports", 0, () => as(chief, () => q(`select id from public.reports`)));
+await expectCount("chief editor can't read the admin log", 0, () => as(chief, () => q(`select id from public.admin_actions`)));
+await denied("chief editor can't change roles", () =>
+  as(chief, () => q(`update public.profiles set role = 'author' where id = $1`, [alice])));
+await denied("chief editor can't ban", () =>
+  as(chief, () => q(`update public.profiles set banned_until = 'infinity' where id = $1`, [alice])));
 
 // ---------- cascade ----------
 console.log("\nAccount deletion");

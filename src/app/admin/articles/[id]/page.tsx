@@ -11,7 +11,7 @@ export const metadata = { title: "בדיקת מאמר" };
 
 export default async function AdminArticlePage({ params }: PageProps<"/admin/articles/[id]">) {
   const { id } = await params;
-  await requireRole(["admin"], `/admin/articles/${id}`);
+  await requireRole(["admin", "editor"], `/admin/articles/${id}`);
   const article = await getArticleForUser(id);
   if (!article) notFound();
 

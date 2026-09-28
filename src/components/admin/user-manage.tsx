@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Ban, Loader2, ShieldCheck, Trash2, UserCog } from "lucide-react";
 import { banUser, deleteUser, dismissReports, setPlan, setRole, unbanUser, type AdminResult } from "@/lib/admin/actions";
 import { BAN_DURATIONS, BAN_DURATION_HE, type BanDuration } from "@/lib/admin/bans";
-import { ROLES, ROLE_HE, type Role } from "@/lib/auth/roles";
+import { ROLES, ROLE_DESC, ROLE_HE, type Role } from "@/lib/auth/roles";
 import { FormAlert } from "@/components/ui/form";
 import { cn } from "@/lib/cn";
 
@@ -113,6 +113,7 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
                 </option>
               ))}
             </select>
+            <span className="text-xs text-muted">{ROLE_DESC[role]}</span>
           </label>
           <button
             type="button"
