@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CalendarDays, ExternalLink, LogOut, Mail, NotebookPen, PenLine, ShieldCheck } from "lucide-react";
 import { canWrite } from "@/lib/auth/roles";
+import { followCounts } from "@/lib/follows/queries";
 import { requireUser } from "@/lib/auth/session";
 import { signOut } from "@/lib/auth/actions";
 import { ProfileForm } from "@/components/auth/profile-form";
@@ -12,6 +13,7 @@ export const dynamic = "force-dynamic"; // per-user page, never prerendered
 export default async function ProfilePage() {
   const { user, profile } = await requireUser("/profile");
   const name = profile?.display_name || user.email || "";
+  const counts = await followCounts(user.id);
   const joined = new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" }).format(
     new Date(profile?.created_at ?? user.created_at),
   );
@@ -29,6 +31,18 @@ export default async function ProfilePage() {
             <li className="flex items-center gap-1">
               <Mail className="size-4" aria-hidden />
               <span className="ltr">{user.email}</span>
+            </li>
+            <li>
+              {profile?.username ? (
+                <Link href={`/u/${profile.username}/followers`} className="hover:text-primary">
+                  <span className="font-bold text-text tabular-nums">{counts.followers}</span> עוקבים ·{" "}
+                  <span className="font-bold text-text tabular-nums">{counts.following}</span> במעקב
+                </Link>
+              ) : (
+                <span>
+                  {counts.followers} עוקבים · {counts.following} במעקב
+                </span>
+              )}
             </li>
             <li className="flex items-center gap-1">
               <CalendarDays className="size-4" aria-hidden />

@@ -67,6 +67,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                     <span className="block text-xs text-muted">הצטרפות: {formatDate(u.created_at)}</span>
                   </span>
                   <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs">{ROLE_HE[u.role]}</span>
+                  {u.plan === "plus" && <span className="rounded-full bg-sun-soft px-2.5 py-0.5 text-xs">פלוס</span>}
                   {isBanned && (
                     <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs text-accent" title={u.ban_reason ?? undefined}>
                       מושעה {u.banned_until === "infinity" ? "לצמיתות" : `עד ${formatDate(u.banned_until)}`}
@@ -75,7 +76,7 @@ export default async function AdminUsersPage({ searchParams }: PageProps<"/admin
                 </div>
                 <UserManage
                   isSelf={u.id === user.id}
-                  user={{ id: u.id, username: u.username, display_name: u.display_name, role: u.role, banned: isBanned }}
+                  user={{ id: u.id, username: u.username, display_name: u.display_name, role: u.role, plan: u.plan, banned: isBanned }}
                 />
               </li>
             );

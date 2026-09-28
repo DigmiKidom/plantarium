@@ -6,7 +6,8 @@ import { reportUser } from "@/lib/reports/actions";
 import { REPORT_REASONS, REPORT_REASON_HE, type ReportReason } from "@/lib/reports/reasons";
 import { FormAlert } from "@/components/ui/form";
 
-export function ReportButton({ userId, name }: { userId: string; name: string }) {
+/** Report an account, or one of its marketplace listings (listingId). */
+export function ReportButton({ userId, name, listingId }: { userId: string; name: string; listingId?: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const [reason, setReason] = useState<ReportReason | "">("");
   const [details, setDetails] = useState("");
@@ -19,7 +20,7 @@ export function ReportButton({ userId, name }: { userId: string; name: string })
     if (!reason) return setError("נא לבחור סיבה");
     setError(undefined);
     startTransition(async () => {
-      const res = await reportUser({ userId, reason, details });
+      const res = await reportUser({ userId, listingId, reason, details });
       if (!res.ok) return setError(res.error);
       setDone(true);
     });
@@ -53,7 +54,7 @@ export function ReportButton({ userId, name }: { userId: string; name: string })
         ) : (
           <form onSubmit={submit} className="flex flex-col gap-4 p-6">
             <h2 id="report-title" className="text-xl font-bold">
-              דיווח על {name}
+              {listingId ? "דיווח על המודעה" : `דיווח על ${name}`}
             </h2>
             <FormAlert error={error} />
             <fieldset className="flex flex-col gap-2">

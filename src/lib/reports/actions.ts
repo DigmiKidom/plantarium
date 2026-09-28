@@ -6,6 +6,7 @@ import { REPORT_REASONS } from "./reasons";
 
 const input = z.object({
   userId: z.uuid(),
+  listingId: z.uuid().optional(),
   reason: z.enum(REPORT_REASONS, { error: "נא לבחור סיבה" }),
   details: z.string().trim().max(1000, { error: "עד 1000 תווים" }).optional().default(""),
 });
@@ -24,10 +25,11 @@ export async function reportUser(raw: z.input<typeof input>): Promise<ReportResu
 
   const { error } = await supabase.from("reports").insert({
     user_id: parsed.data.userId,
+    listing_id: parsed.data.listingId ?? null,
     reason: parsed.data.reason,
     details: parsed.data.details || null,
   });
-  if (error?.code === "23505") return { ok: false, error: "כבר דיווחת על החשבון הזה. הדיווח בטיפול." };
+  if (error?.code === "23505") return { ok: false, error: parsed.data.listingId ? "כבר דיווחת על המודעה הזו. הדיווח בטיפול." : "כבר דיווחת על החשבון הזה. הדיווח בטיפול." };
   if (error) {
     console.error(JSON.stringify({ at: "reports.reportUser", error: error.message }));
     return { ok: false, error: "הדיווח לא נשלח. נסו שוב" };

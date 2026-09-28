@@ -1,8 +1,10 @@
 "use client";
 
-import { createArticleImageUpload } from "./actions";
-
 const MAX_SIDE = 1800;
+
+type SignResult = { ok: true; uploadUrl: string; publicUrl: string } | { ok: false; error: string };
+/** A server action that returns a signed R2 upload URL for one image. */
+export type SignUpload = (input: { contentType: "image/webp" | "image/jpeg" | "image/png"; size: number }) => Promise<SignResult>;
 
 /** Shrinks big photos in the browser (max 1800px, WebP) so uploads are fast and pages stay light. */
 async function toWebp(file: File): Promise<Blob> {
@@ -19,7 +21,7 @@ async function toWebp(file: File): Promise<Blob> {
 }
 
 /** Uploads an image to R2 through a signed URL and returns its public URL. Throws a Hebrew message. */
-export async function uploadArticleImage(file: File): Promise<string> {
+export async function uploadImage(file: File, sign: SignUpload): Promise<string> {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) throw new Error("אפשר להעלות JPG, PNG או WebP");
   let blob: Blob = file;
   try {
@@ -27,7 +29,7 @@ export async function uploadArticleImage(file: File): Promise<string> {
   } catch {
     // Old browser without WebP export: upload the original
   }
-  const res = await createArticleImageUpload({ contentType: blob.type as "image/webp", size: blob.size });
+  const res = await sign({ contentType: blob.type as "image/webp", size: blob.size });
   if (!res.ok) throw new Error(res.error);
   const put = await fetch(res.uploadUrl, { method: "PUT", body: blob, headers: { "Content-Type": blob.type } });
   if (!put.ok) throw new Error("העלאת התמונה נכשלה");

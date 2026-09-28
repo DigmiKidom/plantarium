@@ -10,7 +10,7 @@ export function ComingSoon({ title, description, stage }: { title: string; descr
       <h1 className="text-3xl font-bold">{title}</h1>
       <p className="text-muted">{description}</p>
       <span className="rounded-full bg-surface-2 px-3 py-1 text-xs text-muted">בפיתוח · {stage}</span>
-      <Link href="/knowledge" className="mt-2 text-primary underline">
+      <Link href="/magazine/plants" className="mt-2 text-primary underline">
         בינתיים, לעיון במאגר הצמחים
       </Link>
     </div>

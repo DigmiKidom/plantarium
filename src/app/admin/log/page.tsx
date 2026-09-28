@@ -16,10 +16,13 @@ const ACTION_HE: Record<string, string> = {
   unpublish_article: "הורדת מאמר",
   dismiss_reports: "סגירת דיווחים",
   delete_comment: "מחיקת תגובה",
+  set_plan: "שינוי חבילה",
+  remove_listing: "הסרת מודעה מהשוק",
 };
 
 function detail(action: string, meta: Record<string, unknown>) {
   if (action === "set_role") return `${ROLE_HE[meta.from as Role] ?? meta.from} ← ${ROLE_HE[meta.to as Role] ?? meta.to}`;
+  if (action === "set_plan") return `${meta.from} ← ${meta.to}`;
   if (action === "ban") return BAN_DURATION_HE[meta.duration as BanDuration] ?? "";
   return "";
 }

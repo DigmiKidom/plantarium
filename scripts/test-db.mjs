@@ -307,6 +307,118 @@ await q(`update public.magazine_articles set status = 'rejected', review_note = 
 await expectCount("comments hide when the article is unpublished", 0, () =>
   as(null, () => q(`select id from public.magazine_comments where article_id = $1`, [liveId])));
 
+// ---------- marketplace ----------
+console.log("\nMarketplace");
+const { rows: sp } = await q(`select id from public.species where published_at is not null order by slug limit 1`);
+const speciesId = sp[0]?.id;
+if (!speciesId) fail("no species to list (run with --seed)");
+const photo = ["https://img.test/market/a.webp"];
+const listAs = (uid, extra = "") =>
+  as(uid, () => q(`insert into public.market_listings (species_id, price, photos${extra ? ", status" : ""}) values ($1, 50, $2${extra ? `, '${extra}'` : ""}) returning id`, [speciesId, photo]));
+
+let listingId;
+await allowed("user lists a plant", async () => {
+  const { rows } = await listAs(alice);
+  listingId = rows[0].id;
+});
+await allowed("seller adds contact details", () =>
+  as(alice, () => q(`insert into public.market_listing_contacts (listing_id, phone, whatsapp) values ($1, '050-1234567', true)`, [listingId])));
+await denied("contact needs a phone or an email", () =>
+  as(alice, async () => {
+    const { rows } = await listAs(alice);
+    await q(`insert into public.market_listing_contacts (listing_id) values ($1)`, [rows[0].id]);
+  }));
+await q(`delete from public.market_listings where seller_id = $1 and id <> $2`, [alice, listingId]);
+await denied("listing needs a photo", () =>
+  as(alice, () => q(`insert into public.market_listings (species_id, price, photos) values ($1, 10, '{}')`, [speciesId])));
+await denied("negative price is rejected", () =>
+  as(alice, () => q(`insert into public.market_listings (species_id, price, photos) values ($1, -5, $2)`, [speciesId, photo])));
+await denied("visitors can't list", () => listAs(null));
+await denied("can't list in someone else's name", () =>
+  as(alice, () => q(`insert into public.market_listings (seller_id, species_id, price, photos) values ($1, $2, 1, $3)`, [mallory, speciesId, photo])));
+await expectCount("visitors see active listings", 1, () =>
+  as(null, () => q(`select id from public.market_listings where id = $1`, [listingId])));
+await expectCount("visitors can't see contact details", 0, () =>
+  as(null, () => q(`select phone from public.market_listing_contacts where listing_id = $1`, [listingId])));
+await expectCount("signed-in users see contact details", 1, () =>
+  as(mallory, () => q(`select phone from public.market_listing_contacts where listing_id = $1`, [listingId])));
+await denied("others can't edit the listing", () =>
+  as(mallory, () => q(`update public.market_listings set price = 1 where id = $1`, [listingId])));
+await denied("others can't change the contact", () =>
+  as(mallory, () => q(`update public.market_listing_contacts set phone = '0500000000' where listing_id = $1`, [listingId])));
+await expectCount("visitors see species counts", 1, () =>
+  as(null, () => q(`select active_count as n from public.market_species_counts where species_id = $1`, [speciesId])));
+
+// limit: free plan = 5 active
+await allowed("free account lists up to 5 plants", async () => {
+  for (let i = 0; i < 4; i++) await listAs(alice);
+});
+await denied("6th active listing is blocked", () => listAs(alice));
+await allowed("marking one sold frees a slot", async () => {
+  await as(alice, () => q(`update public.market_listings set status = 'sold' where id = $1`, [listingId]));
+  await listAs(alice);
+});
+await expectCount("sold_at is stamped", 1, () =>
+  q(`select 1 from public.market_listings where id = $1 and sold_at is not null`, [listingId]));
+await expectCount("others don't see sold listings", 0, () =>
+  as(mallory, () => q(`select id from public.market_listings where id = $1`, [listingId])));
+await denied("reactivating a sold one over the limit is blocked", () =>
+  as(alice, () => q(`update public.market_listings set status = 'active' where id = $1`, [listingId])));
+await denied("user can't upgrade their own plan", () =>
+  as(alice, () => q(`update public.profiles set plan = 'plus' where id = $1`, [alice])));
+await allowed("admin gives the plus plan", () =>
+  as(carol, () => q(`update public.profiles set plan = 'plus' where id = $1`, [alice])));
+await allowed("plus plan lists more than 5", () => listAs(alice));
+
+// moderation
+const { rows: ml } = await listAs(mallory);
+const malloryListing = ml[0].id;
+await denied("seller can't mark own listing as removed", () =>
+  as(mallory, () => q(`update public.market_listings set status = 'removed' where id = $1`, [malloryListing])));
+await allowed("admin removes a listing", () =>
+  as(carol, () => q(`update public.market_listings set status = 'removed', removed_reason = 'spam' where id = $1`, [malloryListing])));
+await denied("seller can't bring back a removed listing", () =>
+  as(mallory, () => q(`update public.market_listings set status = 'active' where id = $1`, [malloryListing])));
+await allowed("seller deletes own listing", () =>
+  as(mallory, async () => {
+    const r = await q(`delete from public.market_listings where id = $1`, [malloryListing]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+
+// reports on listings
+const { rows: ml2 } = await listAs(mallory);
+const { rows: ml3 } = await listAs(mallory);
+await allowed("user reports a listing", () =>
+  as(dave, () => q(`insert into public.reports (user_id, listing_id, reason) values ($1, $2, 'spam')`, [mallory, ml2[0].id])));
+await allowed("…and another listing of the same seller", () =>
+  as(dave, () => q(`insert into public.reports (user_id, listing_id, reason) values ($1, $2, 'spam')`, [mallory, ml3[0].id])));
+await denied("…but not the same listing twice", () =>
+  as(dave, () => q(`insert into public.reports (user_id, listing_id, reason) values ($1, $2, 'other')`, [mallory, ml2[0].id])));
+
+// ---------- follows ----------
+console.log("\nFollows");
+await allowed("user follows another user", () =>
+  as(alice, () => q(`insert into public.follows (followee_id) values ($1)`, [mallory])));
+await denied("can't follow twice", () =>
+  as(alice, () => q(`insert into public.follows (followee_id) values ($1)`, [mallory])));
+await denied("can't follow yourself", () =>
+  as(alice, () => q(`insert into public.follows (followee_id) values ($1)`, [alice])));
+await denied("can't follow in someone else's name", () =>
+  as(alice, () => q(`insert into public.follows (follower_id, followee_id) values ($1, $2)`, [mallory, carol])));
+await expectCount("follower counts are public", 1, () =>
+  as(null, () => q(`select 1 from public.follows where followee_id = $1`, [mallory])));
+await q(`update public.profiles set banned_until = 'infinity' where id = $1`, [mallory]);
+await denied("banned user can't follow", () =>
+  as(mallory, () => q(`insert into public.follows (followee_id) values ($1)`, [alice])));
+await q(`update public.profiles set banned_until = null where id = $1`, [mallory]);
+await denied("can't remove someone else's follow", () =>
+  as(mallory, () => q(`delete from public.follows where follower_id = $1`, [alice])));
+await allowed("user unfollows", () =>
+  as(alice, async () => {
+    const r = await q(`delete from public.follows where follower_id = $1 and followee_id = $2`, [alice, mallory]);
+    if (r.affectedRows !== 1) throw new Error("0 rows");
+  }));
+
 // ---------- cascade ----------
 console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);

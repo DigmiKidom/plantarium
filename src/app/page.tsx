@@ -31,7 +31,7 @@ export default async function HomePage() {
           <p className="text-lg text-muted">
             פלנטריום משלב מאגר ידע על צמחים עם מערכת אישית לניהול, מעקב וגידול – ועם קהילה של אנשים שאוהבים צמחים.
           </p>
-          <form action="/knowledge" className="relative mt-2 max-w-md">
+          <form action="/magazine/plants" className="relative mt-2 max-w-md">
             <Search className="pointer-events-none absolute start-4 top-1/2 size-5 -translate-y-1/2 text-muted" aria-hidden />
             <input
               name="q"
@@ -66,7 +66,7 @@ export default async function HomePage() {
       <section aria-labelledby="beginners" className="flex flex-col gap-4">
         <div className="flex items-end justify-between gap-4">
           <h2 id="beginners" className="text-2xl font-bold">צמחים מושלמים למתחילים</h2>
-          <Link href="/knowledge" className="shrink-0 text-sm font-medium text-primary hover:underline">
+          <Link href="/magazine/plants" className="shrink-0 text-sm font-medium text-primary hover:underline">
             לכל המאגר
           </Link>
         </div>

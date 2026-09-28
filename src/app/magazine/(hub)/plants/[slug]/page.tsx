@@ -15,13 +15,13 @@ export async function generateStaticParams() {
   return (await allSlugs()).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/knowledge/[slug]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/magazine/plants/[slug]">): Promise<Metadata> {
   const s = await getSpecies((await params).slug);
   if (!s) return {};
   return {
     title: `${s.common_name_he} (${s.scientific_name}) – מדריך גידול`,
     description: s.summary_he,
-    alternates: { canonical: `/knowledge/${s.slug}` },
+    alternates: { canonical: `/magazine/plants/${s.slug}` },
   };
 }
 
@@ -54,7 +54,7 @@ function CareCard({
   );
 }
 
-export default async function SpeciesPage({ params }: PageProps<"/knowledge/[slug]">) {
+export default async function SpeciesPage({ params }: PageProps<"/magazine/plants/[slug]">) {
   const { slug } = await params;
   const s = await getSpecies(slug);
   if (!s) notFound();
@@ -66,8 +66,8 @@ export default async function SpeciesPage({ params }: PageProps<"/knowledge/[slu
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "ידע", item: "/knowledge" },
-      { "@type": "ListItem", position: 2, name: s.common_name_he, item: `/knowledge/${s.slug}` },
+      { "@type": "ListItem", position: 1, name: "מאגר הצמחים", item: "/magazine/plants" },
+      { "@type": "ListItem", position: 2, name: s.common_name_he, item: `/magazine/plants/${s.slug}` },
     ],
   };
 
@@ -76,9 +76,9 @@ export default async function SpeciesPage({ params }: PageProps<"/knowledge/[slu
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <nav aria-label="פירורי לחם" className="flex items-center gap-1 text-sm text-muted">
-        <Link href="/knowledge" className="hover:text-primary">ידע</Link>
+        <Link href="/magazine/plants" className="hover:text-primary">מאגר הצמחים</Link>
         <ChevronRight className="size-4 rotate-180" aria-hidden />
-        <Link href={`/knowledge?category=${s.category}`} className="hover:text-primary">
+        <Link href={`/magazine/plants?category=${s.category}`} className="hover:text-primary">
           {CATEGORY_HE[s.category]}
         </Link>
       </nav>

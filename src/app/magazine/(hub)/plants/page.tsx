@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 const pick = <T extends string>(v: unknown, allowed: readonly T[]): T | undefined =>
   typeof v === "string" && (allowed as readonly string[]).includes(v) ? (v as T) : undefined;
 
-export default async function KnowledgePage({ searchParams }: PageProps<"/knowledge">) {
+export default async function KnowledgePage({ searchParams }: PageProps<"/magazine/plants">) {
   const sp = await searchParams;
   const filters: SpeciesFilters = {
     q: typeof sp.q === "string" ? sp.q.slice(0, 80) : undefined,
@@ -38,7 +38,7 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/knowle
     };
     for (const [k, v] of Object.entries(merged)) if (v) p.set(k, v);
     const s = p.toString();
-    return s ? `/knowledge?${s}` : "/knowledge";
+    return s ? `/magazine/plants?${s}` : "/magazine/plants";
   };
 
   return (
@@ -48,7 +48,7 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/knowle
         <p className="text-muted">איך לגדל כל צמח: אור, השקיה, לחות, טמפרטורה, מצע ודישון.</p>
       </header>
 
-      <form action="/knowledge" className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4">
+      <form action="/magazine/plants" className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4">
         {filters.category && <input type="hidden" name="category" value={filters.category} />}
         <label className="relative block">
           <span className="sr-only">חיפוש צמח</span>
@@ -116,7 +116,7 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/knowle
       ) : (
         <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted">
           לא מצאנו צמח שמתאים לחיפוש.{" "}
-          <Link href="/knowledge" className="text-primary underline">
+          <Link href="/magazine/plants" className="text-primary underline">
             ניקוי הסינון
           </Link>
         </div>

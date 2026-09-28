@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Ban, Loader2, ShieldCheck, Trash2, UserCog } from "lucide-react";
-import { banUser, deleteUser, dismissReports, setRole, unbanUser, type AdminResult } from "@/lib/admin/actions";
+import { banUser, deleteUser, dismissReports, setPlan, setRole, unbanUser, type AdminResult } from "@/lib/admin/actions";
 import { BAN_DURATIONS, BAN_DURATION_HE, type BanDuration } from "@/lib/admin/bans";
 import { ROLES, ROLE_HE, type Role } from "@/lib/auth/roles";
 import { FormAlert } from "@/components/ui/form";
@@ -14,6 +14,7 @@ export type ManagedUser = {
   username: string | null;
   display_name: string;
   role: Role;
+  plan: "free" | "plus";
   banned: boolean;
 };
 
@@ -25,6 +26,7 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
   const router = useRouter();
   const [panel, setPanel] = useState<Panel>(null);
   const [role, setRoleValue] = useState<Role>(user.role);
+  const [plan, setPlanValue] = useState(user.plan);
   const [duration, setDuration] = useState<BanDuration>("7d");
   const [reason, setReason] = useState("");
   const [confirmName, setConfirmName] = useState("");
@@ -69,7 +71,7 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
-        {tab("role", "תפקיד", UserCog)}
+        {tab("role", "תפקיד וחבילה", UserCog)}
         {user.banned ? (
           <button
             type="button"
@@ -118,6 +120,21 @@ export function UserManage({ user, isSelf, withDismiss }: { user: ManagedUser; i
               if (role === "admin" && !confirm("מנהל יוכל להשעות ולמחוק משתמשים, ולא ניתן לשנות אותו מהאתר. להמשיך?")) return;
               run(() => setRole(user.id, role));
             }}
+            className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary disabled:opacity-50"
+          >
+            שמירה
+          </button>
+          <label className="flex min-w-40 flex-1 flex-col gap-1 text-sm">
+            חבילה (מכסת מודעות בשוק)
+            <select value={plan} onChange={(e) => setPlanValue(e.target.value as "free" | "plus")} className={inputCls}>
+              <option value="free">חינם – עד 5 מודעות</option>
+              <option value="plus">פלוס – עד 50 מודעות</option>
+            </select>
+          </label>
+          <button
+            type="button"
+            disabled={pending || plan === user.plan}
+            onClick={() => run(() => setPlan(user.id, plan))}
             className="rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-on-primary disabled:opacity-50"
           >
             שמירה

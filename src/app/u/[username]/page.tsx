@@ -6,6 +6,11 @@ import { ROLE_HE, isBannedNow, type Role } from "@/lib/auth/roles";
 import { listPublished } from "@/lib/magazine/queries";
 import { ArticleCard } from "@/components/magazine/article-card";
 import { ReportButton } from "@/components/reports/report-button";
+import { FollowButton } from "@/components/follow/follow-button";
+import { ListingTable } from "@/components/market/listing-table";
+import { followCounts, isFollowing } from "@/lib/follows/queries";
+import { listListings } from "@/lib/market/queries";
+import Link from "next/link";
 import { formatDate } from "@/lib/dates";
 
 type PublicProfile = {
@@ -42,7 +47,12 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
   const { data: auth } = await (await createUserClient()).auth.getUser();
   const viewerId = auth.user?.id;
   const banned = isBannedNow(profile.banned_until);
-  const articles = banned ? [] : await listPublished({ authorId: profile.id, limit: 12 });
+  const [articles, listings, counts, following] = await Promise.all([
+    banned ? [] : listPublished({ authorId: profile.id, limit: 12 }),
+    banned ? [] : listListings({ sellerId: profile.id, limit: 20 }),
+    followCounts(profile.id),
+    viewerId && viewerId !== profile.id ? isFollowing(viewerId, profile.id) : Promise.resolve(false),
+  ]);
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-8">
@@ -61,8 +71,26 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
             </li>
           </ul>
         </div>
-        {viewerId && viewerId !== profile.id && <ReportButton userId={profile.id} name={profile.display_name} />}
+        <div className="flex flex-wrap items-center gap-2">
+          {viewerId !== profile.id && !banned && (
+            <FollowButton userId={profile.id} following={following} signedIn={Boolean(viewerId)} loginNext={`/u/${profile.username}`} />
+          )}
+          {viewerId && viewerId !== profile.id && <ReportButton userId={profile.id} name={profile.display_name} />}
+        </div>
       </header>
+
+      <ul className="-mt-4 flex gap-5 text-sm">
+        <li>
+          <Link href={`/u/${profile.username}/followers`} className="hover:text-primary">
+            <span className="font-bold tabular-nums">{counts.followers}</span> עוקבים
+          </Link>
+        </li>
+        <li>
+          <Link href={`/u/${profile.username}/following`} className="hover:text-primary">
+            <span className="font-bold tabular-nums">{counts.following}</span> במעקב
+          </Link>
+        </li>
+      </ul>
 
       {banned ? (
         <p className="flex items-center gap-2 rounded-2xl bg-accent-soft px-4 py-3 text-accent">
@@ -71,6 +99,13 @@ export default async function PublicProfilePage({ params }: PageProps<"/u/[usern
         </p>
       ) : (
         profile.bio && <p className="whitespace-pre-line">{profile.bio}</p>
+      )}
+
+      {listings.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold">מוכר/ת בשוק הצמחים</h2>
+          <ListingTable listings={listings} />
+        </section>
       )}
 
       {articles.length > 0 && (

@@ -8,7 +8,7 @@ import { DifficultyPill } from "./difficulty-pill";
 export function SpeciesCard({ species: s }: { species: Species }) {
   return (
     <Link
-      href={`/knowledge/${s.slug}`}
+      href={`/magazine/plants/${s.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
     >
       <SpeciesVisual species={s} className="aspect-[16/9] w-full sm:aspect-[4/3]" />

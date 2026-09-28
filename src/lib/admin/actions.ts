@@ -80,6 +80,23 @@ export async function setRole(userId: string, role: Role): Promise<AdminResult> 
   return { ok: true, message: "התפקיד עודכן" };
 }
 
+// ---------- plans ----------
+export async function setPlan(userId: string, plan: "free" | "plus"): Promise<AdminResult> {
+  const s = await adminSession();
+  if (!s) return fail("אין הרשאת מנהל");
+  if (!uuid.safeParse(userId).success || !["free", "plus"].includes(plan)) return fail("נתונים לא תקינים");
+  if (userId === s.adminId) return fail("אי אפשר לשנות את החבילה של עצמך");
+  const target = await getTarget(s, userId);
+  if (!target) return fail("המשתמש לא נמצא");
+  if (target.role === "admin") return fail("אי אפשר לשנות מנהל אחר מהאתר");
+  const { data: before } = await s.supabase.from("profiles").select("plan").eq("id", userId).single();
+  const { data, error } = await s.supabase.from("profiles").update({ plan }).eq("id", userId).select("id");
+  if (error || !data?.length) return fail("העדכון נכשל");
+  await log(s, { action: "set_plan", targetId: userId, label: labelOf(target), meta: { from: before?.plan, to: plan } });
+  refreshAdmin();
+  return { ok: true, message: "החבילה עודכנה" };
+}
+
 // ---------- bans ----------
 const banInput = z.object({
   userId: z.uuid(),

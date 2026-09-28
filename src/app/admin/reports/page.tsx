@@ -47,6 +47,11 @@ export default async function AdminReportsPage() {
                       · {r.reporter?.username ? `@${r.reporter.username}` : r.reporter?.display_name} · {formatDateTime(r.created_at)}
                     </span>
                   </p>
+                  {r.listing_id && (
+                    <Link href={`/market/l/${r.listing_id}`} className="text-primary underline">
+                      על מודעה בשוק
+                    </Link>
+                  )}
                   {r.details && <p className="mt-1 whitespace-pre-line">{r.details}</p>}
                 </li>
               ))}
@@ -54,7 +59,7 @@ export default async function AdminReportsPage() {
             <UserManage
               isSelf={target.id === user.id}
               withDismiss
-              user={{ id: target.id, username: target.username, display_name: target.display_name, role: target.role, banned }}
+              user={{ id: target.id, username: target.username, display_name: target.display_name, role: target.role, plan: target.plan, banned }}
             />
           </li>
         );

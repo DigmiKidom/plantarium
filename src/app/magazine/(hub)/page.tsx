@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PenLine } from "lucide-react";
 import { listPublished } from "@/lib/magazine/queries";
 import { ArticleCard, ArticleStats } from "@/components/magazine/article-card";
 
 export const metadata: Metadata = {
-  title: "מגזין",
+  title: "מגזין – כתבות ומדריכים",
   description: "כתבות, מדריכים וסיפורים מעולם הצמחים – נכתבים על ידי כותבי פלנטריום.",
 };
 export const revalidate = 300; // new approvals also refresh it right away
@@ -15,16 +14,10 @@ export default async function MagazinePage() {
   const [lead, ...rest] = articles;
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-8">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold md:text-4xl">מגזין</h1>
-          <p className="mt-1 text-muted">כתבות, מדריכים וסיפורים מעולם הצמחים</p>
-        </div>
-        <Link href="/magazine/write" className="flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm font-medium hover:bg-surface-2">
-          <PenLine className="size-4" aria-hidden />
-          אזור הכותבים
-        </Link>
+    <div className="flex flex-col gap-8">
+      <header>
+        <h1 className="text-3xl font-bold md:text-4xl">כתבות ומדריכים</h1>
+        <p className="mt-1 text-muted">סיפורים, מדריכים וטיפים מעולם הצמחים, מכותבי פלנטריום</p>
       </header>
 
       {!lead ? (

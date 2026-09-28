@@ -28,8 +28,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { articleExtensions } from "@/lib/magazine/extensions";
-import { deleteArticle, saveArticle } from "@/lib/magazine/actions";
-import { uploadArticleImage } from "@/lib/magazine/image-upload";
+import { createArticleImageUpload, deleteArticle, saveArticle } from "@/lib/magazine/actions";
+import { uploadImage } from "@/lib/uploads/client";
 import { STATUS_HE, type ArticleStatus } from "@/lib/magazine/types";
 import { FormAlert } from "@/components/ui/form";
 import { cn } from "@/lib/cn";
@@ -196,7 +196,7 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
     setError(undefined);
     setUploading(target);
     try {
-      const url = await uploadArticleImage(file);
+      const url = await uploadImage(file, createArticleImageUpload);
       if (target === "cover") setCoverUrl(url);
       else editor?.chain().focus().setImage({ src: url, alt: "" }).run();
     } catch (e) {

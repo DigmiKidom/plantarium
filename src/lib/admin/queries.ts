@@ -19,11 +19,12 @@ export async function adminCounts() {
   };
 }
 
-type ProfileRef = { id: string; username: string | null; display_name: string; role: Role; banned_until: string | null };
+type ProfileRef = { id: string; username: string | null; display_name: string; role: Role; plan: "free" | "plus"; banned_until: string | null };
 export type OpenReport = {
   id: string;
   reason: string;
   details: string | null;
+  listing_id: string | null;
   created_at: string;
   reporter: { username: string | null; display_name: string } | null;
   target: ProfileRef | null;
@@ -35,7 +36,7 @@ export async function openReportsByUser() {
   const { data } = await supabase
     .from("reports")
     .select(
-      "id, reason, details, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, banned_until)",
+      "id, reason, details, listing_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)",
     )
     .eq("status", "open")
     .not("user_id", "is", null)
@@ -62,7 +63,7 @@ export async function searchUsers({ q, role, banned }: { q?: string; role?: Role
   const supabase = await createUserClient();
   let query = supabase
     .from("profiles")
-    .select("id, username, display_name, role, banned_until, ban_reason, created_at")
+    .select("id, username, display_name, role, plan, banned_until, ban_reason, created_at")
     .order("created_at", { ascending: false })
     .limit(50);
   const text = q ? cleanQuery(q) : "";

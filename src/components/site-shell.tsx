@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, Newspaper, NotebookPen, Plus, Sprout, type LucideIcon } from "lucide-react";
+import { Home, NotebookPen, Plus, Sprout, Store, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { MeProvider } from "@/components/auth/me";
 import { CompactUserMenu, SidebarUserMenu } from "@/components/nav/user-menu";
@@ -16,25 +16,25 @@ type NavItem = { href: string; label: string; icon: LucideIcon };
 const DESKTOP_NAV: NavItem[] = [
   { href: "/", label: "בית", icon: Home },
   { href: "/plants", label: "הצמחים שלי", icon: Sprout },
-  { href: "/knowledge", label: "ידע", icon: BookOpen },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },
-  { href: "/blog", label: "בלוג", icon: Newspaper },
+  { href: "/market", label: "שוק הצמחים", icon: Store },
 ];
 
-/** Two on each side of the raised + button. Home is the logo in the top bar. */
+/** Two on each side of the raised + button. */
 const MOBILE_NAV: NavItem[] = [
+  { href: "/", label: "בית", icon: Home },
   { href: "/plants", label: "צמחים", icon: Sprout },
-  { href: "/knowledge", label: "ידע", icon: BookOpen },
   { href: "/plants/new", label: "הוספה", icon: Plus },
   { href: "/magazine", label: "מגזין", icon: NotebookPen },
-  { href: "/blog", label: "בלוג", icon: Newspaper },
+  { href: "/market", label: "שוק", icon: Store },
 ];
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   if (href === "/plants") return pathname === "/plants" || (pathname.startsWith("/plants/") && pathname !== "/plants/new");
-  // The writer area belongs to the account menu, not to "Magazine"
+  // Personal areas (writer area, my listings) belong to the account menu
   if (href === "/magazine") return pathname.startsWith("/magazine") && !pathname.startsWith("/magazine/write");
+  if (href === "/market") return pathname.startsWith("/market") && !pathname.startsWith("/market/mine");
   return pathname === href || pathname.startsWith(href + "/");
 }
 

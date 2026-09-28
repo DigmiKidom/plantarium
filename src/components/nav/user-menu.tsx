@@ -12,6 +12,7 @@ import {
   PenLine,
   Settings,
   ShieldCheck,
+  Tag,
   Trees,
   User,
   UserPlus,
@@ -30,6 +31,7 @@ function accountItems(me: NonNullable<Me>): Item[] {
   return [
     { href: "/profile", label: "הפרופיל שלי", icon: User },
     { href: "/garden", label: "הגינה שלי", icon: Trees },
+    { href: "/market/mine", label: "המודעות שלי", icon: Tag },
     ...(canWrite(me.role) ? [{ href: "/magazine/write", label: "המאמרים שלי", icon: PenLine }] : []),
     ...(me.role === "admin" ? [{ href: "/admin", label: "ניהול האתר", icon: ShieldCheck }] : []),
     { href: "/settings", label: "הגדרות", icon: Settings },
@@ -42,7 +44,7 @@ const guestItems: Item[] = [
   { href: "/settings", label: "הגדרות", icon: Settings },
 ];
 
-const ACCOUNT_PATHS = ["/profile", "/garden", "/settings", "/admin", "/magazine/write"];
+const ACCOUNT_PATHS = ["/profile", "/garden", "/settings", "/admin", "/magazine/write", "/market/mine"];
 export const isAccountPath = (p: string) => ACCOUNT_PATHS.some((a) => p === a || p.startsWith(a + "/"));
 
 /** Open/close state that closes on navigation, outside click and Escape. */
