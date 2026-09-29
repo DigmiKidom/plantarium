@@ -1,7 +1,7 @@
 import "server-only";
 import { createPublicClient, createUserClient, hasSupabase } from "@/lib/supabase/server";
 import type { Category } from "@/lib/species/types";
-import { LISTING_COLUMNS, OTHER_SPECIES, type Contact, type ListingRow, type Sort } from "./types";
+import { LISTING_COLUMNS, OTHER_SPECIES, type Contact, type ListingRow, type MarketCategory, type Sort } from "./types";
 
 const log = (at: string, error: { message: string } | null) =>
   error && console.error(JSON.stringify({ at, error: error.message }));
@@ -27,17 +27,17 @@ export async function speciesCounts(category?: Category): Promise<SpeciesCount[]
 }
 
 /** Active listings per category (database species and "other" plants). */
-export async function categoryCounts(): Promise<Partial<Record<Category, number>>> {
-  const out: Partial<Record<Category, number>> = {};
+export async function categoryCounts(): Promise<Partial<Record<MarketCategory, number>>> {
+  const out: Partial<Record<MarketCategory, number>> = {};
   if (!hasSupabase()) return out;
   const { data, error } = await createPublicClient().from("market_listings").select("category").eq("status", "active").limit(10000);
   log("market.categoryCounts", error);
-  for (const r of (data ?? []) as { category: Category }[]) out[r.category] = (out[r.category] ?? 0) + 1;
+  for (const r of (data ?? []) as { category: MarketCategory }[]) out[r.category] = (out[r.category] ?? 0) + 1;
   return out;
 }
 
 /** Active "other" listings (plants not in the database) in a category. */
-export async function otherCount(category: Category) {
+export async function otherCount(category: MarketCategory) {
   if (!hasSupabase()) return 0;
   const { count } = await createPublicClient()
     .from("market_listings")
@@ -55,7 +55,7 @@ export async function listListings({
   sellerId,
   sort = "new",
   limit = 60,
-}: { category?: Category; speciesSlug?: string; sellerId?: string; sort?: Sort; limit?: number }) {
+}: { category?: MarketCategory; speciesSlug?: string; sellerId?: string; sort?: Sort; limit?: number }) {
   if (!hasSupabase()) return [] as ListingRow[];
   const db = createPublicClient();
   let q = db.from("market_listings").select(LISTING_COLUMNS).eq("status", "active").limit(limit);

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import { SIZE_SHORT_HE, formatPrice, listingName, type ListingRow } from "@/lib/market/types";
+import { CONDITION_HE, SIZE_SHORT_HE, categoryHe, formatPrice, isSupplyCategory, listingName, type ListingRow } from "@/lib/market/types";
 import { formatDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
 
@@ -28,7 +28,7 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
                 מחיר
               </th>
               <th scope="col" className="px-4 py-3 text-start font-medium">
-                גודל
+                גודל / מצב
               </th>
               <th scope="col" className="px-4 py-3 text-start font-medium">
                 עיר
@@ -56,7 +56,7 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
                     {l.species ? (
                       <span className="ltr block text-xs italic text-muted">{l.species.scientific_name}</span>
                     ) : (
-                      <span className="block text-xs text-muted">לא במאגר</span>
+                      <span className="block text-xs text-muted">{isSupplyCategory(l.category) ? categoryHe(l.category) : "לא במאגר"}</span>
                     )}
                   </td>
                 )}
@@ -69,7 +69,7 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
                     </Link>
                   )}
                 </td>
-                <td className="px-4 py-2">{l.size ? SIZE_SHORT_HE[l.size] : "—"}</td>
+                <td className="px-4 py-2">{l.size ? SIZE_SHORT_HE[l.size] : l.condition ? CONDITION_HE[l.condition] : "—"}</td>
                 <td className="px-4 py-2">{l.city ?? "—"}</td>
                 <td className="px-4 py-2">{l.seller?.display_name}</td>
                 <td className="px-4 py-2 text-muted">{formatDate(l.created_at)}</td>
@@ -90,6 +90,7 @@ export function ListingTable({ listings, showSpecies = true }: { listings: Listi
                 <span className="block truncate font-semibold">{listingName(l)}</span>
                 <span className="flex flex-wrap items-center gap-x-2 text-xs text-muted">
                   {l.size && <span>{SIZE_SHORT_HE[l.size]}</span>}
+                  {l.condition && <span>{CONDITION_HE[l.condition]}</span>}
                   {l.city && (
                     <span className="flex items-center gap-0.5">
                       <MapPin className="size-3" aria-hidden />

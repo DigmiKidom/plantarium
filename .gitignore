@@ -45,3 +45,6 @@ tsconfig.tsbuildinfo
 # supabase cli local state
 supabase/.temp/
 supabase/.branches/
+
+# Files the Claude app saves here
+Claude outputs/

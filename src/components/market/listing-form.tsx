@@ -4,7 +4,7 @@ import { useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ImagePlus, Loader2, X } from "lucide-react";
 import { createListingImageUpload, saveListing } from "@/lib/market/actions";
-import { MARKET_CATEGORIES, OTHER_SPECIES, SIZES, SIZE_HE, type Size } from "@/lib/market/types";
+import { CONDITIONS, CONDITION_HE, OTHER_SPECIES, PLANT_MARKET_CATEGORIES, SIZES, SIZE_HE, SUPPLY_CATEGORIES, isSupplyCategory, type Condition, type MarketCategory, type Size } from "@/lib/market/types";
 import type { Category } from "@/lib/species/types";
 import { uploadImage } from "@/lib/uploads/client";
 import { FormAlert } from "@/components/ui/form";
@@ -13,12 +13,13 @@ import { cn } from "@/lib/cn";
 export type SpeciesOption = { slug: string; name: string; scientific: string; category: Category };
 export type ListingFormValues = {
   id?: string;
-  category: Category | "";
+  category: MarketCategory | "";
   /** A species slug, or OTHER_SPECIES with otherName. */
   speciesSlug: string;
   otherName: string;
   price: string;
   size: Size | "";
+  condition?: Condition | "";
   city: string;
   description: string;
   photos: string[];
@@ -47,7 +48,7 @@ export function ListingForm({
   quota?: { used: number; limit: number };
 }) {
   const router = useRouter();
-  const [category, setCategory] = useState<Category | "">(
+  const [category, setCategory] = useState<MarketCategory | "">(
     initial.category || (species.find((s) => s.slug === initial.speciesSlug)?.category ?? ""),
   );
   const [v, setV] = useState(initial);
@@ -63,6 +64,7 @@ export function ListingForm({
     [species, category],
   );
   const chosen = species.find((s) => s.slug === v.speciesSlug);
+  const supply = isSupplyCategory(category);
 
   const addPhotos = async (files: FileList | null) => {
     if (!files) return;
@@ -87,16 +89,18 @@ export function ListingForm({
     setError(undefined);
     const price = free ? 0 : Number(v.price);
     if (!category) return setError("נא לבחור קטגוריה");
-    if (!v.speciesSlug) return setError("נא לבחור צמח מהרשימה, או ״אחר – לא ברשימה״");
+    if (!supply && !v.speciesSlug) return setError("נא לבחור צמח מהרשימה, או ״אחר – לא ברשימה״");
+    if (supply && v.otherName.trim().length < 2) return setError("נא לכתוב מה מוכרים (שם הפריט)");
     if (!free && (v.price.trim() === "" || !Number.isFinite(price))) return setError("נא להזין מחיר, או לסמן ״למסירה בחינם״");
     startTransition(async () => {
       const res = await saveListing({
         id: v.id,
         category,
-        speciesSlug: v.speciesSlug,
+        speciesSlug: supply ? OTHER_SPECIES : v.speciesSlug,
         otherName: v.otherName,
         price: Math.round(price),
-        size: v.size || null,
+        size: supply ? null : v.size || null,
+        condition: v.condition || null,
         city: v.city,
         description: v.description,
         photos: v.photos,
@@ -126,9 +130,9 @@ export function ListingForm({
       )}
       <FormAlert error={error} />
 
-      {/* 1. The plant */}
+      {/* 1. What's for sale */}
       <fieldset className="flex flex-col gap-4 rounded-3xl border border-border bg-surface p-5">
-        <legend className="px-1 text-lg font-bold">איזה צמח?</legend>
+        <legend className="px-1 text-lg font-bold">מה מוכרים?</legend>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="category" required>
@@ -138,35 +142,83 @@ export function ListingForm({
               id="category"
               value={category}
               onChange={(e) => {
-                setCategory(e.target.value as Category);
-                set("speciesSlug", "");
+                const c = e.target.value as MarketCategory;
+                setCategory(c);
+                set("speciesSlug", isSupplyCategory(c) ? OTHER_SPECIES : "");
               }}
               className={input}
             >
               <option value="">בחרו קטגוריה</option>
-              {MARKET_CATEGORIES.map((c) => (
-                <option key={c.key} value={c.key}>
-                  {c.he}
-                </option>
-              ))}
+              <optgroup label="צמחים">
+                {PLANT_MARKET_CATEGORIES.map((c) => (
+                  <option key={c.key} value={c.key}>
+                    {c.he}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup label="ציוד וחומרים">
+                {SUPPLY_CATEGORIES.map((c) => (
+                  <option key={c.key} value={c.key}>
+                    {c.he}
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="species" required>
-              זן
-            </Label>
-            <select id="species" value={v.speciesSlug} onChange={(e) => set("speciesSlug", e.target.value)} disabled={!category} className={input}>
-              <option value="">{category ? "בחרו צמח" : "קודם בוחרים קטגוריה"}</option>
-              {inCategory.map((s) => (
-                <option key={s.slug} value={s.slug}>
-                  {s.name} · {s.scientific}
-                </option>
-              ))}
-              {category && <option value={OTHER_SPECIES}>אחר – לא ברשימה</option>}
-            </select>
-          </div>
+          {!supply && (
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="species" required>
+                זן
+              </Label>
+              <select id="species" value={v.speciesSlug} onChange={(e) => set("speciesSlug", e.target.value)} disabled={!category} className={input}>
+                <option value="">{category ? "בחרו צמח" : "קודם בוחרים קטגוריה"}</option>
+                {inCategory.map((s) => (
+                  <option key={s.slug} value={s.slug}>
+                    {s.name} · {s.scientific}
+                  </option>
+                ))}
+                {category && <option value={OTHER_SPECIES}>אחר – לא ברשימה</option>}
+              </select>
+            </div>
+          )}
+          {supply && (
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="otherName" required>
+                שם הפריט
+              </Label>
+              <input
+                id="otherName"
+                value={v.otherName}
+                onChange={(e) => set("otherName", e.target.value)}
+                maxLength={80}
+                placeholder={SUPPLY_CATEGORIES.find((c) => c.key === category)?.hint.split(",")[0] ?? "למשל: עציץ טרקוטה 30 ס״מ"}
+                className={input}
+              />
+            </div>
+          )}
         </div>
-        {v.speciesSlug === OTHER_SPECIES && (
+        {supply && (
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm font-medium">מצב</span>
+            <div className="flex flex-wrap gap-2">
+              {CONDITIONS.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  aria-pressed={v.condition === c}
+                  onClick={() => set("condition", v.condition === c ? "" : c)}
+                  className={cn(
+                    "rounded-full border px-4 py-1.5 text-sm",
+                    v.condition === c ? "border-primary bg-leaf-soft font-semibold text-primary-strong" : "border-border hover:bg-surface-2",
+                  )}
+                >
+                  {CONDITION_HE[c]}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {!supply && v.speciesSlug === OTHER_SPECIES && (
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="otherName" required>
               שם הצמח
@@ -182,7 +234,7 @@ export function ListingForm({
             <p className="text-xs text-muted">צמחים שלא במאגר מופיעים בקטגוריה תחת ״אחר״, בלי מדריך גידול.</p>
           </div>
         )}
-        {chosen && v.speciesSlug !== OTHER_SPECIES && (
+        {!supply && chosen && v.speciesSlug !== OTHER_SPECIES && (
           <p className="text-sm text-muted">
             המודעה תקושר לדף הצמח <span className="font-medium text-text">{chosen.name}</span> במאגר, עם כל הוראות הגידול.
           </p>
@@ -267,7 +319,7 @@ export function ListingForm({
             למסירה בחינם
           </label>
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className={cn("flex flex-col gap-1.5", supply && "hidden")}>
           <Label htmlFor="size">גודל</Label>
           <select id="size" value={v.size} onChange={(e) => set("size", e.target.value as Size | "")} className={input}>
             <option value="">לא צוין</option>
@@ -290,7 +342,7 @@ export function ListingForm({
             onChange={(e) => set("description", e.target.value)}
             maxLength={2000}
             rows={4}
-            placeholder="גיל הצמח, מצב, עציץ כלול, סיבת המכירה…"
+            placeholder={supply ? "מידות, כמות, מותג, מצב…" : "גיל הצמח, מצב, עציץ כלול, סיבת המכירה…"}
             className={cn(input, "resize-y")}
           />
         </div>

@@ -7,6 +7,7 @@ import {
   Flower2,
   Leaf,
   Moon,
+  Palette,
   PawPrint,
   Smile,
   Snowflake,
@@ -76,7 +77,8 @@ export function plantTraits(s: Species): Trait[] {
   if (s.is_toxic_pets === true) out.push({ key: "toxic", label: "רעיל לחיות", hint: "להרחיק מחיות מחמד", icon: PawPrint, tone: T.toxic });
 
   // Character
-  if (has("flowering") || has("colorful")) out.push({ key: "flower", label: "פורח", hint: "פריחה צבעונית", icon: Flower2, tone: T.flower });
+  if (has("flowering")) out.push({ key: "flower", label: "פורח", hint: "פריחה צבעונית", icon: Flower2, tone: T.flower });
+  else if (has("colorful")) out.push({ key: "colorful", label: "צבעוני", hint: "עלווה בצבעים מיוחדים", icon: Palette, tone: T.flower });
   if (has("edible") || has("fruit") || has("herb") || has("vegetable") || s.category === "fruit_tree")
     out.push({ key: "edible", label: "אכיל", hint: "יש מה לקטוף", icon: Apple, tone: T.edible });
   if (has("fragrant")) out.push({ key: "scent", label: "ריחני", hint: "ריח נעים", icon: Wind, tone: T.scent });

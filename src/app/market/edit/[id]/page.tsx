@@ -29,6 +29,7 @@ export default async function EditListingPage({ params }: PageProps<"/market/edi
           otherName: l.other_species ?? "",
           price: String(l.price),
           size: l.size ?? "",
+          condition: l.condition ?? "",
           city: l.city ?? "",
           description: l.description ?? "",
           photos: l.photos,

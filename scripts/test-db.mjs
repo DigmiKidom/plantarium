@@ -426,9 +426,20 @@ await expectCount("a database species wins over a typed name", 1, () =>
 await denied("needs a species or an other name", () =>
   as(dave, () => q(`insert into public.market_listings (category, price, photos) values ('garden', 5, $1)`, [photo])));
 await expectCount("species decides the category", 1, () =>
-  q(`select 1 from public.market_listings l join public.species s on s.id = l.species_id where l.id = $1 and l.category = s.category`, [ml2[0].id]));
+  q(`select 1 from public.market_listings l join public.species s on s.id = l.species_id where l.id = $1 and l.category = s.category::text`, [ml2[0].id]));
 await denied("email contact is no longer accepted", () =>
   as(mallory, () => q(`insert into public.market_listing_contacts (listing_id, phone, email) values ($1, '0501234567', 'a@b.co')`, [ml3[0].id])));
+
+// supplies (pots, soil, tools…)
+await allowed("listing a used pot (supplies category, item name, condition)", () =>
+  as(dave, () =>
+    q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('עציץ טרקוטה 30 ס״מ', 'pots', 'used', 40, $1)`, [photo])));
+await denied("supplies can't be linked to a plant species", () =>
+  as(dave, () => q(`insert into public.market_listings (species_id, category, price, photos) values ($1, 'tools', 5, $2)`, [speciesId, photo])));
+await denied("unknown market category is rejected", () =>
+  as(dave, () => q(`insert into public.market_listings (other_species, category, price, photos) values ('משהו', 'cars', 5, $1)`, [photo])));
+await denied("unknown condition is rejected", () =>
+  as(dave, () => q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('מזמרה', 'tools', 'broken', 5, $1)`, [photo])));
 
 // ---------- follows ----------
 console.log("\nFollows");

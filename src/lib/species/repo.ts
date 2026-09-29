@@ -1,4 +1,6 @@
 import "server-only";
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import seed from "@/data/species.json";
 import { matchScore } from "@/lib/search/hebrew";
 import { createPublicClient, hasSupabase } from "@/lib/supabase/server";
@@ -62,18 +64,40 @@ function fromRow(r: Row): Species {
   };
 }
 
+/**
+ * Lists only need the card fields + care numbers (no long care notes), so ~1,100 species stay small.
+ * Species pages use getSpecies() for the full record.
+ */
+const LIST_SELECT =
+  "slug, scientific_name, common_name_he, other_names_he, common_name_en, family, category, difficulty, summary_he, native_region_he, growth_rate, max_height_cm, is_toxic_pets, tags, species_care(light, water_interval_min_days, water_interval_max_days, humidity_min, humidity_max, temp_min_c, temp_max_c, fertilize_interval_days, fertilize_season, seasonal), species_images(storage_path, alt, credit)";
+const PAGE = 1000; // PostgREST's default max rows per request
+
+async function fetchAllPublished(): Promise<Species[]> {
+  const db = createPublicClient();
+  const out: Species[] = [];
+  for (let from = 0; ; from += PAGE) {
+    const { data, error } = await db
+      .from("species")
+      .select(LIST_SELECT)
+      .not("published_at", "is", null)
+      .order("slug")
+      .order("sort", { referencedTable: "species_images" })
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    out.push(...(data as unknown as Row[]).map(fromRow));
+    if (!data || data.length < PAGE) return out;
+  }
+}
+
+// Shared across requests for 5 minutes (edits also refresh it through revalidatePath), and deduped within a request.
+const allPublished = cache(
+  unstable_cache(fetchAllPublished, ["species-list-v2"], { revalidate: 300 }),
+);
+
 export async function listSpecies(filters: SpeciesFilters = {}): Promise<Species[]> {
   if (!hasSupabase()) return applyFilters(local, filters);
-
-  const db = createPublicClient();
-  const { data, error } = await db
-    .from("species")
-    .select(SELECT)
-    .not("published_at", "is", null)
-    .order("sort", { referencedTable: "species_images" });
-  if (error) throw error;
-  // Filtering is done in JS for now (~hundreds of rows). Move to the search_species RPC past ~2k species.
-  return applyFilters((data as unknown as Row[]).map(fromRow), filters);
+  // Filtering is done in JS (~1k rows, cached). Move to the search_species RPC past ~5k species.
+  return applyFilters(await allPublished(), filters);
 }
 
 export async function getSpecies(slug: string): Promise<Species | null> {
@@ -93,9 +117,7 @@ export async function getSpecies(slug: string): Promise<Species | null> {
 
 export async function allSlugs(): Promise<string[]> {
   if (!hasSupabase()) return local.map((s) => s.slug);
-  const db = createPublicClient();
-  const { data } = await db.from("species").select("slug").not("published_at", "is", null);
-  return (data ?? []).map((r) => r.slug as string);
+  return (await allPublished()).map((s) => s.slug);
 }
 
 /** Species sharing the most tags within the same category. */

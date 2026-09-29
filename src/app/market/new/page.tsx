@@ -14,8 +14,8 @@ export default async function NewListingPage() {
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-6">
       <header>
-        <h1 className="text-3xl font-bold">פרסום צמח למכירה</h1>
-        <p className="text-muted">בוחרים קטגוריה וזן, מוסיפים תמונה, מחיר וטלפון ליצירת קשר.</p>
+        <h1 className="text-3xl font-bold">פרסום מודעה</h1>
+        <p className="text-muted">צמח, עציץ, מצע או כלי גינון – בוחרים קטגוריה, מוסיפים תמונה, מחיר וטלפון ליצירת קשר.</p>
       </header>
       <ListingForm
         species={species}

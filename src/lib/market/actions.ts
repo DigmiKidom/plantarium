@@ -6,10 +6,9 @@ import { z } from "zod";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { isBannedNow, type Role } from "@/lib/auth/roles";
 import { IMAGE_TYPES, MAX_IMAGE_BYTES, hasR2, presignImageUpload } from "@/lib/r2";
-import { OTHER_SPECIES, SIZES } from "./types";
-import type { Category } from "@/lib/species/types";
+import { CONDITIONS, MARKET_CATEGORIES, OTHER_SPECIES, SIZES, isSupplyCategory, type MarketCategory } from "./types";
 
-const CATEGORIES = ["houseplant", "succulent", "herb", "vegetable", "fruit_tree", "garden"] as const satisfies readonly Category[];
+const CATEGORIES = MARKET_CATEGORIES.map((c) => c.key) as [MarketCategory, ...MarketCategory[]];
 
 type Result<T = object> = ({ ok: true } & T) | { ok: false; error: string };
 
@@ -62,13 +61,18 @@ const listingInput = z
     otherName: z.string().trim().max(80, { error: "שם הצמח עד 80 תווים" }),
     price: z.number({ error: "נא להזין מחיר" }).int({ error: "מחיר בשקלים שלמים" }).min(0, { error: "מחיר לא תקין" }).max(100000, { error: "מחיר עד ₪100,000" }),
     size: z.enum(SIZES).nullable(),
+    condition: z.enum(CONDITIONS).nullable().optional(),
     city: z.string().trim().max(60, { error: "עיר עד 60 תווים" }),
     description: z.string().trim().max(2000, { error: "תיאור עד 2000 תווים" }),
     photos: z.array(z.string()).min(1, { error: "צריך לפחות תמונה אחת" }).max(6, { error: "עד 6 תמונות" }),
     phone: z.string().trim().min(1, { error: "נא להזין מספר טלפון ליצירת קשר" }).regex(phoneRe, { error: "מספר טלפון לא תקין" }),
     whatsapp: z.boolean(),
   })
-  .refine((v) => v.speciesSlug !== OTHER_SPECIES || v.otherName.length >= 2, { path: ["otherName"], error: "כתבו את שם הצמח (לפחות 2 תווים)" });
+  .refine((v) => v.speciesSlug !== OTHER_SPECIES || v.otherName.length >= 2, {
+    path: ["otherName"],
+    error: "כתבו את שם הפריט (לפחות 2 תווים)",
+  })
+  .refine((v) => !isSupplyCategory(v.category) || v.speciesSlug === OTHER_SPECIES, { path: ["speciesSlug"], error: "פריט ציוד לא מקושר לצמח" });
 export type ListingInput = z.input<typeof listingInput>;
 
 export async function saveListing(raw: ListingInput): Promise<Result<{ id: string }>> {
@@ -96,7 +100,8 @@ export async function saveListing(raw: ListingInput): Promise<Result<{ id: strin
     other_species: speciesId ? null : v.otherName,
     category: v.category,
     price: v.price,
-    size: v.size,
+    size: isSupplyCategory(v.category) ? null : v.size,
+    condition: v.condition ?? null,
     city: v.city || null,
     description: v.description || null,
     photos: v.photos,

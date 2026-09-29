@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "מדריכי גידול לצמחי בית, סוקולנטים, תבלינים, ירקות וצמחי גינה – אור, השקיה, לחות, דישון ועוד.",
 };
 
+const PER_PAGE = 48;
+
 const pick = <T extends string>(v: unknown, allowed: readonly T[]): T | undefined =>
   typeof v === "string" && (allowed as readonly string[]).includes(v) ? (v as T) : undefined;
 
@@ -26,8 +28,12 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/magazi
     petSafe: sp.petSafe === "1",
   };
   const species = await listSpecies(filters);
+  const pages = Math.max(1, Math.ceil(species.length / PER_PAGE));
+  const page = Math.min(pages, Math.max(1, Number.parseInt(typeof sp.page === "string" ? sp.page : "1", 10) || 1));
+  const shown = species.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   const hrefWith = (patch: Record<string, string | undefined>) => {
+    if (!("page" in patch)) patch = { ...patch, page: undefined };
     const p = new URLSearchParams();
     const merged = {
       q: filters.q,
@@ -106,18 +112,52 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/magazi
       </nav>
 
       <p className="text-sm text-muted" aria-live="polite">
-        {species.length} צמחים
+        {species.length.toLocaleString("he-IL")} צמחים{pages > 1 ? ` · עמוד ${page} מתוך ${pages}` : ""}
       </p>
 
       {species.length ? (
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {species.map((s) => (
+          {shown.map((s) => (
             <li key={s.slug} className="contents">
               <SpeciesCard species={s} />
             </li>
           ))}
         </ul>
-      ) : (
+      ) : null}
+
+      {pages > 1 && (
+        <nav aria-label="עמודים" className="flex flex-wrap items-center justify-center gap-2">
+          {page > 1 && (
+            <Link href={hrefWith({ page: String(page - 1) })} className="rounded-full border border-border px-4 py-2 text-sm hover:border-primary">
+              הקודם
+            </Link>
+          )}
+          {Array.from({ length: pages }, (_, i) => i + 1)
+            .filter((n) => n === 1 || n === pages || Math.abs(n - page) <= 2)
+            .map((n, i, arr) => (
+              <span key={n} className="flex items-center gap-2">
+                {i > 0 && n - arr[i - 1] > 1 && <span className="text-muted">…</span>}
+                <Link
+                  href={hrefWith({ page: n === 1 ? undefined : String(n) })}
+                  aria-current={n === page ? "page" : undefined}
+                  className={cn(
+                    "grid size-10 place-items-center rounded-full border text-sm",
+                    n === page ? "border-primary bg-primary text-on-primary" : "border-border hover:border-primary",
+                  )}
+                >
+                  {n}
+                </Link>
+              </span>
+            ))}
+          {page < pages && (
+            <Link href={hrefWith({ page: String(page + 1) })} className="rounded-full border border-border px-4 py-2 text-sm hover:border-primary">
+              הבא
+            </Link>
+          )}
+        </nav>
+      )}
+
+      {species.length ? null : (
         <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted">
           לא מצאנו צמח שמתאים לחיפוש.{" "}
           <Link href="/magazine/plants" className="text-primary underline">

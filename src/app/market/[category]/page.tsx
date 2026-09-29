@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, Plus } from "lucide-react";
 import { listListings, otherCount, speciesCounts } from "@/lib/market/queries";
-import { OTHER_SPECIES, SORTS, categoryHe, formatPrice, isMarketCategory, type Sort } from "@/lib/market/types";
+import { OTHER_SPECIES, SORTS, categoryHe, formatPrice, isMarketCategory, isSupplyCategory, type Sort } from "@/lib/market/types";
 import { ListingTable } from "@/components/market/listing-table";
 import { cn } from "@/lib/cn";
 
@@ -21,9 +21,10 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
   const speciesSlug = typeof sp.species === "string" && /^[a-z0-9-]+$/.test(sp.species) ? sp.species : undefined;
   const sort: Sort = typeof sp.sort === "string" && sp.sort in SORTS ? (sp.sort as Sort) : "new";
 
+  const supply = isSupplyCategory(category);
   const [species, others, listings] = await Promise.all([
-    speciesCounts(category),
-    otherCount(category),
+    supply ? Promise.resolve([]) : speciesCounts(category),
+    supply ? Promise.resolve(0) : otherCount(category),
     listListings({ category, speciesSlug, sort }),
   ]);
   const chosen = species.find((s) => s.slug === speciesSlug);
@@ -54,7 +55,7 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold">{categoryHe(category)}</h1>
-          <p className="text-muted">בחרו זן כדי לראות את המודעות שלו</p>
+          <p className="text-muted">{supply ? "ציוד וחומרים יד שנייה" : "בחרו זן כדי לראות את המודעות שלו"}</p>
         </div>
         <Link
           href="/market/new"
@@ -66,6 +67,7 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
       </header>
 
       {/* Species within the category */}
+      {!supply && (
       <nav aria-label="זנים" className="-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0">
         <ul className="flex gap-2 md:flex-wrap">
           <li>
@@ -92,6 +94,7 @@ export default async function MarketCategoryPage({ params, searchParams }: PageP
           )}
         </ul>
       </nav>
+      )}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-xl font-bold">

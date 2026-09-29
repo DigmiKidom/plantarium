@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Droplet, Droplets, FlaskConical, Layers, Leaf, Plus, Scissors, Sprout, Sun, Thermometer, Waves } from "lucide-react";
-import { allSlugs, getSpecies, relatedSpecies } from "@/lib/species/repo";
+import { getSpecies, relatedSpecies } from "@/lib/species/repo";
 import type { Season } from "@/lib/species/types";
 import { CATEGORY_HE, DIFFICULTY_HE, GROWTH_HE, LIGHT_HE, MEDIUM_HE, SEASON_HE, tagLabel } from "@/lib/labels";
 import { SpeciesVisual } from "@/components/species/species-visual";
@@ -15,8 +15,9 @@ import { humidityLevel, lightLevel, plantTraits, waterLevel } from "@/lib/specie
 
 export const revalidate = 3600;
 
+// ~1,100 species: pages are built on first visit and cached for an hour (not all at deploy time).
 export async function generateStaticParams() {
-  return (await allSlugs()).map((slug) => ({ slug }));
+  return [];
 }
 
 export async function generateMetadata({ params }: PageProps<"/magazine/plants/[slug]">): Promise<Metadata> {

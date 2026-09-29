@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight, BookOpen, MapPin, MessageCircle, Phone, Ruler } from "lucide-react";
 import { getListing } from "@/lib/market/queries";
-import { LISTING_STATUS_HE, OTHER_SPECIES, SIZE_HE, categoryHe, formatPrice, listingName, whatsappNumber } from "@/lib/market/types";
+import { CONDITION_HE, LISTING_STATUS_HE, OTHER_SPECIES, SIZE_HE, categoryHe, formatPrice, isSupplyCategory, listingName, whatsappNumber } from "@/lib/market/types";
 import { isFollowing } from "@/lib/follows/queries";
 import { createUserClient } from "@/lib/supabase/server";
 import { PhotoGallery } from "@/components/market/photo-gallery";
@@ -51,10 +51,14 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
         <Link href={`/market/${l.category}`} className="hover:text-primary">
           {categoryHe(l.category)}
         </Link>
-        <ArrowRight className="size-4 rotate-180" aria-hidden />
-        <Link href={`/market/${l.category}?species=${l.species?.slug ?? OTHER_SPECIES}`} className="hover:text-primary">
-          {l.species ? l.species.common_name_he : "אחר"}
-        </Link>
+        {!isSupplyCategory(l.category) && (
+          <>
+            <ArrowRight className="size-4 rotate-180" aria-hidden />
+            <Link href={`/market/${l.category}?species=${l.species?.slug ?? OTHER_SPECIES}`} className="hover:text-primary">
+              {l.species ? l.species.common_name_he : "אחר"}
+            </Link>
+          </>
+        )}
       </nav>
 
       {l.status !== "active" && (
@@ -72,6 +76,8 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
             <h1 className="text-3xl font-bold">{listingName(l)}</h1>
             {l.species ? (
               <p className="ltr text-start italic text-muted">{l.species.scientific_name}</p>
+            ) : isSupplyCategory(l.category) ? (
+              <p className="text-sm text-muted">{categoryHe(l.category)}</p>
             ) : (
               <p className="text-sm text-muted">צמח שעדיין לא במאגר שלנו</p>
             )}
@@ -79,6 +85,7 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
           </header>
 
           <ul className="flex flex-wrap gap-2 text-sm">
+            {l.condition && <li className="rounded-full bg-sun-soft px-3 py-1 font-medium">{CONDITION_HE[l.condition]}</li>}
             {l.size && (
               <li className="flex items-center gap-1.5 rounded-full bg-surface-2 px-3 py-1">
                 <Ruler className="size-4" aria-hidden />
