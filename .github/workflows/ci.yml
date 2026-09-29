@@ -1,0 +1,60 @@
+# Automatic checks on every push and pull request.
+# The same checks run locally with: npm run check (and npm run build).
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# A newer push to the same branch cancels the older, still-running check.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Lint, types & tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Lint (code style, React hooks, RTL rules)
+        run: npm run lint
+      - name: Types
+        run: npm run typecheck
+      - name: Unit tests (search, care planner, schemas, plant data)
+        run: npm test
+      - name: Database – all migrations, seed and security rules (RLS)
+        run: npm run db:test
+      - name: Security – known vulnerable packages
+        run: npm audit --audit-level=high --omit=dev
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-${{ hashFiles('src/**') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('package-lock.json') }}-
+      # No secrets needed: without Supabase settings the site builds from the local plant data.
+      - name: next build
+        run: npm run build

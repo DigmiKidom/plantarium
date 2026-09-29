@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const USERNAME_RE = /^[a-z0-9_]{3,24}$/;
 
-const email = z.email({ error: "כתובת אימייל לא תקינה" }).trim().toLowerCase();
+// Trim first, then validate: " name@mail.com" (autocomplete space) is fine.
+const email = z.string().trim().toLowerCase().pipe(z.email({ error: "כתובת אימייל לא תקינה" }));
 const password = z
   .string()
   .min(8, { error: "הסיסמה צריכה להכיל לפחות 8 תווים" })
