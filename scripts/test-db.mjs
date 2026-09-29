@@ -597,6 +597,58 @@ await denied("chief editor can't change roles", () =>
 await denied("chief editor can't ban", () =>
   as(chief, () => q(`update public.profiles set banned_until = 'infinity' where id = $1`, [alice])));
 
+// ---------- my plants ----------
+console.log("\nMy plants");
+let alicePlace, alicePlant, malloryPlace;
+await allowed("user adds a place with a window direction", () =>
+  as(alice, async () => {
+    const { rows } = await q(`insert into public.locations (name, kind, direction) values ('מרפסת', 'balcony', 'sw') returning id`);
+    alicePlace = rows[0].id;
+  }));
+await denied("place with a bad direction is rejected", () =>
+  as(alice, () => q(`insert into public.locations (name, kind, direction) values ('x', 'room', 'up')`)));
+await as(mallory, async () => {
+  const { rows } = await q(`insert into public.locations (name) values ('סלון')`);
+  malloryPlace = rows[0]?.id;
+});
+{
+  const { rows } = await q(`select id from public.locations where user_id = $1`, [mallory]);
+  malloryPlace = rows[0].id;
+}
+await allowed("user adds a plant from the database to their place", () =>
+  as(alice, async () => {
+    const { rows } = await q(
+      `insert into public.user_plants (species_id, location_id, nickname) values ((select id from public.species limit 1), $1, 'מוני') returning id`,
+      [alicePlace]);
+    alicePlant = rows[0].id;
+  }));
+await allowed("user adds a plant that isn't in the database", () =>
+  as(alice, () => q(`insert into public.user_plants (species_name, location_id) values ('פטוניה כפולה', $1)`, [alicePlace])));
+await denied("can't put a plant in someone else's place", () =>
+  as(alice, () => q(`insert into public.user_plants (species_name, location_id) values ('פטוניה', $1)`, [malloryPlace])));
+await allowed("user logs watering", () =>
+  as(alice, () => q(`insert into public.care_events (user_plant_id, type) values ($1, 'water')`, [alicePlant])));
+await expectCount("last watering shows in the summary view", 1, () =>
+  as(alice, () => q(`select 1 from public.user_plant_last_care where user_plant_id = $1 and last_water_at is not null`, [alicePlant])));
+await q(`update public.user_plants set visibility = 'public' where id = $1`, [alicePlant]);
+await denied("can't log care on someone else's (even public) plant", () =>
+  as(mallory, () => q(`insert into public.care_events (user_plant_id, type) values ($1, 'water')`, [alicePlant])));
+await denied("can't add a photo to someone else's plant", () =>
+  as(mallory, () => q(`insert into public.plant_photos (user_plant_id, storage_path) values ($1, 'x')`, [alicePlant])));
+await expectCount("others don't see my care log", 0, () => as(mallory, () => q(`select 1 from public.care_events`)));
+await expectCount("others don't see my places", 0, () =>
+  as(mallory, () => q(`select 1 from public.locations where user_id = $1`, [alice])));
+await denied("others can't edit my plant", () =>
+  as(mallory, () => q(`update public.user_plants set nickname = 'x' where id = $1`, [alicePlant])));
+await denied("water rhythm must be 1–90 days", () =>
+  as(alice, () => q(`update public.user_plants set water_every_days = 0 where id = $1`, [alicePlant])));
+await allowed("deleting a place keeps its plants", () =>
+  as(alice, async () => {
+    await q(`delete from public.locations where id = $1`, [alicePlace]);
+    const r = await q(`select 1 from public.user_plants where id = $1 and location_id is null`, [alicePlant]);
+    if (r.rows.length !== 1) throw new Error("plant gone");
+  }));
+
 // ---------- cascade ----------
 console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);

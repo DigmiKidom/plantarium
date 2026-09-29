@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 import type { Weather } from "@/lib/weather/types";
 
-// Current weather from Open-Meteo (free, no API key). Cached 15 minutes per ~1 km area,
+// Current weather + a 3-day forecast from Open-Meteo (free, no API key). Cached 15 minutes per ~1 km area,
 // so every visitor in the same city shares one request.
 const CACHE_SECONDS = 900;
 
@@ -21,6 +21,9 @@ const openMeteo = z.object({
     is_day: z.number(),
   }),
   daily: z.object({
+    time: z.array(z.string()).min(1),
+    precipitation_sum: z.array(z.number().nullable()).min(1),
+    precipitation_probability_max: z.array(z.number().nullable()).min(1),
     temperature_2m_max: z.array(z.number()).min(1),
     temperature_2m_min: z.array(z.number()).min(1),
     uv_index_max: z.array(z.number().nullable()).min(1),
@@ -36,7 +39,7 @@ export async function GET(request: NextRequest) {
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}` +
     "&current=temperature_2m,apparent_temperature,relative_humidity_2m,wind_speed_10m,weather_code,is_day" +
-    "&daily=temperature_2m_max,temperature_2m_min,uv_index_max&timezone=auto&forecast_days=1";
+    "&daily=temperature_2m_max,temperature_2m_min,uv_index_max,precipitation_sum,precipitation_probability_max&timezone=auto&forecast_days=3";
 
   try {
     const res = await fetch(url, { next: { revalidate: CACHE_SECONDS }, signal: AbortSignal.timeout(5000) });
@@ -53,6 +56,13 @@ export async function GET(request: NextRequest) {
       max: Math.round(data.daily.temperature_2m_max[0]),
       min: Math.round(data.daily.temperature_2m_min[0]),
       uv: Math.round(data.daily.uv_index_max[0] ?? 0),
+      days: data.daily.time.map((date, i) => ({
+        date,
+        max: Math.round(data.daily.temperature_2m_max[i] ?? data.daily.temperature_2m_max[0]),
+        min: Math.round(data.daily.temperature_2m_min[i] ?? data.daily.temperature_2m_min[0]),
+        rain: Math.round((data.daily.precipitation_sum[i] ?? 0) * 10) / 10,
+        rainChance: Math.round(data.daily.precipitation_probability_max[i] ?? 0),
+      })),
     };
     return NextResponse.json(weather, {
       headers: { "Cache-Control": `public, s-maxage=${CACHE_SECONDS}, stale-while-revalidate=3600` },

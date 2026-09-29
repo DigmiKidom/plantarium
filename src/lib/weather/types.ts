@@ -1,3 +1,6 @@
+/** One day of the 3-day forecast (index 0 = today). */
+export type DayForecast = { date: string; max: number; min: number; rain: number; rainChance: number };
+
 export type Weather = {
   temp: number;
   feelsLike: number;
@@ -8,6 +11,7 @@ export type Weather = {
   max: number;
   min: number;
   uv: number;
+  days: DayForecast[];
 };
 
 export type WeatherKind = "clear" | "partly" | "cloudy" | "fog" | "drizzle" | "rain" | "snow" | "storm";

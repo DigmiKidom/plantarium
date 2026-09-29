@@ -1,8 +1,6 @@
-import type { Metadata } from "next";
-import { ComingSoon } from "@/components/coming-soon";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = { title: "הגינה שלי" };
-
-export default function Page() {
-  return <ComingSoon title="הגינה שלי" description="גינות, חדרים ומיקומים – וכל צמח במקום האמיתי שלו." stage="V2" />;
+// "My garden" is now part of "My plants" (the places tab).
+export default function GardenPage() {
+  redirect("/plants?tab=places");
 }
