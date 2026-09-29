@@ -95,7 +95,7 @@ export function ReportButton({
               />
             </label>
             <div className="flex gap-3">
-              <button type="submit" disabled={pending} className="flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-semibold text-white disabled:opacity-60">
+              <button type="submit" disabled={pending} className="flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 font-semibold text-on-accent disabled:opacity-60">
                 {pending && <Loader2 className="size-4 animate-spin" aria-hidden />}
                 שליחת דיווח
               </button>

@@ -6,7 +6,7 @@ import { SpeciesVisual } from "./species-visual";
 import { DifficultyPill } from "./difficulty-pill";
 import { TraitIcons } from "./trait-badges";
 
-export function SpeciesCard({ species: s }: { species: Species }) {
+export function SpeciesCard({ species: s, headingLevel: Heading = "h3" }: { species: Species; headingLevel?: "h2" | "h3" }) {
   const traits = plantTraits(s).filter((t) => t.key !== "easy"); // difficulty already has its own pill
   return (
     <Link
@@ -21,7 +21,7 @@ export function SpeciesCard({ species: s }: { species: Species }) {
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="min-w-0">
-          <h3 className="truncate text-lg font-bold group-hover:text-primary">{s.common_name_he}</h3>
+          <Heading className="truncate text-lg font-bold group-hover:text-primary">{s.common_name_he}</Heading>
           <p className="truncate text-sm italic text-muted">
             <span className="ltr">{s.scientific_name}</span>
           </p>

@@ -71,13 +71,13 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/magazi
           />
         </label>
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <select name="light" defaultValue={filters.light ?? ""} className="rounded-lg border border-border bg-bg px-3 py-2">
+          <select name="light" aria-label="רמת אור" defaultValue={filters.light ?? ""} className="rounded-lg border border-border bg-bg px-3 py-2">
             <option value="">כל רמות האור</option>
             {Object.entries(LIGHT_HE).map(([k, v]) => (
               <option key={k} value={k}>{v}</option>
             ))}
           </select>
-          <select name="difficulty" defaultValue={filters.difficulty ?? ""} className="rounded-lg border border-border bg-bg px-3 py-2">
+          <select name="difficulty" aria-label="רמת קושי" defaultValue={filters.difficulty ?? ""} className="rounded-lg border border-border bg-bg px-3 py-2">
             <option value="">כל רמות הקושי</option>
             {Object.entries(DIFFICULTY_HE).map(([k, v]) => (
               <option key={k} value={k}>{v}</option>
@@ -119,7 +119,7 @@ export default async function KnowledgePage({ searchParams }: PageProps<"/magazi
         <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shown.map((s) => (
             <li key={s.slug} className="contents">
-              <SpeciesCard species={s} />
+              <SpeciesCard species={s} headingLevel="h2" />
             </li>
           ))}
         </ul>

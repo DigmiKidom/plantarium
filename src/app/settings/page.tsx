@@ -16,9 +16,10 @@ export default async function SettingsPage() {
     const { data } = await supabase.auth.getUser();
     if (data.user) {
       signedIn = true;
-      const { data: row, error } = await supabase.from("profiles").select("settings").eq("id", data.user.id).single();
-      // error = the settings column doesn't exist yet (migration 0005 not run) → fall back to browser settings
-      account = error ? null : parseSettings(row?.settings);
+      // Own settings are private (not readable from the profiles table) – read them through my_settings().
+      const { data: row, error } = await supabase.rpc("my_settings");
+      // error = database not updated yet → fall back to browser settings
+      account = error ? null : parseSettings(row);
     }
   }
 

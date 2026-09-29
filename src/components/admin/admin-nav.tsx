@@ -38,7 +38,7 @@ export function AdminNav({ counts, role }: { counts: { reports: number; pending:
                 )}
               >
                 {label}
-                {n > 0 && <span className="rounded-full bg-accent px-1.5 text-xs font-semibold text-white">{n}</span>}
+                {n > 0 && <span className="rounded-full bg-accent px-1.5 text-xs font-semibold text-on-accent">{n}</span>}
               </Link>
             </li>
           );

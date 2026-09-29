@@ -81,3 +81,16 @@ export async function listByStatus(status: ArticleStatus, limit = 50) {
   if (error) console.error(JSON.stringify({ at: "magazine.listByStatus", status, error: error.message }));
   return data ?? [];
 }
+
+/** Slugs + dates of every published article, for the sitemap. */
+export async function publishedSlugs(): Promise<{ slug: string; updated: string }[]> {
+  if (!hasSupabase()) return [];
+  const { data, error } = await createPublicClient()
+    .from("magazine_articles")
+    .select("slug, updated_at, published_at")
+    .eq("status", "published")
+    .limit(5000)
+    .returns<{ slug: string; updated_at: string | null; published_at: string | null }[]>();
+  if (error) console.error(JSON.stringify({ at: "magazine.publishedSlugs", error: error.message }));
+  return (data ?? []).map((a) => ({ slug: a.slug, updated: a.updated_at ?? a.published_at ?? new Date().toISOString() }));
+}

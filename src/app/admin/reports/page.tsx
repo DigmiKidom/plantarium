@@ -35,7 +35,7 @@ export default async function AdminReportsPage() {
               </span>
               <span className="rounded-full bg-surface-2 px-2.5 py-0.5 text-xs">{ROLE_HE[target.role]}</span>
               {banned && <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs text-accent">מושעה</span>}
-              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-white">{reports.length} דיווחים</span>
+              <span className="rounded-full bg-accent px-2.5 py-0.5 text-xs font-semibold text-on-accent">{reports.length} דיווחים</span>
             </header>
             <ul className="flex flex-col gap-2 text-sm">
               {reports.map((r) => (

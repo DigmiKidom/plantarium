@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRight, Droplet, Droplets, FlaskConical, Layers, Leaf, Plus, Scissors, Sprout, Sun, Thermometer, Waves } from "lucide-react";
 import { getSpecies, relatedSpecies } from "@/lib/species/repo";
+import { absoluteUrl, jsonLd as toJsonLd } from "@/lib/seo";
 import type { Season } from "@/lib/species/types";
 import { CATEGORY_HE, DIFFICULTY_HE, GROWTH_HE, LIGHT_HE, MEDIUM_HE, SEASON_HE, tagLabel } from "@/lib/labels";
 import { SpeciesVisual } from "@/components/species/species-visual";
@@ -72,14 +73,14 @@ export default async function SpeciesPage({ params }: PageProps<"/magazine/plant
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "מאגר הצמחים", item: "/magazine/plants" },
-      { "@type": "ListItem", position: 2, name: s.common_name_he, item: `/magazine/plants/${s.slug}` },
+      { "@type": "ListItem", position: 1, name: "מאגר הצמחים", item: absoluteUrl("/magazine/plants") },
+      { "@type": "ListItem", position: 2, name: s.common_name_he, item: absoluteUrl(`/magazine/plants/${s.slug}`) },
     ],
   };
 
   return (
     <article className="flex flex-col gap-8">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
 
       <nav aria-label="פירורי לחם" className="flex items-center gap-1 text-sm text-muted">
         <Link href="/magazine/plants" className="hover:text-primary">מאגר הצמחים</Link>

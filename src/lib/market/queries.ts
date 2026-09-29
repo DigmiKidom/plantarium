@@ -89,16 +89,20 @@ export async function getListing(id: string) {
   log("market.getListing", error);
   if (!listing) return null;
 
+  // Phones come one listing at a time from get_listing_contact() (no bulk reading; max 100 listings a day).
   let contact: Contact | null = null;
+  let contactLimited = false;
   if (auth.user) {
-    const { data } = await supabase
-      .from("market_listing_contacts")
-      .select("phone, whatsapp")
-      .eq("listing_id", id)
-      .maybeSingle<Contact>();
-    contact = data;
+    const { data, error: cErr } = await supabase.rpc("get_listing_contact", { lid: id });
+    if (cErr?.code === "P0429") contactLimited = true;
+    else if (cErr?.code === "PGRST202") {
+      // Database not updated yet (migration 0019) – old direct read
+      const { data: old } = await supabase.from("market_listing_contacts").select("phone, whatsapp").eq("listing_id", id).maybeSingle<Contact>();
+      contact = old;
+    } else log("market.getListing.contact", cErr);
+    contact ??= ((data ?? []) as Contact[])[0] ?? null;
   }
-  return { listing, contact, viewerId: auth.user?.id ?? null };
+  return { listing, contact, contactLimited, viewerId: auth.user?.id ?? null };
 }
 
 export async function myListings(userId: string) {

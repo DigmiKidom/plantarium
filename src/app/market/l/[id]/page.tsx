@@ -30,7 +30,7 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
   const { id } = await params;
   const res = await getListing(id);
   if (!res) notFound();
-  const { listing: l, contact, viewerId } = res;
+  const { listing: l, contact, contactLimited, viewerId } = res;
 
   const isOwner = viewerId === l.seller_id;
   let isAdmin = false;
@@ -122,6 +122,8 @@ export default async function ListingPage({ params }: PageProps<"/market/l/[id]"
                 </Link>{" "}
                 כדי לראות את פרטי הקשר של המוכר/ת.
               </p>
+            ) : contactLimited ? (
+              <p className="text-sm">צפית היום בפרטי קשר של הרבה מודעות. אפשר לראות את הטלפון שוב מחר.</p>
             ) : contact?.phone ? (
               <div className="flex flex-wrap gap-2">
                 {contact.phone && (

@@ -156,7 +156,11 @@ await denied("admin can't edit another user's name", () =>
 // ---------- profile photos ----------
 console.log("\nProfile photos");
 await allowed("user sets own profile photo", () =>
-  as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/profiles/a.webp' where id = $1`, [alice])));
+  as(alice, () => q(`update public.profiles set avatar_url = $2 where id = $1`, [alice, `https://img.test/profiles/${alice}/avatar-1.webp`])));
+await denied("profile photo must come from the user's own folder", () =>
+  as(alice, () => q(`update public.profiles set avatar_url = 'https://evil.test/tracker.webp' where id = $1`, [alice])));
+await denied("…not someone else's folder either", () =>
+  as(alice, () => q(`update public.profiles set avatar_url = $2 where id = $1`, [alice, `https://img.test/profiles/${bob}/avatar-1.webp`])));
 await denied("user can't change someone else's photo", () =>
   as(alice, () => q(`update public.profiles set avatar_url = 'https://img.test/x.webp' where id = $1`, [bob])));
 await denied("photo must be an https URL", () =>
@@ -331,9 +335,9 @@ console.log("\nMarketplace");
 const { rows: sp } = await q(`select id from public.species where published_at is not null order by slug limit 1`);
 const speciesId = sp[0]?.id;
 if (!speciesId) fail("no species to list (run with --seed)");
-const photo = ["https://img.test/market/a.webp"];
+const photoOf = (uid) => [`https://img.test/market/${uid}/a.webp`];
 const listAs = (uid, extra = "") =>
-  as(uid, () => q(`insert into public.market_listings (species_id, price, photos${extra ? ", status" : ""}) values ($1, 50, $2${extra ? `, '${extra}'` : ""}) returning id`, [speciesId, photo]));
+  as(uid, () => q(`insert into public.market_listings (species_id, price, photos${extra ? ", status" : ""}) values ($1, 50, $2${extra ? `, '${extra}'` : ""}) returning id`, [speciesId, photoOf(uid)]));
 
 let listingId;
 await allowed("user lists a plant", async () => {
@@ -351,16 +355,32 @@ await q(`delete from public.market_listings where seller_id = $1 and id <> $2`, 
 await denied("listing needs a photo", () =>
   as(alice, () => q(`insert into public.market_listings (species_id, price, photos) values ($1, 10, '{}')`, [speciesId])));
 await denied("negative price is rejected", () =>
-  as(alice, () => q(`insert into public.market_listings (species_id, price, photos) values ($1, -5, $2)`, [speciesId, photo])));
+  as(alice, () => q(`insert into public.market_listings (species_id, price, photos) values ($1, -5, $2)`, [speciesId, photoOf(alice)])));
 await denied("visitors can't list", () => listAs(null));
 await denied("can't list in someone else's name", () =>
-  as(alice, () => q(`insert into public.market_listings (seller_id, species_id, price, photos) values ($1, $2, 1, $3)`, [mallory, speciesId, photo])));
+  as(alice, () => q(`insert into public.market_listings (seller_id, species_id, price, photos) values ($1, $2, 1, $3)`, [mallory, speciesId, photoOf(alice)])));
 await expectCount("visitors see active listings", 1, () =>
   as(null, () => q(`select id from public.market_listings where id = $1`, [listingId])));
 await expectCount("visitors can't see contact details", 0, () =>
   as(null, () => q(`select phone from public.market_listing_contacts where listing_id = $1`, [listingId])));
-await expectCount("signed-in users see contact details", 1, () =>
-  as(mallory, () => q(`select phone from public.market_listing_contacts where listing_id = $1`, [listingId])));
+await expectCount("signed-in users can't bulk-read contact details", 0, () =>
+  as(mallory, () => q(`select phone from public.market_listing_contacts`)));
+await expectCount("…they get one listing's phone through get_listing_contact", 1, () =>
+  as(mallory, () => q(`select phone from public.get_listing_contact($1)`, [listingId])));
+await denied("visitors can't call get_listing_contact", () =>
+  as(null, () => q(`select phone from public.get_listing_contact($1)`, [listingId])));
+await expectCount("the seller still sees their own contact", 1, () =>
+  as(alice, () => q(`select phone from public.market_listing_contacts where listing_id = $1`, [listingId])));
+{
+  // 100 different listings a day is the limit
+  const fake = await q(`select id from public.market_listings limit 1`);
+  await q(`alter table public.contact_reveals drop constraint contact_reveals_listing_id_fkey`);
+  await q(`insert into public.contact_reveals (user_id, listing_id) select $1, gen_random_uuid() from generate_series(1, 100)`, [dave]);
+  await denied("more than 100 phone numbers a day is blocked", () =>
+    as(dave, () => q(`select phone from public.get_listing_contact($1)`, [listingId])));
+  await q(`delete from public.contact_reveals where user_id = $1`, [dave]);
+  void fake;
+}
 await denied("others can't edit the listing", () =>
   as(mallory, () => q(`update public.market_listings set price = 1 where id = $1`, [listingId])));
 await denied("others can't change the contact", () =>
@@ -417,14 +437,14 @@ await denied("…but not the same listing twice", () =>
 // other species + phone only
 await allowed("listing a plant that isn't in the database (other + category)", () =>
   as(dave, () =>
-    q(`insert into public.market_listings (other_species, category, price, photos) values ('פטוניה כפולה', 'garden', 20, $1)`, [photo])));
+    q(`insert into public.market_listings (other_species, category, price, photos) values ('פטוניה כפולה', 'garden', 20, $1)`, [photoOf(dave)])));
 await denied("other plant needs a category", () =>
-  as(dave, () => q(`insert into public.market_listings (other_species, price, photos) values ('משהו', 5, $1)`, [photo])));
+  as(dave, () => q(`insert into public.market_listings (other_species, price, photos) values ('משהו', 5, $1)`, [photoOf(dave)])));
 await expectCount("a database species wins over a typed name", 1, () =>
   as(dave, () =>
-    q(`insert into public.market_listings (species_id, other_species, category, price, photos) values ($1, 'x y', 'garden', 5, $2) returning other_species`, [speciesId, photo]).then((r) => ({ rows: r.rows.filter((x) => x.other_species === null) }))));
+    q(`insert into public.market_listings (species_id, other_species, category, price, photos) values ($1, 'x y', 'garden', 5, $2) returning other_species`, [speciesId, photoOf(dave)]).then((r) => ({ rows: r.rows.filter((x) => x.other_species === null) }))));
 await denied("needs a species or an other name", () =>
-  as(dave, () => q(`insert into public.market_listings (category, price, photos) values ('garden', 5, $1)`, [photo])));
+  as(dave, () => q(`insert into public.market_listings (category, price, photos) values ('garden', 5, $1)`, [photoOf(dave)])));
 await expectCount("species decides the category", 1, () =>
   q(`select 1 from public.market_listings l join public.species s on s.id = l.species_id where l.id = $1 and l.category = s.category::text`, [ml2[0].id]));
 await denied("email contact is no longer accepted", () =>
@@ -433,13 +453,13 @@ await denied("email contact is no longer accepted", () =>
 // supplies (pots, soil, tools…)
 await allowed("listing a used pot (supplies category, item name, condition)", () =>
   as(dave, () =>
-    q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('עציץ טרקוטה 30 ס״מ', 'pots', 'used', 40, $1)`, [photo])));
+    q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('עציץ טרקוטה 30 ס״מ', 'pots', 'used', 40, $1)`, [photoOf(dave)])));
 await denied("supplies can't be linked to a plant species", () =>
-  as(dave, () => q(`insert into public.market_listings (species_id, category, price, photos) values ($1, 'tools', 5, $2)`, [speciesId, photo])));
+  as(dave, () => q(`insert into public.market_listings (species_id, category, price, photos) values ($1, 'tools', 5, $2)`, [speciesId, photoOf(dave)])));
 await denied("unknown market category is rejected", () =>
-  as(dave, () => q(`insert into public.market_listings (other_species, category, price, photos) values ('משהו', 'cars', 5, $1)`, [photo])));
+  as(dave, () => q(`insert into public.market_listings (other_species, category, price, photos) values ('משהו', 'cars', 5, $1)`, [photoOf(dave)])));
 await denied("unknown condition is rejected", () =>
-  as(dave, () => q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('מזמרה', 'tools', 'broken', 5, $1)`, [photo])));
+  as(dave, () => q(`insert into public.market_listings (other_species, category, condition, price, photos) values ('מזמרה', 'tools', 'broken', 5, $1)`, [photoOf(dave)])));
 
 // ---------- follows ----------
 console.log("\nFollows");
@@ -659,6 +679,44 @@ await allowed("deleting a place keeps its plants", () =>
     const r = await q(`select 1 from public.user_plants where id = $1 and location_id is null`, [alicePlant]);
     if (r.rows.length !== 1) throw new Error("plant gone");
   }));
+
+// ---------- security hardening (0019) ----------
+console.log("\nSecurity hardening");
+{
+  const eve = await createUser("eve");
+  const { rows: evePost } = await as(eve, () => q(`insert into public.posts (body) values ('שלום') returning id`));
+  await q(`update public.profiles set banned_until = now() + interval '7 days', ban_reason = 'ספאם', settings = '{"theme":"dark"}' where id = $1`, [eve]);
+  await denied("banned user can't edit their profile", () =>
+    as(eve, async () => {
+      const r = await q(`update public.profiles set bio = 'קנו עכשיו' where id = $1`, [eve]);
+      if (r.affectedRows !== 1) throw new Error("0 rows");
+    }));
+  await denied("banned user can't edit their old posts", () =>
+    as(eve, async () => {
+      const r = await q(`update public.posts set body = 'ספאם' where id = $1`, [evePost[0].id]);
+      if (r.affectedRows !== 1) throw new Error("0 rows");
+    }));
+  await denied("banned user can't follow", () => as(eve, () => q(`insert into public.follows (followee_id) values ($1)`, [alice])));
+  await denied("visitors can't read the ban reason", () => as(null, () => q(`select ban_reason from public.profiles where id = $1`, [eve])));
+  await denied("other users can't read someone's settings", () => as(alice, () => q(`select settings from public.profiles where id = $1`, [eve])));
+  await expectCount("public profile fields are still readable", 1, () =>
+    as(null, () => q(`select username, display_name, avatar_url, role, banned_until from public.profiles where id = $1`, [eve])));
+  await expectCount("users read their own settings through my_settings()", 1, () =>
+    as(eve, () => q(`select 1 from public.my_settings() s where s->>'theme' = 'dark'`)));
+  await expectCount("admins see ban reasons", 1, () =>
+    as(carol, () => q(`select 1 from public.admin_ban_reasons($1) where ban_reason = 'ספאם'`, [[eve]])));
+  await expectCount("…other users don't", 0, () => as(alice, () => q(`select 1 from public.admin_ban_reasons($1)`, [[eve]])));
+  await allowed("admin can still unban", () =>
+    as(carol, async () => {
+      const r = await q(`update public.profiles set banned_until = null, ban_reason = null where id = $1`, [eve]);
+      if (r.affectedRows !== 1) throw new Error("0 rows");
+    }));
+  await allowed("…and then the user can edit again", () =>
+    as(eve, async () => {
+      const r = await q(`update public.profiles set bio = 'חזרתי' where id = $1`, [eve]);
+      if (r.affectedRows !== 1) throw new Error("0 rows");
+    }));
+}
 
 // ---------- cascade ----------
 console.log("\nAccount deletion");

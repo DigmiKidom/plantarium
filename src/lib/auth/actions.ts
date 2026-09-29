@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { safeNext } from "@/lib/safe-next";
 import { createUserClient, hasSupabase } from "@/lib/supabase/server";
 import { createAdminClient, hasAdmin } from "@/lib/supabase/admin";
 import {
@@ -15,11 +16,6 @@ import {
 
 const NOT_CONFIGURED: FormState = { error: "Supabase לא מוגדר (.env.local)" };
 
-/** Only allow redirects to local paths, never to other sites. */
-function safeNext(raw: FormDataEntryValue | null): string {
-  const s = typeof raw === "string" ? raw : "";
-  return s.startsWith("/") && !s.startsWith("//") ? s : "/";
-}
 
 const pick = (fd: FormData, keys: string[]) =>
   Object.fromEntries(keys.map((k) => [k, String(fd.get(k) ?? "")]));
@@ -96,6 +92,9 @@ export async function updateProfile(_prev: FormState, fd: FormData): Promise<For
   const supabase = await createUserClient();
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) redirect("/login?next=/profile");
+
+  const { data: banned } = await supabase.rpc("is_banned");
+  if (banned === true) return { error: "החשבון מושעה ולא ניתן לערוך אותו", values };
 
   const { displayName, username, bio } = parsed.data;
   const { data: taken } = await supabase

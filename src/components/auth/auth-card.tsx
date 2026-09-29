@@ -1,3 +1,4 @@
+import { safeNext } from "@/lib/safe-next";
 export function AuthCard({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) {
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-6 py-6 md:py-12">
@@ -12,7 +13,4 @@ export function AuthCard({ title, subtitle, children }: { title: string; subtitl
   );
 }
 
-export const nextFrom = (v: string | string[] | undefined) => {
-  const s = typeof v === "string" ? v : "/";
-  return s.startsWith("/") && !s.startsWith("//") ? s : "/";
-};
+export const nextFrom = (v: string | string[] | undefined) => safeNext(v);

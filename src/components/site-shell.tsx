@@ -53,9 +53,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   return (
     <MeProvider>
+      <a
+        href="#main"
+        className="sr-only z-50 whitespace-nowrap rounded-full bg-primary px-5 py-2.5 font-semibold text-on-primary shadow-lg focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:px-5 focus:py-2.5"
+      >
+        דלג לתוכן
+      </a>
       <div className="mx-auto flex min-h-dvh max-w-7xl">
         {/* Desktop sidebar – first in DOM, so it sits on the right in RTL */}
-        <aside className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
+        <aside aria-label="תפריט האתר" className="sticky top-0 hidden h-dvh w-60 shrink-0 flex-col gap-6 border-e border-border px-4 py-6 md:flex">
           <Logo className="h-12" />
           <nav aria-label="ניווט ראשי" className="flex flex-col gap-1">
             {DESKTOP_NAV.map(({ href, label, icon: Icon }) => {
@@ -95,12 +101,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <CompactUserMenu />
           </header>
 
-          <main className="flex-1 px-4 pb-28 pt-6 md:px-8 md:pb-12">{children}</main>
+          <main id="main" tabIndex={-1} className="flex-1 px-4 pb-28 pt-6 outline-none md:px-8 md:pb-12">
+            {children}
+          </main>
         </div>
 
         {/* Mobile bottom bar */}
         <nav
-          aria-label="ניווט ראשי"
+          aria-label="תפריט תחתון"
           className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
         >
           {MOBILE_NAV.map(({ href, label, icon: Icon }) => {

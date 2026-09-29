@@ -15,8 +15,10 @@
   --primary: #2f6b45;      /* leaf green */
   --primary-strong: #245436;
   --on-primary: #ffffff;
-  --accent: #c2663f;       /* terracotta – alerts, overdue */
+  --accent: #a4502c;       /* terracotta – alerts, overdue (4.5:1+ on white and on accent-soft) */
+  --on-accent: #ffffff;
   --accent-soft: #f6e6dd;
+  --control-border: #8a948c; /* input/select outlines: 3:1 against the background */
   --leaf-soft: #e3efe4;
   --sun-soft: #fbf1d6;
   --water-soft: #e1eef6;
@@ -35,7 +37,9 @@
     --primary-strong: #8fd3a6;
     --on-primary: #0d1a12;
     --accent: #e08a62;
+    --on-accent: #1a0f0a;
     --accent-soft: #3a2519;
+    --control-border: #6b7a70;
     --leaf-soft: #1e3326;
     --sun-soft: #3a3219;
     --water-soft: #172a36;
@@ -52,6 +56,7 @@
   --color-primary-strong: var(--primary-strong);
   --color-on-primary: var(--on-primary);
   --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
   --color-accent-soft: var(--accent-soft);
   --color-leaf-soft: var(--leaf-soft);
   --color-sun-soft: var(--sun-soft);
@@ -66,6 +71,32 @@ html {
 body {
   background: var(--bg);
   color: var(--text);
+}
+
+/* Form controls get a stronger outline than card borders (WCAG 1.4.11). Focus/error colours still win. */
+@layer utilities {
+  :is(input, select, textarea).border-border:not(:focus):not([type="checkbox"]):not([type="radio"]) {
+    border-color: var(--control-border);
+  }
+}
+
+/* Keyboard focus is always visible (inputs that set outline-none show a coloured border instead) */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Latin fragments (scientific names, numbers) inside Hebrew text */

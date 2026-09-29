@@ -30,7 +30,10 @@ export function MeProvider({ children }: { children: React.ReactNode }) {
 
     const load = async (userId: string | undefined, fallbackName: string) => {
       if (!userId) return active && setMe(null);
-      const { data } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+      const [{ data }, { data: settings, error: settingsError }] = await Promise.all([
+        supabase.from("profiles").select("display_name, username, role, avatar_url").eq("id", userId).maybeSingle(),
+        supabase.rpc("my_settings"),
+      ]);
       if (!active) return;
       setMe({
         name: data?.display_name || fallbackName,
@@ -39,8 +42,8 @@ export function MeProvider({ children }: { children: React.ReactNode }) {
         avatarUrl: data?.avatar_url ?? null,
       });
       // Signed-in users get their saved theme on every device.
-      if (data && "settings" in data) {
-        const saved = parseSettings(data.settings).theme;
+      if (data && !settingsError && settings) {
+        const saved = parseSettings(settings).theme;
         if (saved !== currentTheme()) applyTheme(saved);
       }
     };

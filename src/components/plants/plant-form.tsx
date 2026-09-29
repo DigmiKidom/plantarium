@@ -88,6 +88,7 @@ function SpeciesPicker({ species, value, onChange }: { species: SpeciesOption[];
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="חיפוש: מונסטרה, פיקוס, בזיליקום…"
+          aria-label="חיפוש צמח במאגר"
           autoComplete="off"
           className={cn(input, "ps-11")}
         />

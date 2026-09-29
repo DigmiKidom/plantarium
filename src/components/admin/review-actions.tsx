@@ -65,7 +65,7 @@ export function ReviewActions({ id, published }: { id: string; published: boolea
             type="button"
             disabled={pending}
             onClick={() => run(() => (published ? unpublishArticle(id, note) : rejectArticle(id, note)), "/admin/articles")}
-            className="self-start rounded-full bg-accent px-5 py-2.5 font-semibold text-white disabled:opacity-60"
+            className="self-start rounded-full bg-accent px-5 py-2.5 font-semibold text-on-accent disabled:opacity-60"
           >
             שליחה לכותב/ת
           </button>

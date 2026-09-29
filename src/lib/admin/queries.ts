@@ -74,15 +74,23 @@ export async function searchUsers({ q, role, banned }: { q?: string; role?: Role
     return query.returns<AdminUserRow[]>();
   };
 
-  let { data, error } = await run("id, username, display_name, role, plan, banned_until, ban_reason, created_at");
+  // ban_reason is private (migration 0019) – it comes from admin_ban_reasons() below.
+  let { data, error } = await run("id, username, display_name, role, plan, banned_until, created_at");
   if (error) {
     // Usually a database update that wasn't applied yet (e.g. the "plan" column) – still show the users.
     console.error(JSON.stringify({ at: "admin.searchUsers", code: error.code, error: error.message }));
     ({ data, error } = await run("id, username, display_name, role, banned_until, created_at"));
     if (error) console.error(JSON.stringify({ at: "admin.searchUsers.fallback", code: error.code, error: error.message }));
-    data = (data ?? []).map((u) => ({ ...u, plan: u.plan ?? "free", ban_reason: u.ban_reason ?? null }));
+    data = (data ?? []).map((u) => ({ ...u, plan: u.plan ?? "free" }));
   }
-  return data ?? [];
+  const rows = data ?? [];
+  const bannedIds = rows.filter((u) => u.banned_until && new Date(u.banned_until) > new Date()).map((u) => u.id);
+  const reasons = new Map<string, string | null>();
+  if (bannedIds.length) {
+    const { data: r } = await supabase.rpc("admin_ban_reasons", { ids: bannedIds });
+    for (const x of (r ?? []) as { id: string; ban_reason: string | null }[]) reasons.set(x.id, x.ban_reason);
+  }
+  return rows.map((u) => ({ ...u, ban_reason: reasons.get(u.id) ?? null }));
 }
 
 /** Which recent database updates are missing (so the admin panel can say "run npm run db:push"). */
@@ -96,6 +104,7 @@ export async function missingDbUpdates() {
     ["0015 עורך ראשי", supabase.rpc("is_reviewer")],
     ["0016 הצמחים שלי", supabase.from("locations").select("direction").limit(1)],
     ["0017 ציוד בשוק", supabase.from("market_listings").select("condition").limit(1)],
+    ["0019 אבטחה", supabase.rpc("my_settings")],
   ];
   const results = await Promise.all(checks.map(async ([name, p]) => ((await p).error ? name : null)));
   return results.filter(Boolean) as string[];

@@ -16,8 +16,8 @@ export async function saveSettings(patch: Partial<Settings>): Promise<{ ok: bool
   const { data: auth } = await supabase.auth.getUser();
   if (!auth.user) return { ok: true, saved: "browser" };
 
-  const { data: row } = await supabase.from("profiles").select("settings").eq("id", auth.user.id).single();
-  const next = { ...parseSettings(row?.settings), ...clean.data };
+  const { data: row } = await supabase.rpc("my_settings");
+  const next = { ...parseSettings(row), ...clean.data };
   const { error } = await supabase.from("profiles").update({ settings: next }).eq("id", auth.user.id);
   return { ok: !error, saved: "account" };
 }

@@ -37,7 +37,7 @@ export function RejectSuggestion({ id }: { id: string }) {
                 router.refresh();
               })
             }
-            className="self-start rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            className="self-start rounded-full bg-accent px-4 py-2 text-sm font-semibold text-on-accent disabled:opacity-60"
           >
             דחיית ההצעה
           </button>

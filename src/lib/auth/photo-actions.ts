@@ -42,6 +42,8 @@ export async function setProfilePhoto(kind: PhotoKind, url: string | null): Prom
   if (url !== null && (!imagesBase() || !url.startsWith(`${imagesBase()}/profiles/${m.userId}/`) || url.includes(".."))) {
     return { ok: false, error: "התמונה לא תקינה. העלו אותה מחדש" };
   }
+  const { data: banned } = await m.supabase.rpc("is_banned");
+  if (banned === true) return { ok: false, error: "החשבון מושעה" };
   const { data, error } = await m.supabase.from("profiles").update({ avatar_url: url }).eq("id", m.userId).select("username").maybeSingle();
   if (error || !data) {
     console.error(JSON.stringify({ at: "profile.setPhoto", error: error?.message }));
