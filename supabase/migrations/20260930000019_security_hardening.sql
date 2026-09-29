@@ -5,6 +5,13 @@
 --   4. Seller phone numbers: no bulk reading – one listing at a time through a function, max 100 listings a day.
 
 -- ---------------------------------------------------------------
+-- 0. Repair: migration 0005 was marked "applied" on the live database but never ran,
+--    so profiles.settings can be missing there. Same statement as 0005 (safe to repeat).
+-- ---------------------------------------------------------------
+alter table public.profiles
+  add column if not exists settings jsonb not null default '{}'::jsonb;
+
+-- ---------------------------------------------------------------
 -- 1. Private profile columns
 -- ---------------------------------------------------------------
 -- Column privileges: every profile column stays public except the private ones below.
