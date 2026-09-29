@@ -95,6 +95,7 @@ export async function missingDbUpdates() {
     ["0012 הצעות צמחים", supabase.from("species_suggestions").select("id").limit(1)],
     ["0015 עורך ראשי", supabase.rpc("is_reviewer")],
     ["0016 הצמחים שלי", supabase.from("locations").select("direction").limit(1)],
+    ["0017 ציוד בשוק", supabase.from("market_listings").select("condition").limit(1)],
   ];
   const results = await Promise.all(checks.map(async ([name, p]) => ((await p).error ? name : null)));
   return results.filter(Boolean) as string[];
