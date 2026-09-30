@@ -12,8 +12,9 @@ import { PhotoButton, RemovePhotoButton } from "@/components/profile/photo-butto
 export const metadata: Metadata = { title: "עריכת פרופיל", robots: { index: false } };
 export const dynamic = "force-dynamic"; // per-user page, never prerendered
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ searchParams }: PageProps<"/profile">) {
   const { user, profile } = await requireUser("/profile");
+  const passwordChanged = (await searchParams).password === "changed";
   const name = profile?.display_name || user.email || "";
   const counts = await followCounts(user.id);
   const joined = new Intl.DateTimeFormat("he-IL", { month: "long", year: "numeric" }).format(
@@ -22,6 +23,11 @@ export default async function ProfilePage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-8">
+      {passwordChanged && (
+        <p role="status" className="rounded-2xl bg-leaf-soft px-4 py-3 text-sm font-medium text-primary-strong">
+          הסיסמה עודכנה. מעכשיו מתחברים עם הסיסמה החדשה.
+        </p>
+      )}
       <header className="flex items-center gap-4">
         <Avatar name={name} url={profile?.avatar_url} className="size-20 text-3xl" />
         <div className="min-w-0">

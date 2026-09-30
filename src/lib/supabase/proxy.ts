@@ -2,9 +2,9 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /** Pages that need a signed-in user. Everything else (knowledge, blog, home) is public. */
-const PROTECTED = ["/plants", "/garden", "/profile", "/admin", "/magazine/write", "/market/new", "/market/edit", "/market/mine"];
+const PROTECTED = ["/plants", "/garden", "/profile", "/admin", "/magazine/write", "/market/new", "/market/edit", "/market/mine", "/reset-password"];
 /** Pages a signed-in user shouldn't see. */
-const GUEST_ONLY = ["/login", "/signup"];
+const GUEST_ONLY = ["/login", "/signup", "/forgot-password"];
 
 const matches = (path: string, list: string[]) => list.some((p) => path === p || path.startsWith(p + "/"));
 

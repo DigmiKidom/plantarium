@@ -89,7 +89,7 @@ async function saveArticleInner(input: ArticleInput): Promise<Result<{ id: strin
 
   if (res.error || !res.data) {
     console.error(JSON.stringify({ at: "magazine.save.db", code: res.error?.code, error: res.error?.message, details: res.error?.details }));
-    return { ok: false, error: `השמירה נכשלה: ${res.error?.message ?? "לא נמצא מאמר"}` };
+    return { ok: false, error: res.error ? "השמירה נכשלה. נסו שוב" : "המאמר לא נמצא" };
   }
 
   revalidatePath("/magazine", "layout");

@@ -53,10 +53,14 @@ for (const f of files) {
 }
 console.log(`✅ ${files.length} migrations applied in order`);
 
-if (process.argv.includes("--seed")) {
-  await db.exec(readFileSync(join(root, "supabase/seed.sql"), "utf8"));
+{
+  // Plant species come from migrations (0018 + 0021) – no separate seed file any more.
   const { rows } = await db.query("select count(*)::int as n from public.species");
-  console.log(`✅ seed loaded (${rows[0].n} species)`);
+  if (rows[0].n < 1000) {
+    console.log(`❌ expected the migrations to load 1,000+ species, got ${rows[0].n}`);
+    process.exit(1);
+  }
+  console.log(`✅ migrations loaded ${rows[0].n} species`);
 }
 
 // ---------- helpers ----------
@@ -260,8 +264,8 @@ await expectCount("users can't read the log", 0, () => as(alice, () => q(`select
 
 // ---------- personal data ----------
 console.log("\nPersonal data");
-await as(alice, () => q(`insert into public.gardens (name) values ('בית')`));
-await expectCount("users can't see each other's gardens", 0, () => as(mallory, () => q(`select id from public.gardens`)));
+await as(alice, () => q(`insert into public.locations (name) values ('בית')`));
+await expectCount("users can't see each other's places", 0, () => as(mallory, () => q(`select id from public.locations where user_id = $1`, [alice])));
 
 // ---------- likes & comments ----------
 console.log("\nLikes & comments");
@@ -334,7 +338,7 @@ await expectCount("comments hide when the article is unpublished", 0, () =>
 console.log("\nMarketplace");
 const { rows: sp } = await q(`select id from public.species where published_at is not null order by slug limit 1`);
 const speciesId = sp[0]?.id;
-if (!speciesId) fail("no species to list (run with --seed)");
+if (!speciesId) fail("no published species to list");
 const photoOf = (uid) => [`https://img.test/market/${uid}/a.webp`];
 const listAs = (uid, extra = "") =>
   as(uid, () => q(`insert into public.market_listings (species_id, price, photos${extra ? ", status" : ""}) values ($1, 50, $2${extra ? `, '${extra}'` : ""}) returning id`, [speciesId, photoOf(uid)]));
@@ -716,6 +720,91 @@ console.log("\nSecurity hardening");
       const r = await q(`update public.profiles set bio = 'חזרתי' where id = $1`, [eve]);
       if (r.affectedRows !== 1) throw new Error("0 rows");
     }));
+}
+
+// ---------- data integrity (0020) ----------
+console.log("\nData integrity");
+{
+  const fran = await createUser("fran");
+  const photos = [`https://img.test/market/${fran}/a.webp`];
+  let lid;
+  await allowed("save_listing creates the listing and its phone together", () =>
+    as(fran, async () => {
+      const { rows } = await q(`select public.save_listing(null, $1, null, 'houseplant', 30, null, null, 'חיפה', null, $2, '050-1234567', true) as id`, [speciesId, photos]);
+      lid = rows[0].id;
+      const c = await q(`select 1 from public.market_listing_contacts where listing_id = $1`, [lid]);
+      if (c.rows.length !== 1) throw new Error("no contact");
+    }));
+  await expectCount("…a bad phone rolls back the whole listing", 1, () =>
+    as(fran, async () => {
+      await q(`select public.save_listing(null, $1, null, 'houseplant', 30, null, null, null, null, $2, 'not-a-phone', false)`, [speciesId, photos]).catch(() => null);
+      return q(`select count(*)::int as n from public.market_listings where seller_id = $1`, [fran]);
+    }));
+  await denied("save_listing can't edit someone else's listing", () =>
+    as(alice, () => q(`select public.save_listing($1, $2, null, 'houseplant', 1, null, null, null, null, $3, '050-1234567', false)`, [lid, speciesId, photos])));
+  await expectCount("market category counts come from the database", 1, () =>
+    as(null, () => q(`select 1 where (select sum(n) from public.market_category_counts()) >= 1`)));
+
+  await allowed("create_post saves the post and its photos together", () =>
+    as(fran, async () => {
+      const { rows } = await q(`select public.create_post('שלום', 'post', null, $1) as id`, [[`feed/${fran}/a.webp`, `feed/${fran}/b.webp`]]);
+      const m = await q(`select count(*)::int as n from public.post_media where post_id = $1`, [rows[0].id]);
+      if (m.rows[0].n !== 2) throw new Error("photos missing");
+    }));
+  await expectCount("…a photo from someone else's folder rolls back the post", 1, () =>
+    as(fran, async () => {
+      await q(`select public.create_post('x', 'post', null, $1)`, [[`feed/${alice}/a.webp`]]).catch(() => null);
+      return q(`select count(*)::int as n from public.posts where author_id = $1`, [fran]);
+    }));
+
+  await allowed("create_user_plant saves the plant and its first watering together", () =>
+    as(fran, async () => {
+      const { rows } = await q(`select public.create_user_plant(null, 'פטוניה', null, null, null, null, null, null, null, null, now() - interval '1 day') as id`);
+      const w = await q(`select 1 from public.care_events where user_plant_id = $1 and type = 'water'`, [rows[0].id]);
+      if (w.rows.length !== 1) throw new Error("no watering");
+    }));
+
+  // reports keep their evidence
+  const { rows: fp } = await as(fran, () => q(`insert into public.posts (body) values ('קנו עוקבים בזול') returning id`));
+  await allowed("reporting a post takes the account from the post itself", () =>
+    as(alice, async () => {
+      await q(`insert into public.reports (user_id, post_id, reason) values ($1, $2, 'spam')`, [mallory, fp[0].id]);
+    }));
+  await expectCount("…the report is about the post's author, with a copy of the post", 1, () =>
+    q(`select 1 from public.reports where post_id = $1 and user_id = $2 and snapshot->>'body' = 'קנו עוקבים בזול'`, [fp[0].id, fran]));
+  await as(fran, () => q(`delete from public.posts where id = $1`, [fp[0].id]));
+  await expectCount("deleting the post doesn't erase the report", 1, () =>
+    q(`select 1 from public.reports where post_id = $1`, [fp[0].id]));
+
+  await denied("tables the site doesn't use can't be written", () =>
+    as(fran, () => q(`insert into public.feed_impressions (user_id, post_id) values ($1, $2)`, [fran, fp[0].id])));
+
+  await q(`insert into public.user_plants (user_id, species_name) select $1, 'צמח ' || g from generate_series(1, 499) g`, [fran]);
+  await denied("501st plant is blocked by the database", () =>
+    as(fran, () => q(`insert into public.user_plants (species_name) values ('עוד אחד')`)));
+
+  await denied("users can't call the login rate limiter", () =>
+    as(alice, () => q(`select public.auth_rate_check('login:ip:1', 5, interval '1 minute')`)));
+  await expectCount("the server's rate limiter allows 3 then blocks", 1, async () => {
+    await db.exec("set role service_role");
+    try {
+      const r = [];
+      for (let i = 0; i < 4; i++) r.push((await q(`select public.auth_rate_check('test:k', 3, interval '1 hour') as ok`)).rows[0].ok);
+      return { rows: r.join(",") === "true,true,true,false" ? [{}] : [] };
+    } finally {
+      await db.exec("reset role");
+    }
+  });
+}
+
+// ---------- policy performance (0022) ----------
+console.log("\nPolicy performance");
+await expectCount("no security rule calls auth.uid() once per row", 0, () =>
+  q(`select 1 from pg_policies where schemaname = 'public' and (qual ~ '(?<!SELECT )auth\\.uid\\(\\)' or with_check ~ '(?<!SELECT )auth\\.uid\\(\\)')`));
+{
+  const { rows } = await q(`select count(*)::int as n from pg_policies where schemaname = 'public' and (qual ~ 'SELECT auth\\.uid\\(\\)' or with_check ~ 'SELECT auth\\.uid\\(\\)')`);
+  if (rows[0].n >= 30) pass(`…${rows[0].n} rules use the once-per-query form`);
+  else fail(`expected 30+ rewritten rules, got ${rows[0].n}`);
 }
 
 // ---------- cascade ----------

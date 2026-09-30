@@ -30,9 +30,16 @@ export async function speciesCounts(category?: Category): Promise<SpeciesCount[]
 export async function categoryCounts(): Promise<Partial<Record<MarketCategory, number>>> {
   const out: Partial<Record<MarketCategory, number>> = {};
   if (!hasSupabase()) return out;
-  const { data, error } = await createPublicClient().from("market_listings").select("category").eq("status", "active").limit(10000);
-  log("market.categoryCounts", error);
-  for (const r of (data ?? []) as { category: MarketCategory }[]) out[r.category] = (out[r.category] ?? 0) + 1;
+  const db = createPublicClient();
+  const { data, error } = await db.rpc("market_category_counts");
+  if (!error) {
+    for (const r of (data ?? []) as { category: MarketCategory; n: number }[]) out[r.category] = r.n;
+    return out;
+  }
+  // Before migration 0020: count in JS (only correct up to 1,000 active listings)
+  const { data: rows, error: e2 } = await db.from("market_listings").select("category").eq("status", "active").limit(1000);
+  log("market.categoryCounts", e2);
+  for (const r of (rows ?? []) as { category: MarketCategory }[]) out[r.category] = (out[r.category] ?? 0) + 1;
   return out;
 }
 

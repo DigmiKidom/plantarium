@@ -14,6 +14,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           החשבון הושעה על ידי צוות האתר ולכן נותקת.
         </p>
       )}
+      {sp.error === "link" && (
+        <p role="alert" className="mb-4 rounded-xl bg-accent-soft px-4 py-3 text-sm text-accent">
+          הקישור לא תקין או שפג תוקפו. אפשר לבקש קישור חדש ב״שכחתי סיסמה״.
+        </p>
+      )}
       <LoginForm next={next} />
     </AuthCard>
   );

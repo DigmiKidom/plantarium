@@ -28,6 +28,12 @@ export const signInSchema = z.object({
   password: z.string().min(1, { error: "נא להזין סיסמה" }),
 });
 
+export const forgotSchema = z.object({ email });
+
+export const resetSchema = z
+  .object({ password, confirm: z.string() })
+  .refine((v) => v.password === v.confirm, { path: ["confirm"], error: "הסיסמאות לא תואמות" });
+
 export const profileSchema = z.object({
   displayName,
   username,

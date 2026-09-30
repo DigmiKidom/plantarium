@@ -58,6 +58,11 @@ export default async function AdminReportsPage() {
                     </Link>
                   )}
                   {r.details && <p className="mt-1 whitespace-pre-line">{r.details}</p>}
+                  {r.snapshot && (r.snapshot.body || r.snapshot.name || r.snapshot.description) && (
+                    <blockquote className="mt-1 line-clamp-4 whitespace-pre-line border-s-2 border-border ps-3 text-muted">
+                      {r.snapshot.kind === "listing" ? [r.snapshot.name, r.snapshot.description].filter(Boolean).join(" – ") : r.snapshot.body}
+                    </blockquote>
+                  )}
                 </li>
               ))}
             </ul>

@@ -33,8 +33,10 @@ jobs:
         run: npm run typecheck
       - name: Unit tests (search, care planner, schemas, plant data)
         run: npm test
-      - name: Database – all migrations, seed and security rules (RLS)
+      - name: Database – all migrations, plant data and security rules (RLS)
         run: npm run db:test
+      - name: Plant data – every species in species.json is in a migration
+        run: node scripts/species-migration.mjs --check
       - name: Security – known vulnerable packages
         run: npm audit --audit-level=high --omit=dev
 

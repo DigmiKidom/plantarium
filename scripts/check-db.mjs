@@ -24,10 +24,10 @@ const { count, error } = await db.from("species").select("slug", { count: "exact
 if (error) {
   fail(`species table: ${error.message}`);
   if (/does not exist|schema cache/i.test(error.message)) {
-    console.log("   → Run supabase/setup.sql in the Supabase SQL Editor first.");
+    console.log("   → Run: npm run db:push");
   }
 } else if (!count) {
-  fail("species table is empty – run supabase/setup.sql (or seed.sql)");
+  fail("species table is empty – run: npm run db:push");
 } else {
   ok(`${count} published species`);
 }

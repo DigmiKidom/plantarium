@@ -140,16 +140,36 @@ export async function savePlant(input: z.input<typeof plantInput>): Promise<Resu
     return { ok: true, id: v.id };
   }
 
+  const lastWateredAt =
+    v.lastWatered && v.lastWatered !== "unknown" ? new Date(Date.now() - LAST_WATERED[v.lastWatered] * 86_400_000).toISOString() : null;
+
+  // Plant + first watering in one database transaction (migration 0020); the 500-plant limit is enforced there too.
+  const rpc = await m.supabase.rpc("create_user_plant", {
+    p_species_id: row.species_id,
+    p_species_name: row.species_name,
+    p_nickname: row.nickname,
+    p_location_id: row.location_id,
+    p_pot_cm: row.pot_diameter_cm,
+    p_medium: row.medium,
+    p_acquired_on: row.acquired_on,
+    p_water_every_days: row.water_every_days,
+    p_notes: row.notes,
+    p_photo_url: row.photo_url,
+    p_last_watered_at: lastWateredAt,
+  });
+  if (!rpc.error && rpc.data) {
+    refresh();
+    return { ok: true, id: rpc.data as string };
+  }
+  if (rpc.error?.code === "P0413") return { ok: false, error: "הגעת למקסימום של 500 צמחים" };
+  if (rpc.error && rpc.error.code !== "PGRST202") return dbError(rpc.error, "plants.create");
+
+  // Before migration 0020: the old two-step save
   const { count } = await m.supabase.from("user_plants").select("id", { count: "exact", head: true }).eq("user_id", m.userId);
   if ((count ?? 0) >= 500) return { ok: false, error: "הגעת למקסימום של 500 צמחים" };
-
   const { data, error } = await m.supabase.from("user_plants").insert(row).select("id").single<{ id: string }>();
   if (error) return dbError(error, "plants.create");
-
-  if (v.lastWatered && v.lastWatered !== "unknown") {
-    const at = new Date(Date.now() - LAST_WATERED[v.lastWatered] * 86_400_000).toISOString();
-    await m.supabase.from("care_events").insert({ user_plant_id: data.id, type: "water", occurred_at: at });
-  }
+  if (lastWateredAt) await m.supabase.from("care_events").insert({ user_plant_id: data.id, type: "water", occurred_at: lastWateredAt });
   refresh();
   return { ok: true, id: data.id };
 }

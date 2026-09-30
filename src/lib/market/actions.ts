@@ -108,23 +108,54 @@ export async function saveListing(raw: ListingInput): Promise<Result<{ id: strin
   };
   const contact = { phone: v.phone, whatsapp: v.whatsapp };
 
-  if (v.id) {
-    const { data, error } = await s.supabase.from("market_listings").update(row).eq("id", v.id).eq("seller_id", s.userId).select("id").maybeSingle();
-    if (error || !data) return { ok: false, error: "השמירה נכשלה" };
-    const { error: cErr } = await s.supabase.from("market_listing_contacts").upsert({ listing_id: v.id, ...contact });
-    if (cErr) return { ok: false, error: "פרטי הקשר לא נשמרו" };
-    refresh(v.id);
-    return { ok: true, id: v.id };
+  // Listing + phone in one database transaction (migration 0020).
+  const { data: savedId, error } = await s.supabase.rpc("save_listing", {
+    p_id: v.id ?? null,
+    p_species_id: row.species_id,
+    p_other_species: row.other_species,
+    p_category: row.category,
+    p_price: row.price,
+    p_size: row.size,
+    p_condition: row.condition,
+    p_city: row.city,
+    p_description: row.description,
+    p_photos: row.photos,
+    p_phone: contact.phone,
+    p_whatsapp: contact.whatsapp,
+  });
+  if (error?.code === "PGRST202") return saveListingLegacy(s, v.id, row, contact);
+  if (error?.code === "P0413") {
+    return { ok: false, error: "הגעת למכסת המודעות הפעילות בחשבון. סמנו מודעה כ״נמכר״ או מחקו אחת כדי לפרסם חדשה" };
   }
+  if (error || !savedId) {
+    console.error(JSON.stringify({ at: "market.save", code: error?.code, error: error?.message }));
+    if (error?.code === "23514") return { ok: false, error: "אחד הפרטים לא תקין (טלפון, מחיר או תמונות)" };
+    return { ok: false, error: v.id ? "השמירה נכשלה" : "הפרסום נכשל. נסו שוב" };
+  }
+  refresh(savedId as string);
+  return { ok: true, id: savedId as string };
+}
 
+/** Before migration 0020 is applied: the old two-step save. Remove once every database has 0020. */
+async function saveListingLegacy(
+  s: NonNullable<Awaited<ReturnType<typeof seller>>>,
+  id: string | undefined,
+  row: Record<string, unknown>,
+  contact: { phone: string; whatsapp: boolean },
+): Promise<Result<{ id: string }>> {
+  if (id) {
+    const { data, error } = await s.supabase.from("market_listings").update(row).eq("id", id).eq("seller_id", s.userId).select("id").maybeSingle();
+    if (error || !data) return { ok: false, error: "השמירה נכשלה" };
+    const { error: cErr } = await s.supabase.from("market_listing_contacts").upsert({ listing_id: id, ...contact });
+    if (cErr) return { ok: false, error: "פרטי הקשר לא נשמרו" };
+    refresh(id);
+    return { ok: true, id };
+  }
   const { data, error } = await s.supabase.from("market_listings").insert(row).select("id").single();
   if (error?.code === "P0413") {
     return { ok: false, error: "הגעת למכסת המודעות הפעילות בחשבון. סמנו מודעה כ״נמכר״ או מחקו אחת כדי לפרסם חדשה" };
   }
-  if (error || !data) {
-    console.error(JSON.stringify({ at: "market.save", code: error?.code, error: error?.message }));
-    return { ok: false, error: "הפרסום נכשל. נסו שוב" };
-  }
+  if (error || !data) return { ok: false, error: "הפרסום נכשל. נסו שוב" };
   const { error: cErr } = await s.supabase.from("market_listing_contacts").insert({ listing_id: data.id, ...contact });
   if (cErr) {
     await s.supabase.from("market_listings").delete().eq("id", data.id);

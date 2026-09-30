@@ -10,6 +10,8 @@ const origin = (url: string | undefined) => {
 };
 const images = origin(process.env.NEXT_PUBLIC_IMAGES_URL);
 const supabase = origin(process.env.NEXT_PUBLIC_SUPABASE_URL);
+// Cloudflare Turnstile ("I'm human" check on login/signup) – only allowed when it's configured.
+const turnstile = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? "https://challenges.cloudflare.com" : "";
 
 /**
  * Content-Security-Policy: the browser may only load images from our R2 bucket, talk to Supabase + R2 uploads,
@@ -19,12 +21,12 @@ const supabase = origin(process.env.NEXT_PUBLIC_SUPABASE_URL);
  */
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} ${turnstile}`.trim(),
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${images}`.trim(),
   "font-src 'self' data:",
   `connect-src 'self' ${supabase} ${supabase.replace(/^https:/, "wss:")} https://*.r2.cloudflarestorage.com${isDev ? " ws:" : ""}`.replace(/\s+/g, " "),
-  "frame-src https://www.youtube-nocookie.com https://www.youtube.com",
+  `frame-src https://www.youtube-nocookie.com https://www.youtube.com ${turnstile}`.trim(),
   "media-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",

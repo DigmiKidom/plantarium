@@ -28,6 +28,8 @@ export type OpenReport = {
   details: string | null;
   listing_id: string | null;
   post_id: string | null;
+  /** Copy of the reported post/listing, kept even if it was deleted (migration 0020). */
+  snapshot?: { kind: "post" | "listing"; body?: string; name?: string; description?: string; price?: number } | null;
   created_at: string;
   reporter: { username: string | null; display_name: string } | null;
   target: ProfileRef | null;
@@ -36,16 +38,19 @@ export type OpenReport = {
 /** Open reports about accounts, grouped by the reported account (most reported first). */
 export async function openReportsByUser() {
   const supabase = await createUserClient();
-  const { data, error } = await supabase
-    .from("reports")
-    .select(
-      "id, reason, details, listing_id, post_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)",
-    )
-    .eq("status", "open")
-    .not("user_id", "is", null)
-    .order("created_at", { ascending: true })
-    .limit(500)
-    .returns<OpenReport[]>();
+  const COLS =
+    "id, reason, details, listing_id, post_id, created_at, reporter:profiles!reports_reporter_id_fkey(username, display_name), target:profiles!reports_user_id_fkey(id, username, display_name, role, plan, banned_until)";
+  const run = (cols: string) =>
+    supabase
+      .from("reports")
+      .select(cols)
+      .eq("status", "open")
+      .not("user_id", "is", null)
+      .order("created_at", { ascending: true })
+      .limit(500)
+      .returns<OpenReport[]>();
+  let { data, error } = await run(`${COLS}, snapshot`);
+  if (error?.code === "42703") ({ data, error } = await run(COLS)); // before migration 0020
   if (error) console.error(JSON.stringify({ at: "admin.openReports", code: error.code, error: error.message }));
 
   const groups = new Map<string, { target: ProfileRef; reports: OpenReport[] }>();
@@ -105,6 +110,7 @@ export async function missingDbUpdates() {
     ["0016 הצמחים שלי", supabase.from("locations").select("direction").limit(1)],
     ["0017 ציוד בשוק", supabase.from("market_listings").select("condition").limit(1)],
     ["0019 אבטחה", supabase.rpc("my_settings")],
+    ["0020 שמירה בטוחה ומגבלות", supabase.rpc("market_category_counts")],
   ];
   const results = await Promise.all(checks.map(async ([name, p]) => ((await p).error ? name : null)));
   return results.filter(Boolean) as string[];

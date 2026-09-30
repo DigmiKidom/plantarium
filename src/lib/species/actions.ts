@@ -83,17 +83,30 @@ function careRow(speciesId: string, v: SpeciesFormValues) {
 }
 
 /** Make species_images match the given ordered list of URLs. */
-async function syncImages(s: S, speciesId: string, photos: string[], alt: string) {
-  const { data: current } = await s.supabase.from("species_images").select("id, storage_path").eq("species_id", speciesId);
+/** Makes the plant's photos match `photos` (order = sort). Returns false if any step failed. */
+async function syncImages(s: S, speciesId: string, photos: string[], alt: string): Promise<boolean> {
+  const { data: current, error } = await s.supabase.from("species_images").select("id, storage_path").eq("species_id", speciesId);
+  if (error) return logErr("species.syncImages.read", error);
   const keep = new Set(photos);
   const toDelete = (current ?? []).filter((r) => !keep.has(r.storage_path as string)).map((r) => r.id as string);
-  if (toDelete.length) await s.supabase.from("species_images").delete().in("id", toDelete);
+  if (toDelete.length) {
+    const { error: dErr } = await s.supabase.from("species_images").delete().in("id", toDelete);
+    if (dErr) return logErr("species.syncImages.delete", dErr);
+  }
   const existing = new Map((current ?? []).map((r) => [r.storage_path as string, r.id as string]));
   for (const [sort, url] of photos.entries()) {
     const id = existing.get(url);
-    if (id) await s.supabase.from("species_images").update({ sort }).eq("id", id);
-    else await s.supabase.from("species_images").insert({ species_id: speciesId, storage_path: url, alt, sort });
+    const { error: wErr } = id
+      ? await s.supabase.from("species_images").update({ sort }).eq("id", id)
+      : await s.supabase.from("species_images").insert({ species_id: speciesId, storage_path: url, alt, sort });
+    if (wErr) return logErr("species.syncImages.write", wErr);
   }
+  return true;
+}
+
+function logErr(at: string, error: { code?: string; message: string }): false {
+  console.error(JSON.stringify({ at, code: error.code, error: error.message }));
+  return false;
 }
 
 async function log(s: S, action: string, label: string, targetId?: string, reason?: string) {
@@ -134,10 +147,14 @@ export async function updateSpecies(slug: string, values: SpeciesFormValues): Pr
     return { ok: false, error: error.code === "23505" ? "כבר יש צמח עם השם המדעי הזה" : "השמירה נכשלה" };
   }
   const { error: cErr } = await s.supabase.from("species_care").upsert(careRow(sp.id as string, v));
-  if (cErr) return { ok: false, error: `מידע הטיפול לא נשמר: ${cErr.message}` };
-  await syncImages(s, sp.id as string, v.photos, v.common_name_he);
+  if (cErr) {
+    logErr("species.update.care", cErr);
+    return { ok: false, error: "מידע הטיפול לא נשמר. נסו שוב" };
+  }
+  const imagesOk = await syncImages(s, sp.id as string, v.photos, v.common_name_he);
   await log(s, "edit_species", v.common_name_he, sp.id as string);
   refreshPlants(slug);
+  if (!imagesOk) return { ok: false, error: "הפרטים נשמרו, אבל התמונות לא עודכנו. נסו לשמור שוב" };
   return { ok: true, slug };
 }
 
@@ -194,17 +211,23 @@ export async function approveSuggestion(id: string, values: SpeciesFormValues): 
     .insert({ ...speciesRow(v), slug, published_at: new Date().toISOString() })
     .select("id")
     .single();
-  if (error || !sp) return { ok: false, error: error?.code === "23505" ? "כבר יש צמח עם השם המדעי הזה" : `יצירת הצמח נכשלה: ${error?.message}` };
+  if (error || !sp) {
+    if (error) logErr("species.approve.insert", error);
+    return { ok: false, error: error?.code === "23505" ? "כבר יש צמח עם השם המדעי הזה" : "יצירת הצמח נכשלה. נסו שוב" };
+  }
   const { error: cErr } = await s.supabase.from("species_care").insert({ ...careRow(sp.id as string, v), seasonal: DEFAULT_SEASONAL });
   if (cErr) {
     await s.supabase.from("species").delete().eq("id", sp.id);
-    return { ok: false, error: `מידע הטיפול לא נשמר: ${cErr.message}` };
+    logErr("species.approve.care", cErr);
+    return { ok: false, error: "מידע הטיפול לא נשמר. נסו שוב" };
   }
-  await syncImages(s, sp.id as string, v.photos, v.common_name_he);
-  await s.supabase.from("species_suggestions").update({ status: "approved", species_id: sp.id }).eq("id", id);
+  const imagesOk = await syncImages(s, sp.id as string, v.photos, v.common_name_he);
+  const { error: sErr } = await s.supabase.from("species_suggestions").update({ status: "approved", species_id: sp.id }).eq("id", id);
+  if (sErr) logErr("species.approve.status", sErr);
   await log(s, "approve_species", v.common_name_he, sp.id as string);
   refreshPlants(slug);
   revalidatePath("/admin", "layout");
+  if (!imagesOk || sErr) return { ok: false, error: "הצמח נוסף למאגר, אבל חלק מהעדכון נכשל (תמונות או סטטוס ההצעה). בדקו את דף הצמח" };
   return { ok: true, slug };
 }
 

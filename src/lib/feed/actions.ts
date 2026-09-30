@@ -70,6 +70,21 @@ export async function createPost(raw: z.input<typeof postInput>): Promise<Result
     speciesId = (data?.id as string) ?? null;
   }
 
+  // Post + photos in one database transaction (migration 0020)
+  const base = imagesBase() + "/";
+  const media = v.photos.map((url) => url.slice(base.length));
+  const rpc = await m.supabase.rpc("create_post", { p_body: v.body || null, p_type: v.type, p_species_id: speciesId, p_media: media });
+  if (!rpc.error && rpc.data) {
+    refresh();
+    return { ok: true, id: rpc.data as string };
+  }
+  if (rpc.error?.code === "P0429") return { ok: false, error: "יותר מדי פוסטים בזמן קצר. נסו שוב בעוד כמה דקות" };
+  if (rpc.error && rpc.error.code !== "PGRST202") {
+    console.error(JSON.stringify({ at: "feed.createPost", code: rpc.error.code, error: rpc.error.message }));
+    return { ok: false, error: rpc.error.code === "P0413" ? "עד 4 תמונות בפוסט" : "הפרסום נכשל. נסו שוב" };
+  }
+
+  // Before migration 0020: the old two-step save
   const { data: post, error } = await m.supabase
     .from("posts")
     .insert({ body: v.body || null, type: v.type, species_id: speciesId })
@@ -82,7 +97,6 @@ export async function createPost(raw: z.input<typeof postInput>): Promise<Result
   }
 
   if (v.photos.length) {
-    const base = imagesBase() + "/";
     const { error: mErr } = await m.supabase
       .from("post_media")
       .insert(v.photos.map((url, sort) => ({ post_id: post.id, storage_path: url.slice(base.length), sort })));
