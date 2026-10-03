@@ -82,7 +82,17 @@ export async function uploadImage(file: File, sign: SignUpload, resize?: ResizeO
 
   const res = await sign({ contentType: type, size: blob.size });
   if (!res.ok) throw new Error(res.error);
-  const put = await fetch(res.uploadUrl, { method: "PUT", body: blob, headers: { "Content-Type": type } });
-  if (!put.ok) throw new Error("העלאת התמונה נכשלה. נסו שוב");
+  let put: Response;
+  try {
+    put = await fetch(res.uploadUrl, { method: "PUT", body: blob, headers: { "Content-Type": type } });
+  } catch (e) {
+    // Usually the storage's CORS rule doesn't allow this site's address
+    console.error("[upload] PUT to storage was blocked", new URL(res.uploadUrl).host, e);
+    throw new Error("שירות התמונות חסם את ההעלאה מהאתר הזה (הגדרת CORS ב-R2)");
+  }
+  if (!put.ok) {
+    console.error("[upload] storage answered", put.status, await put.text().catch(() => ""));
+    throw new Error(`העלאת התמונה נכשלה (${put.status}). נסו שוב`);
+  }
   return res.publicUrl;
 }

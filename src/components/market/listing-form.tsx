@@ -55,6 +55,7 @@ export function ListingForm({
   const [free, setFree] = useState(initial.price === "0");
   const [uploading, setUploading] = useState(0);
   const [error, setError] = useState<string>();
+  const [photoError, setPhotoError] = useState<string>();
   const [pending, startTransition] = useTransition();
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -70,14 +71,15 @@ export function ListingForm({
     if (!files) return;
     const room = MAX_PHOTOS - v.photos.length;
     const list = Array.from(files).slice(0, room);
-    setError(undefined);
+    setPhotoError(undefined);
     setUploading((n) => n + list.length);
     for (const file of list) {
       try {
         const url = await uploadImage(file, createListingImageUpload);
         setV((prev) => ({ ...prev, photos: [...prev.photos, url].slice(0, MAX_PHOTOS) }));
       } catch (e) {
-        setError(e instanceof Error ? e.message : "העלאת התמונה נכשלה");
+        console.error("[market] photo upload failed", file.name, file.type, file.size, e);
+        setPhotoError(`${file.name}: ${e instanceof Error ? e.message : "העלאת התמונה נכשלה"}`);
       } finally {
         setUploading((n) => n - 1);
       }
@@ -247,6 +249,11 @@ export function ListingForm({
           תמונות <span className="text-accent">*</span>
         </legend>
         <p className="text-sm text-muted">1 עד {MAX_PHOTOS} תמונות. הראשונה תופיע בטבלה.</p>
+        {photoError && (
+          <p role="alert" className="rounded-xl bg-accent-soft px-4 py-2 text-sm text-accent">
+            {photoError}
+          </p>
+        )}
         <ul className="grid grid-cols-3 gap-3 sm:grid-cols-6">
           {v.photos.map((url, i) => (
             <li key={url} className="relative">
@@ -375,6 +382,7 @@ export function ListingForm({
         </div>
       </fieldset>
 
+      <FormAlert error={error} />
       <div className="flex flex-wrap gap-3">
         <button
           type="submit"
