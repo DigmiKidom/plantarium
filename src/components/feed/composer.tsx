@@ -175,7 +175,7 @@ export function Composer({ name, avatarUrl, species }: { name: string; avatarUrl
       <input
         ref={fileRef}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,image/heic,.jpg,.jpeg,.png,.webp,.heic"
         multiple
         hidden
         onChange={(e) => {

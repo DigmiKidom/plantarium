@@ -261,7 +261,7 @@ export function PlantForm({ species, places: initialPlaces, initial }: { species
         <input
           ref={fileRef}
           type="file"
-          accept="image/jpeg,image/png,image/webp"
+          accept="image/jpeg,image/png,image/webp,image/heic,.jpg,.jpeg,.png,.webp,.heic"
           hidden
           onChange={(e) => {
             addPhoto(e.target.files?.[0]);

@@ -60,7 +60,7 @@ export function PhotoButton({ kind, label, className, showLabel }: { kind: Photo
       <input
         ref={input}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,image/heic,.jpg,.jpeg,.png,.webp,.heic"
         hidden
         onChange={(e) => {
           pick(e.target.files?.[0]);

@@ -494,8 +494,8 @@ export function ArticleEditor({ initial }: { initial: Initial }) {
         )}
       </div>
 
-      <input ref={bodyFile} type="file" accept="image/jpeg,image/png,image/webp" multiple hidden onChange={(e) => { upload(e.target.files, "body"); e.target.value = ""; }} />
-      <input ref={coverFile} type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { upload(e.target.files, "cover"); e.target.value = ""; }} />
+      <input ref={bodyFile} type="file" accept="image/jpeg,image/png,image/webp,image/heic,.jpg,.jpeg,.png,.webp,.heic" multiple hidden onChange={(e) => { upload(e.target.files, "body"); e.target.value = ""; }} />
+      <input ref={coverFile} type="file" accept="image/jpeg,image/png,image/webp,image/heic,.jpg,.jpeg,.png,.webp,.heic" hidden onChange={(e) => { upload(e.target.files, "cover"); e.target.value = ""; }} />
 
       <div className="sticky bottom-20 z-10 flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-surface/95 p-3 backdrop-blur md:bottom-4">
         {(error || message) && (
