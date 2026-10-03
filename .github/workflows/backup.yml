@@ -25,13 +25,13 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_R2_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: auto
-      R2_ENDPOINT: https://${{ secrets.BACKUP_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      R2_ACCOUNT: ${{ secrets.BACKUP_R2_ACCOUNT_ID }}
       BUCKET: ${{ secrets.BACKUP_R2_BUCKET }}
     steps:
       - name: Check settings
         run: |
           missing=""
-          for v in SUPABASE_DB_URL BACKUP_PASSPHRASE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY BUCKET; do
+          for v in SUPABASE_DB_URL BACKUP_PASSPHRASE R2_ACCOUNT AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY BUCKET; do
             [ -n "${!v}" ] || missing="$missing $v"
           done
           if [ -n "$missing" ]; then echo "::error::Missing secrets:$missing (see docs/operations.md)"; exit 1; fi
@@ -53,4 +53,10 @@ jobs:
           echo "NAME=$name" >> "$GITHUB_ENV"
           ls -la "$name"
       - name: Upload to R2
-        run: aws s3 cp "$NAME" "s3://$BUCKET/db/$NAME" --endpoint-url "$R2_ENDPOINT" --no-progress
+        run: |
+          # The account id is 32 hex characters; accept it alone or inside the full endpoint address.
+          account=$(printf '%s' "$R2_ACCOUNT" | grep -oiE '[0-9a-f]{32}' | head -1 || true)
+          if [ -z "$account" ]; then echo "::error::BACKUP_R2_ACCOUNT_ID should be the 32-character Cloudflare account id"; exit 1; fi
+          echo "::add-mask::$account"
+          bucket=$(printf '%s' "$BUCKET" | tr -d '[:space:]')
+          aws s3 cp "$NAME" "s3://$bucket/db/$NAME" --endpoint-url "https://$account.r2.cloudflarestorage.com" --no-progress
