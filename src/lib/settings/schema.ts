@@ -1,4 +1,6 @@
 import { z } from "zod";
+// No eval probe: the site's Content-Security-Policy forbids it (zod falls back anyway, this just keeps the console clean).
+z.config({ jitless: true });
 
 /**
  * All user settings live here. To add a new setting:
