@@ -15,7 +15,7 @@ async function me() {
   const { data } = await supabase.auth.getUser();
   return data.user ? { supabase, userId: data.user.id } : null;
 }
-const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 
 const uploadInput = z.object({ contentType: z.enum(IMAGE_TYPES), size: z.number().int().positive().max(MAX_IMAGE_BYTES) });
 

@@ -32,7 +32,7 @@ const refresh = (id?: string) => {
   if (id) revalidatePath(`/market/l/${id}`);
 };
 
-const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 
 // ---------- photos ----------
 const uploadInput = z.object({ contentType: z.enum(IMAGE_TYPES), size: z.number().int().positive().max(MAX_IMAGE_BYTES) });
@@ -129,7 +129,12 @@ export async function saveListing(raw: ListingInput): Promise<Result<{ id: strin
   }
   if (error || !savedId) {
     console.error(JSON.stringify({ at: "market.save", code: error?.code, error: error?.message }));
-    if (error?.code === "23514") return { ok: false, error: checkMessage(error.message) };
+    if (error?.code === "23514") {
+      // Temporary diagnostics: which rule and what the photo addresses look like
+      console.error(JSON.stringify({ at: "market.save.check", error: error.message, seller: s.userId, photos: row.photos }));
+      const msg = checkMessage(error.message);
+      return { ok: false, error: msg.includes("תמונות") ? `${msg} [${error.message} | ${row.photos.join(" , ")}]` : msg };
+    }
     return { ok: false, error: v.id ? "השמירה נכשלה" : "הפרסום נכשל. נסו שוב" };
   }
   refresh(savedId as string);

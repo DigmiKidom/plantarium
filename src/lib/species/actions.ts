@@ -27,7 +27,7 @@ type S = NonNullable<Awaited<ReturnType<typeof session>>>;
 
 const NO_ADMIN = { ok: false as const, error: "רק עורכים ראשיים ומנהלים יכולים לעשות את זה" };
 const NO_WRITER = { ok: false as const, error: "רק כותבים יכולים להציע צמחים" };
-const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 
 /** Validates the form; photos must be our uploads (or already on this plant). */
 function parse(values: unknown, existing: Set<string> = new Set()): Result<{ v: SpeciesFormValues }> {

@@ -38,6 +38,6 @@ export async function presignImageUpload(key: string, contentType: ImageType, si
     }),
     { expiresIn: 300 },
   );
-  const publicUrl = `${process.env.NEXT_PUBLIC_IMAGES_URL!.replace(/\/+$/, "")}/${key}`;
+  const publicUrl = `${process.env.NEXT_PUBLIC_IMAGES_URL!.trim().replace(/\/+$/, "")}/${key}`;
   return { uploadUrl, publicUrl };
 }

@@ -20,7 +20,7 @@ async function me() {
   return { supabase, userId: data.user.id };
 }
 const SIGN_IN = { ok: false as const, error: "צריך להתחבר" };
-const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 
 function dbError(error: { code?: string; message: string }, at: string): { ok: false; error: string } {
   console.error(JSON.stringify({ at, code: error.code, error: error.message }));

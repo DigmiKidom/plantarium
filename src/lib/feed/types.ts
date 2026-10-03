@@ -25,7 +25,7 @@ export const POST_COLUMNS =
 
 export type PostRow = Omit<FeedPost, "photos" | "liked"> & { media: { storage_path: string; sort: number }[] | null };
 
-export const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+export const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 export const mediaUrl = (path: string) => `${imagesBase()}/${path}`;
 
 /** "לפני 5 דק׳" style times for the feed. */

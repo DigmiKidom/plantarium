@@ -34,7 +34,7 @@ const ALIGNS = new Set(["right", "center", "left"]);
 export const MAX_CONTENT_BYTES = 300_000;
 export const EMPTY_DOC: JSONContent = { type: "doc", content: [] };
 
-const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").replace(/\/+$/, "");
+const imagesBase = () => (process.env.NEXT_PUBLIC_IMAGES_URL ?? "").trim().replace(/\/+$/, "");
 
 /** Images must come from our own photo storage (R2), never from other sites. */
 export function isOwnImageUrl(src: unknown): src is string {
