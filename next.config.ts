@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs/config";
+import { assertEnv } from "./src/env";
+
+// Fail the build early, with a clear list, when a setting in Vercel is missing or malformed.
+assertEnv();
 
 const isDev = process.env.NODE_ENV !== "production";
 const origin = (url: string | undefined) => {
@@ -62,4 +67,17 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Error monitoring: only wraps the build when Sentry is configured. Source maps are uploaded when SENTRY_AUTH_TOKEN is set,
+// and browser reports go through our own /monitoring route (no extra CSP host, not blocked by ad blockers).
+export default process.env.NEXT_PUBLIC_SENTRY_DSN
+  ? withSentryConfig(nextConfig, {
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: { disable: !process.env.SENTRY_AUTH_TOKEN },
+      tunnelRoute: "/monitoring",
+      widenClientFileUpload: true,
+      silent: !process.env.CI,
+      telemetry: false,
+    })
+  : nextConfig;

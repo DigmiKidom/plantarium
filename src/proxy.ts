@@ -6,6 +6,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Everything except static files and images
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)"],
+  // Everything except static files, images, the uptime check and the Sentry tunnel
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/health|monitoring|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico)$).*)"],
 };

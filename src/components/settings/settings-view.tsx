@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { saveSettings } from "@/lib/settings/actions";
 import { applyTheme, currentTheme } from "@/lib/settings/client";
 import type { Settings, Theme } from "@/lib/settings/schema";
+import { AccountData } from "@/components/account/account-data";
 
 function Section({ title, description, children }: { title: string; description?: string; children: React.ReactNode }) {
   return (
@@ -118,6 +119,12 @@ export function SettingsView({ signedIn, initial }: { signedIn: boolean; initial
           </p>
         )}
       </Section>
+
+      {signedIn && (
+        <Section title="המידע שלי" description="הורדה של כל המידע שלכם, או מחיקת החשבון.">
+          <AccountData />
+        </Section>
+      )}
 
       <p className="h-5 text-sm text-muted" role="status" aria-live="polite">
         {pending ? "שומר…" : status}

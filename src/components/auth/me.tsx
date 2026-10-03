@@ -6,6 +6,7 @@ import { createBrowserSupabase } from "@/lib/supabase/client";
 import { PROFILE_CHANGED, applyTheme, currentTheme } from "@/lib/settings/client";
 import { parseSettings } from "@/lib/settings/schema";
 import type { Role } from "@/lib/auth/roles";
+import { setMonitoringUser } from "@/lib/monitoring/client";
 
 export type Me = { name: string; username: string | null; role: Role; avatarUrl: string | null } | null;
 
@@ -29,6 +30,7 @@ export function MeProvider({ children }: { children: React.ReactNode }) {
     let active = true;
 
     const load = async (userId: string | undefined, fallbackName: string) => {
+      setMonitoringUser(userId ?? null);
       if (!userId) return active && setMe(null);
       const [{ data }, { data: settings, error: settingsError }] = await Promise.all([
         supabase.from("profiles").select("display_name, username, role, avatar_url").eq("id", userId).maybeSingle(),

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { reportError } from "@/lib/monitoring/client";
 import Link from "next/link";
 import { RotateCw, TriangleAlert } from "lucide-react";
 
@@ -8,6 +9,7 @@ import { RotateCw, TriangleAlert } from "lucide-react";
 export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
     console.error(error);
+    reportError(error);
   }, [error]);
 
   return (

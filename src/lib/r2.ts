@@ -1,5 +1,5 @@
 import "server-only";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, ListObjectsV2Command, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export const hasR2 = () =>
@@ -41,3 +41,27 @@ export async function presignImageUpload(key: string, contentType: ImageType, si
   const publicUrl = `${process.env.NEXT_PUBLIC_IMAGES_URL!.trim().replace(/\/+$/, "")}/${key}`;
   return { uploadUrl, publicUrl };
 }
+
+/**
+ * Deletes every photo under a folder such as `market/<user id>/`. Returns how many were removed.
+ * The prefix must end with "/" and contain a folder name, so a mistake can never empty the whole bucket.
+ */
+export async function deletePrefix(prefix: string): Promise<number> {
+  if (!/^[a-z]+\/[0-9a-f-]{36}\/$/.test(prefix)) throw new Error(`refusing to delete prefix ${prefix}`);
+  let removed = 0;
+  let token: string | undefined;
+  do {
+    const page = await r2().send(
+      new ListObjectsV2Command({ Bucket: process.env.R2_BUCKET!, Prefix: prefix, ContinuationToken: token, MaxKeys: 1000 }),
+    );
+    const keys = (page.Contents ?? []).flatMap((o) => (o.Key ? [{ Key: o.Key }] : []));
+    if (keys.length) {
+      const out = await r2().send(new DeleteObjectsCommand({ Bucket: process.env.R2_BUCKET!, Delete: { Objects: keys, Quiet: true } }));
+      if (out.Errors?.length) throw new Error(`R2 delete failed for ${out.Errors.length} files under ${prefix}`);
+      removed += keys.length;
+    }
+    token = page.IsTruncated ? page.NextContinuationToken : undefined;
+  } while (token);
+  return removed;
+}
+

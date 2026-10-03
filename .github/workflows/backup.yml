@@ -1,0 +1,56 @@
+# Nightly copy of the production database (roles, schema and data, including sign-in accounts) to a private R2 bucket.
+# Old copies are removed by the bucket's lifecycle rule (30 days). How to restore: docs/operations.md.
+name: Database backup
+
+on:
+  schedule:
+    - cron: "17 1 * * *" # every night ~04:17 Israel time
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    name: Dump and upload
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      BACKUP_PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.BACKUP_R2_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.BACKUP_R2_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: auto
+      R2_ENDPOINT: https://${{ secrets.BACKUP_R2_ACCOUNT_ID }}.r2.cloudflarestorage.com
+      BUCKET: ${{ secrets.BACKUP_R2_BUCKET }}
+    steps:
+      - name: Check settings
+        run: |
+          missing=""
+          for v in SUPABASE_DB_URL BACKUP_PASSPHRASE AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY BUCKET; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then echo "::error::Missing secrets:$missing (see docs/operations.md)"; exit 1; fi
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Dump (Supabase's recommended three files)
+        run: |
+          mkdir dump
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f dump/roles.sql --role-only
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f dump/schema.sql
+          supabase db dump --db-url "$SUPABASE_DB_URL" -f dump/data.sql --use-copy --data-only
+          ls -la dump
+          test -s dump/schema.sql && test -s dump/data.sql
+      - name: Compress and encrypt
+        run: |
+          name="plantarium-$(date -u +%Y-%m-%dT%H%M)Z.tar.gz.gpg"
+          tar -czf - dump | gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$BACKUP_PASSPHRASE" -o "$name"
+          echo "NAME=$name" >> "$GITHUB_ENV"
+          ls -la "$name"
+      - name: Upload to R2
+        run: aws s3 cp "$NAME" "s3://$BUCKET/db/$NAME" --endpoint-url "$R2_ENDPOINT" --no-progress

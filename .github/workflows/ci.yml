@@ -1,4 +1,6 @@
 # Automatic checks on every push and pull request.
+# On main, after every check passes, new database migrations are applied to production (job "migrate").
+# In Vercel → Settings → Deployment Checks, require "Migrate production database" so the site goes live only after it.
 # The same checks run locally with: npm run check (and npm run build).
 name: CI
 
@@ -8,9 +10,10 @@ on:
   workflow_dispatch:
 
 # A newer push to the same branch cancels the older, still-running check.
+# (Never on main: a database update must not be stopped halfway.)
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
   contents: read
@@ -60,3 +63,27 @@ jobs:
       # No secrets needed: without Supabase settings the site builds from the local plant data.
       - name: next build
         run: npm run build
+
+  migrate:
+    name: Migrate production database
+    needs: [checks, build]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Skip when not set up yet
+        if: env.SUPABASE_DB_URL == ''
+        run: echo "::notice::SUPABASE_DB_URL secret is not set – migrations were not applied. Run npm run db:push yourself, or add the secret (see docs/operations.md)."
+      - uses: supabase/setup-cli@v1
+        if: env.SUPABASE_DB_URL != ''
+        with:
+          version: latest
+      - name: Pending migrations
+        if: env.SUPABASE_DB_URL != ''
+        run: supabase migration list --db-url "$SUPABASE_DB_URL"
+      - name: Apply migrations
+        if: env.SUPABASE_DB_URL != ''
+        run: supabase db push --db-url "$SUPABASE_DB_URL" --yes

@@ -89,8 +89,11 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <Plus className="size-5" aria-hidden />
             הוספת צמח
           </Link>
-          <div className="mt-auto">
+          <div className="mt-auto flex flex-col gap-3">
             <SidebarUserMenu />
+            <Link href="/privacy" className="px-3 text-xs text-muted hover:text-text hover:underline">
+              מדיניות פרטיות
+            </Link>
           </div>
         </aside>
 

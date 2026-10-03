@@ -34,7 +34,9 @@ function PlantSearch() {
 }
 
 export default async function HomePage({ searchParams }: PageProps<"/">) {
-  const tab: FeedTab = (await searchParams).tab === "following" ? "following" : "all";
+  const params = await searchParams;
+  const tab: FeedTab = params.tab === "following" ? "following" : "all";
+  const accountDeleted = params.account === "deleted";
   const [{ posts, viewerId, hasMore }, articles, listings] = await Promise.all([
     getFeed({ tab }),
     listPublished({ limit: 3 }),
@@ -57,6 +59,11 @@ export default async function HomePage({ searchParams }: PageProps<"/">) {
   return (
     <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[minmax(0,1fr)_19rem]">
       <div className="flex min-w-0 flex-col gap-5">
+        {accountDeleted && (
+          <p role="status" className="rounded-xl bg-leaf-soft px-4 py-3 text-sm text-primary-strong">
+            החשבון והמידע שלכם נמחקו. תודה שהייתם איתנו.
+          </p>
+        )}
         <TodayBar />
 
         <header className="flex items-end justify-between gap-3">

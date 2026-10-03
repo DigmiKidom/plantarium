@@ -1,0 +1,46 @@
+# After Vercel finishes a production deployment: check that the live site answers.
+# A failure here means the new version is live but broken – roll back in Vercel (Deployments → previous → Promote).
+name: Smoke test
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Live site answers
+    if: github.event_name == 'workflow_dispatch' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SITE: ${{ vars.PRODUCTION_URL || 'https://plantarium-umber.vercel.app' }}
+      SHA: ${{ github.event.deployment.sha || github.sha }}
+    steps:
+      - name: Wait until the production address serves this version
+        run: |
+          want="${SHA:0:7}"
+          for i in $(seq 1 30); do
+            got=$(curl -fsS --max-time 10 "$SITE/api/health" | jq -r .version || true)
+            echo "attempt $i: live version $got, expected $want"
+            [ "$got" = "$want" ] && exit 0
+            sleep 10
+          done
+          echo "::warning::Production still serves $got (expected $want) – checking it anyway"
+      - name: Pages and health check
+        run: |
+          fail=0
+          for path in / /magazine/plants /market /login /api/health; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$SITE$path")
+            echo "$code $path"
+            [ "$code" = "200" ] || fail=1
+          done
+          db=$(curl -fsS --max-time 10 "$SITE/api/health" | jq -r .db)
+          echo "database: $db"
+          [ "$db" = "ok" ] || fail=1
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$SITE/this-page-does-not-exist")
+          echo "$code (404 page)"
+          [ "$code" = "404" ] || fail=1
+          exit $fail

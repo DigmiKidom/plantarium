@@ -83,6 +83,13 @@ export function SignUpForm({ next }: { next: string }) {
       <Field label="אימות סיסמה" name="confirm" type="password" autoComplete="new-password" ltr required error={fe.confirm} />
       <Captcha resetKey={state} />
       <SubmitButton className="mt-2">יצירת חשבון</SubmitButton>
+      <p className="text-center text-xs text-muted">
+        בהרשמה אתם מסכימים ל
+        <Link href="/privacy" className="font-medium text-primary hover:underline">
+          מדיניות הפרטיות
+        </Link>
+        .
+      </p>
       <p className="text-center text-sm text-muted">
         כבר יש לך חשבון?{" "}
         <Link href={`/login${next !== "/" ? `?next=${encodeURIComponent(next)}` : ""}`} className="font-medium text-primary hover:underline">

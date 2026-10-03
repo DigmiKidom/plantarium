@@ -812,6 +812,20 @@ console.log("\nAccount deletion");
 await q(`delete from auth.users where id = $1`, [bob]);
 await expectCount("deleting an account removes profile and articles", 0, () =>
   q(`select 1 from public.profiles where id = $1 union all select 1 from public.magazine_articles where author_id = $1`, [bob]));
+await expectCount("…and nothing anywhere still points at the deleted account", 0, async () => {
+  const { rows: refs } = await q(`
+    select c.conrelid::regclass::text as tbl, a.attname as col
+      from pg_constraint c
+      join pg_attribute a on a.attrelid = c.conrelid and a.attnum = any (c.conkey)
+     where c.contype = 'f' and c.confrelid in ('public.profiles'::regclass, 'auth.users'::regclass)`);
+  const left = [];
+  for (const r of refs) {
+    const { rows } = await q(`select 1 from ${r.tbl} where ${r.col} = $1 limit 1`, [bob]);
+    if (rows.length) left.push(`${r.tbl}.${r.col}`);
+  }
+  if (left.length) console.log("   still referencing:", left.join(", "));
+  return { rows: left };
+});
 
 console.log(failed ? `\n${failed} check(s) failed` : "\nAll database checks passed");
 process.exitCode = failed ? 1 : 0;

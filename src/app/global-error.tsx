@@ -1,9 +1,15 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportError } from "@/lib/monitoring/client";
 import "./globals.css";
 
 /** Last resort when even the main layout fails. Must render its own <html>. */
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  useEffect(() => {
+    reportError(error);
+  }, [error]);
+
   return (
     <html lang="he" dir="rtl">
       <body className="bg-bg text-text">

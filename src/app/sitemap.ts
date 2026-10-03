@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: absoluteUrl("/magazine"), changeFrequency: "daily", priority: 0.8 },
     { url: absoluteUrl("/magazine/plants"), changeFrequency: "weekly", priority: 0.8 },
     { url: absoluteUrl("/market"), changeFrequency: "daily", priority: 0.7 },
+    { url: absoluteUrl("/privacy"), changeFrequency: "yearly", priority: 0.2 },
     ...MARKET_CATEGORIES.map((c) => ({ url: absoluteUrl(`/market/${c.key}`), changeFrequency: "daily" as const, priority: 0.5 })),
     ...species.map((slug) => ({ url: absoluteUrl(`/magazine/plants/${slug}`), changeFrequency: "monthly" as const, priority: 0.6 })),
     ...articles.map((a) => ({ url: absoluteUrl(`/magazine/${a.slug}`), lastModified: a.updated, changeFrequency: "monthly" as const, priority: 0.7 })),
