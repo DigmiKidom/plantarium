@@ -129,11 +129,25 @@ export async function saveListing(raw: ListingInput): Promise<Result<{ id: strin
   }
   if (error || !savedId) {
     console.error(JSON.stringify({ at: "market.save", code: error?.code, error: error?.message }));
-    if (error?.code === "23514") return { ok: false, error: "אחד הפרטים לא תקין (טלפון, מחיר או תמונות)" };
+    if (error?.code === "23514") return { ok: false, error: checkMessage(error.message) };
     return { ok: false, error: v.id ? "השמירה נכשלה" : "הפרסום נכשל. נסו שוב" };
   }
   refresh(savedId as string);
   return { ok: true, id: savedId as string };
+}
+
+/** Which database rule a listing broke → a message that names the field. */
+function checkMessage(message: string): string {
+  const rule = /constraint "([^"]+)"/.exec(message)?.[1] ?? "";
+  if (rule.includes("phone")) return "מספר הטלפון לא תקין. כתבו רק ספרות, רווח או מקף, למשל 050-1234567";
+  if (rule.includes("photos")) return "אחת התמונות לא תקינה. הסירו את התמונות, העלו אותן מחדש ונסו שוב";
+  if (rule.includes("price")) return "המחיר לא תקין (בין 0 ל-100,000 ₪)";
+  if (rule.includes("other_species")) return "שם הצמח או הפריט צריך להיות 2–80 תווים";
+  if (rule.includes("city")) return "שם העיר ארוך מדי (עד 60 תווים)";
+  if (rule.includes("description")) return "התיאור ארוך מדי (עד 2000 תווים)";
+  if (rule.includes("category") || rule.includes("species")) return "הקטגוריה או הצמח לא תקינים. בחרו שוב";
+  if (rule.includes("condition")) return "מצב הפריט לא תקין. בחרו שוב";
+  return `אחד הפרטים לא תקין${rule ? ` (${rule})` : ""}`;
 }
 
 /** Before migration 0020 is applied: the old two-step save. Remove once every database has 0020. */
