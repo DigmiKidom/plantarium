@@ -59,4 +59,10 @@ jobs:
           if [ -z "$account" ]; then echo "::error::BACKUP_R2_ACCOUNT_ID should be the 32-character Cloudflare account id"; exit 1; fi
           echo "::add-mask::$account"
           bucket=$(printf '%s' "$BUCKET" | tr -d '[:space:]')
+          # Stray spaces/newlines from copy-paste break the request signature
+          export AWS_ACCESS_KEY_ID=$(printf '%s' "$AWS_ACCESS_KEY_ID" | tr -d '[:space:]')
+          export AWS_SECRET_ACCESS_KEY=$(printf '%s' "$AWS_SECRET_ACCESS_KEY" | tr -d '[:space:]')
+          echo "key id: ${#AWS_ACCESS_KEY_ID} characters (R2: 32), secret: ${#AWS_SECRET_ACCESS_KEY} characters (R2: 64)"
+          # R2 doesn't need the newer AWS checksum headers
+          export AWS_REQUEST_CHECKSUM_CALCULATION=when_required AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
           aws s3 cp "$NAME" "s3://$bucket/db/$NAME" --endpoint-url "https://$account.r2.cloudflarestorage.com" --no-progress
