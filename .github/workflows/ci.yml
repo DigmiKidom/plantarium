@@ -77,7 +77,7 @@ jobs:
       - name: Skip when not set up yet
         if: env.SUPABASE_DB_URL == ''
         run: echo "::notice::SUPABASE_DB_URL secret is not set – migrations were not applied. Run npm run db:push yourself, or add the secret (see docs/operations.md)."
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         if: env.SUPABASE_DB_URL != ''
         with:
           version: latest
