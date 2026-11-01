@@ -35,7 +35,7 @@ jobs:
             [ -n "${!v}" ] || missing="$missing $v"
           done
           if [ -n "$missing" ]; then echo "::error::Missing secrets:$missing (see docs/operations.md)"; exit 1; fi
-      - uses: supabase/setup-cli@v1
+      - uses: supabase/setup-cli@v3
         with:
           version: latest
       - name: Dump (Supabase's recommended three files)
